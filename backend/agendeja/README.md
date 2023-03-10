@@ -8,6 +8,7 @@
 - And IDE for compiling Spring Boot project
 
 ## Running
+The application can't start without database running
 
 ### Database MySQL with Docker
 1. Open terminal
