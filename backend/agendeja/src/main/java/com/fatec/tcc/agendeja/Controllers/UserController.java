@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/agenda/user")
 public class UserController {
