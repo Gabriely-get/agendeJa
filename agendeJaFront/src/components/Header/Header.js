@@ -29,11 +29,20 @@ export default function Header() {
         }
       >
         <ul>
-          <li>
+          <li onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}>
             <Link to="/">Pagina inicial</Link>
           </li>
-          <li>
+          <li onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}>
             <Link to="/login">Logar</Link>
+          </li>
+          <li onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}>
+            <Link to="/cadastrar">Cadastrar</Link>
           </li>
         </ul>
       </div>

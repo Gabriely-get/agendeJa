@@ -1,5 +1,6 @@
-import Header from './components/Login/Header/Header';
+import Header from './components/Header/Header';
 import Login from './components/Login/Login';
+import Cadastrar from './components/Cadastrar/Cadastrar';
 import './styles/app.scss';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/cadastrar" element={<Cadastrar />} />
       </Routes>
     </Router>
   );
