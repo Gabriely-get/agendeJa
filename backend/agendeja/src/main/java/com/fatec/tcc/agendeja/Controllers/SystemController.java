@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendeja.Entities.Login;
 import com.fatec.tcc.agendeja.Services.LoginService;
-import com.fatec.tcc.agendeja.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
