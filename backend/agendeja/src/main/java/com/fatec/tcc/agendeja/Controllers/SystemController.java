@@ -8,10 +8,7 @@ import com.fatec.tcc.agendeja.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/agenda")
@@ -27,7 +24,7 @@ public class SystemController {
         return "OK";
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<ObjectNode> login(@RequestBody Login login) {
         try {
             String userLogin = this.loginService.login(login.getEmail(), login.getPassword());
