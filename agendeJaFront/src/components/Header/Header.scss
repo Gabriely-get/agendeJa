@@ -1,141 +1,203 @@
 .navigation {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  height: 60px;
+  background: #FFFFFF;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  position: absolute;
   width: 100%;
-  padding: 0.5rem 0rem;
-  background-color: #fff;
-  color: black;
-  box-shadow: 0 2px 2px 2px rgba(9, 9, 9, 0.23);
-  position: fixed;
+  height: 94px;
   top: 0;
   left: 0;
-  width: 100%;
   z-index: 100;
 
-  .brand-name {
-    text-decoration: none;
-    color: black;
-    font-size: 1.3rem;
-    margin-left: 1rem;
-  }
+  .itens {
+    padding: 32px 10px;
+    display: flex;
+    align-items: center;
+    width: 100%;
 
-  .navigation-menu {
-    margin-left: auto;
-
-    ul {
+    .brand-name {
+      margin-left: 1rem;
       display: flex;
-      padding: 0;
+  
+      .logoImg {
+        height: 20px;
+        width: auto;
+      }
+    }
+  
+    .navigation-menu {
+      ul {
+        display: flex;
+        padding: 0;
+  
+        li {
+          list-style-type: none;
+          margin: 0 1rem;
+  
+          .anchor {
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            color: #666;
+            font-size: 16px;
+            line-height: 20px;
 
-      li {
-        // removes default disc bullet for li tags and applies margin to left & right side
-        list-style-type: none;
-        margin: 0 1rem;
-
-        a {
-          // increases the surface area of the anchor tag to span more than just the anchor text
-          text-decoration: none;
-          display: block;
-          width: 100%;
-          color: black;
-          font-size: 18px;
-
-          &:hover {
-              font-weight: bold;
+            &.login {
+              color: #4B9FE1;
+              font-weight: 700;
+              font-size: 18px;
+            }
           }
         }
       }
     }
-  }
-
-  .hamburger {
-    // removes default border on button element
-    border: 0;
-    height: 40px;
-    width: 40px;
-    padding: 0.5rem;
-    cursor: pointer;
-    background-color: unset;
-    transition: background-color 0.2s ease-in-out;
-    // positions the icon to the right and center aligns it vertically
-    position: absolute;
-    top: 50%;
-    right: 25px;
-    transform: translateY(-50%);
-    display: none;
+  
+    .hamburger {
+      border: 0;
+      height: 40px;
+      width: 40px;
+      padding: 0.5rem;
+      cursor: pointer;
+      background-color: unset;
+      transition: background-color 0.2s ease-in-out;
+      position: absolute;
+      top: 50%;
+      right: 25px;
+      transform: translateY(-50%);
+      display: none;
+    }
+    
   }
 }
 
 @media screen and (max-width: 768px) {
   .navigation {
-    .navigation-menu {
-      ul {
-        flex-direction: column;
-        position: absolute;
-        top: 75px;
-        left: 0;
-        width: 100%;
-        height: calc(100vh - 60px);
-        background-color: white;
-        border-top: 1px solid black;
-        display: none;
-
-        li {
-          // centers link text and strips off margin
-          text-align: center;
-          margin: 0;
-
-          &:hover {
-            background-color: #eee;
+    .itens {
+      .navigation-menu {
+        ul {
+          flex-direction: column;
+          position: absolute;
+          top: 75px;
+          left: 0;
+          width: 100%;
+          height: calc(100vh - 60px);
+          background-color: white;
+          border-top: 1px solid black;
+          display: none;
+  
+          li {
+            text-align: center;
+            margin: 0;
+  
+            &:hover {
+              background-color: #eee;
+            }
+  
+            a {
+              color: black;
+              width: 100%;
+              padding: 1.5rem 0;
+            }
           }
-          a {
-            color: black;
-            // increases the surface area of the anchor tag to span the full width of the menu
-            width: 100%;
-            padding: 1.5rem 0;
+        }
+  
+        &.expanded {
+          ul {
+            display: block;
           }
         }
       }
-
-      &.expanded {
-        ul {
-          display: block;
+  
+      .hamburger {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  
+        .container {
+          display: inline-block;
+          cursor: pointer;
+  
+          &.change {
+            .bar1 {
+              transform: translate(0, 9px) rotate(-45deg);
+            }
+  
+            .bar2 {
+              opacity: 0;
+            }
+  
+            .bar3 {
+              transform: translate(0, -9px) rotate(45deg);
+            }
+          }
+        }
+  
+        .bar1,
+        .bar2,
+        .bar3 {
+          width: 30px;
+          height: 3px;
+          background-color: #333;
+          margin: 6px 0;
+          transition: 0.4s;
         }
       }
     }
+  }
+}
 
-    .hamburger {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+@media screen and (min-width: 769px) {
+  .navigation {
+    width: 100%;
+    height: 94px;
+  
+    .itens {
+      padding: 32px 25px;
+      justify-content: flex-start;
 
-      .container {
-        display: inline-block;
-        cursor: pointer;
+      .brand-name {
+        margin-left: 0;
 
-        &.change {
-          .bar1 {
-            transform: translate(0, 9px) rotate(-45deg);
-          }
-          .bar2 {
-            opacity: 0;
-          }
-
-          .bar3 {
-            transform: translate(0, -9px) rotate(45deg);
-          }
+        .logoImg {
+          height: 30px;
+          width: auto;
         }
       }
 
-      .bar1,
-      .bar2,
-      .bar3 {
-        width: 30px;
-        height: 3px;
-        background-color: #333;
-        margin: 6px 0;
-        transition: 0.4s;
+      .navigation-menu {
+        margin-left: 20px;
+        width: 100%;
+
+        ul {
+          .boxLogin {
+            margin-left: auto;
+            margin-right: 0;
+          }
+        }
       }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .navigation {
+    .itens {
+      padding: 32px 45px;
+
+      .navigation-menu {
+        margin-left: 48px;
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .navigation {
+    .itens {
+      padding: 32px 112px;
     }
   }
 }
