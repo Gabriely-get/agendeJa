@@ -1,0 +1,13 @@
+.App {
+    .content {
+        padding: 0 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .App {
+        .content {
+            padding: 0 15px;
+        }
+    }
+}
