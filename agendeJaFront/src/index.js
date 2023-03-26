@@ -5,8 +5,8 @@ import './styles/index.scss';
 import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './pages/Home/Home';
-import Login from './components/Login/Login';
-import Cadastrar from './components/Cadastrar/Cadastrar';
+import Login from './pages/Login/Login';
+import Cadastrar from './pages/Cadastrar/Cadastrar';
 import ErrorPage from './pages/ErrorPage/ErrorPage';
 
 const router = createBrowserRouter([

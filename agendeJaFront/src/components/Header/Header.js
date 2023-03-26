@@ -67,15 +67,6 @@ export default function Header() {
               </Link>
             </li>
             <li
-              onClick={() => {
-                setIsExpanded(!isExpanded);
-              }}
-            >
-              <Link to="/cadastrar" className="anchor">
-                Cadastrar
-              </Link>
-            </li>
-            <li
               className="boxLogin"
               onClick={() => {
                 setIsExpanded(!isExpanded);
