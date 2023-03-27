@@ -1,19 +1,25 @@
+
 .section01 {
+  margin-top: 96px;
+  
   .divBox {
     display: flex;
     align-items: center;
     justify-content: center;
+    .img{
+      margin-left: 100px;
+    }
 
     .text {
-      width: 384px;
-
       h2 {
+        width: 384px;
         line-height: 39px;
         font-weight: 700;
         color: #4d4d4d;
       }
 
       p {
+        width: 384px;
         font-weight: 500;
         line-height: 22px;
         color: #666666;
@@ -31,6 +37,11 @@
 }
 
 .section02 {
+  margin-top: 192px;
+  .meetingHome{
+   width: 70%;
+   height: 70%;
+  }
   .divBox {
     display: flex;
     align-items: center;
@@ -40,6 +51,7 @@
       width: 300px;
 
       h2 {
+        width: 384px;
         line-height: 39px;
         font-weight: 700;
         color: #4d4d4d;
@@ -55,6 +67,8 @@
 }
 
 .section03 {
+  margin-top: 192px;
+  margin-bottom: 142px;;
   display: grid;
   text-align: center;
   justify-content: center;
@@ -112,7 +126,7 @@
 }
 
 .section04 {
-  margin-top: 50px;
+  
   background: #4b9fe1;
   position: absolute;
   left: 0;
