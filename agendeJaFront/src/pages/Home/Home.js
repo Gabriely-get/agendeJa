@@ -117,9 +117,8 @@ function Home() {
         <div className="divBox">
           <div className="text">
             <h2>
-              Sistema automatizado
-para gerenciamento de agendamentos
-de serviços
+              Sistema automatizado para gerenciamento de agendamentos de
+              serviços
             </h2>
             <p>Agende seus serviços de forma rápida e prática em minutos!</p>
             <a href="/">Primeiros passos</a>

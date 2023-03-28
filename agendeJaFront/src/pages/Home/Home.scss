@@ -1,25 +1,19 @@
-
 .section01 {
-  margin-top: 96px;
-  
   .divBox {
     display: flex;
     align-items: center;
     justify-content: center;
-    .img{
-      margin-left: 100px;
-    }
 
     .text {
+      width: 384px;
+
       h2 {
-        width: 384px;
         line-height: 39px;
         font-weight: 700;
         color: #4d4d4d;
       }
 
       p {
-        width: 384px;
         font-weight: 500;
         line-height: 22px;
         color: #666666;
@@ -37,11 +31,6 @@
 }
 
 .section02 {
-  margin-top: 192px;
-  .meetingHome{
-   width: 70%;
-   height: 70%;
-  }
   .divBox {
     display: flex;
     align-items: center;
@@ -51,7 +40,6 @@
       width: 300px;
 
       h2 {
-        width: 384px;
         line-height: 39px;
         font-weight: 700;
         color: #4d4d4d;
@@ -67,8 +55,6 @@
 }
 
 .section03 {
-  margin-top: 192px;
-  margin-bottom: 142px;;
   display: grid;
   text-align: center;
   justify-content: center;
@@ -86,8 +72,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    padding: 96px 0px 32px;
-    gap: 96px;
 
     .divSon {
       display: flex;
@@ -128,7 +112,6 @@
 }
 
 .section04 {
-  
   background: #4b9fe1;
   position: absolute;
   left: 0;
@@ -193,7 +176,7 @@
 .section06 {
   position: relative;
   top: 950px;
-  height: 600px;
+
   .divBox {
     display: flex;
     align-items: center;
@@ -272,6 +255,7 @@
     display: grid;
     text-align: center;
     justify-content: center;
+    margin-bottom: 40px;
 
     h2 {
       font-size: 26px;
@@ -283,7 +267,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      width: 80vw;
+      width: auto;
 
       .divSon {
         display: grid;
@@ -414,7 +398,13 @@
       .img {
         display: flex;
         justify-content: flex-end;
+        width: 60%;
         height: 100%;
+
+        img {
+          width: 96%;
+          height: 100%;
+        }
       }
     }
   }
@@ -531,7 +521,7 @@
       display: flex;
 
       .text {
-        width: 380px;
+        width: 260px;
 
         h2 {
           font-size: 32px;
@@ -584,16 +574,16 @@
 }
 
 @media screen and (min-width: 1124px) {
-.section06 {
-  top: 700px;
-}
+  .section06 {
+    top: 700px;
+  }
 }
 
 @media screen and (min-width: 1230px) {
   .section06 {
     top: 715px;
   }
-  }
+}
 
 @media screen and (min-width: 1440px) {
   .section01 {
@@ -665,7 +655,7 @@
   }
 
   .section06 {
-    top: 950px;
+    top: 815px;
     .divBox {
       .text {
         width: 310px;

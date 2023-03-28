@@ -1,80 +1,122 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import useRegisterCliente from "../../hooks/useRegisterClient";
 import "./cadastrar.scss";
-import axios from "axios";
 
 export default function Login() {
-  const [nome, setNome] = useState("");
-  const [sobreNome, setSobreNome] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [cpf, setCpf] = useState("");
+  const [register, setRegister] = useState({
+    email: "",
+    password: "",
+    birthday: "",
+    phone: "",
+    username: "",
+    cpf: "",
+  });
+  const { registerUser } = useRegisterCliente();
 
-  const handleSubmit = (event) => {
+  // const [sobreNome, setSobreNome] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setRegister((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    axios
-      .post("http://localhost:8080/agenda/user/", {
-        email: email,
-        password: password,
-        username: nome,
-        cpf: cpf,
-      })
-      .then((response) => {
-        console.log("Deubom" + response.data);
-        // atualizar o estado do componente com a mensagem de sucesso
-        alert("Cadastrado com sucesso");
-      })
-      .catch((error) => {
-        console.log("Deuruim" + error.response.data);
-        // atualizar o estado do componente com a mensagem de erro
-      });
+    try {
+      const dados = await registerUser(register);
+      console.log(dados);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <div className="containerDad">
+    <div className="register">
+      <h1>Crie uma conta!</h1>
+      <span>Crie uma conta e acesse</span>
       <form onSubmit={handleSubmit}>
-        <h1>Cadastrar</h1>
-        <label>
-          Nome:
-          <input
-            type="text"
-            value={nome}
-            onChange={(event) => setNome(event.target.value)}
-          />
-        </label>
-        <label>
-          Sobrenome:
-          <input
-            type="text"
-            value={sobreNome}
-            onChange={(event) => setSobreNome(event.target.value)}
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </label>
-        <label>
-          CPF:
-          <input
-            type="number"
-            value={cpf}
-            onChange={(event) => setCpf(event.target.value)}
-          />
-        </label>
-        <div>
+        <div className="columnName">
+          <label>
+            <input
+              type="text"
+              value={register.username}
+              name="username"
+              placeholder="Nome"
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            <input
+              type="text"
+              value={register.phone}
+              name="phone"
+              placeholder="Sobrenome"
+              onChange={handleInputChange}
+            />
+          </label>
+        </div>
+        <div className="columnEmail">
+          <label>
+            <input
+              type="email"
+              value={register.email}
+              name="email"
+              placeholder="Email"
+              onChange={handleInputChange}
+            />
+          </label>
+        </div>
+
+        <div className="columnCpfDt">
+          <label>
+            <input
+              type="number"
+              value={register.cpf}
+              name="cpf"
+              placeholder="CPF"
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            <input
+              type="date"
+              value={register.birthday}
+              name="birthday"
+              placeholder="Data de nascimento"
+              onChange={handleInputChange}
+            />
+          </label>
+        </div>
+
+        <div className="passwords">
+          <label>
+            <input
+              type="password"
+              value={register.password}
+              name="password"
+              placeholder="Senha"
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            <input
+              type="password"
+              value={confirmPassword}
+              placeholder="Confirmar Senha"
+              onChange={(event) => {
+                setConfirmPassword(event.target.value);
+              }}
+            />
+          </label>
+        </div>
+        <div className="functions">
+          <Link to="/login">Fazer login</Link>
           <button type="submit">Cadastrar</button>
         </div>
       </form>
