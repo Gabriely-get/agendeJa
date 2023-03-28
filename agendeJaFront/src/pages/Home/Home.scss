@@ -86,6 +86,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    padding: 96px 0px 32px;
+    gap: 96px;
 
     .divSon {
       display: flex;
@@ -175,7 +177,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   h2 {
     font-weight: 700;
     line-height: 59px;
@@ -192,6 +193,7 @@
 .section06 {
   position: relative;
   top: 950px;
+  height: 600px;
   .divBox {
     display: flex;
     align-items: center;
@@ -412,13 +414,7 @@
       .img {
         display: flex;
         justify-content: flex-end;
-        width: 60%;
         height: 100%;
-
-        img {
-          width: 96%;
-          height: 100%;
-        }
       }
     }
   }
@@ -535,7 +531,7 @@
       display: flex;
 
       .text {
-        width: 260px;
+        width: 380px;
 
         h2 {
           font-size: 32px;
@@ -669,7 +665,7 @@
   }
 
   .section06 {
-    top: 815px;
+    top: 950px;
     .divBox {
       .text {
         width: 310px;
