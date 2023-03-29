@@ -10,6 +10,7 @@ import Cadastrar from "./pages/Cadastrar/Cadastrar";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import MinhaConta from "./pages/MinhaConta/MinhaConta";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/cadastrar",
         element: <Cadastrar />,
+      },
+      {
+        path: "/minhaconta",
+        element: <MinhaConta />,
       },
     ],
   },

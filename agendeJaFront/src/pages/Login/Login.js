@@ -15,11 +15,14 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorSenha, setErrorSenha] = useState(false);
   const { performLogin } = useLogin();
   const { addUser } = useGetUserById();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isFetching, setIsFetching] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -29,8 +32,6 @@ const Login = () => {
     }));
   };
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -38,24 +39,33 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setIsFetching(true);
+    if (loginData.email === "" && loginData.password === "") {
+      setErrorEmail(true);
+      setErrorSenha(true);
+    } else if (loginData.email === "") {
+      setErrorEmail(true);
+    } else if (loginData.password === "") {
+      setErrorSenha(true);
+    } else {
+      setIsFetching(true);
 
-    setTimeout(() => {
-      setIsFetching(false);
-    }, 3000);
+      setTimeout(() => {
+        setIsFetching(false);
+      }, 3000);
 
-    try {
-      const dados = await performLogin(loginData);
-      const dadosUser = await addUser(dados.message);
-      console.log(dados);
-      console.log(dadosUser);
-      dispatch(changeUser(dados.message));
+      try {
+        const dados = await performLogin(loginData);
+        const dadosUser = await addUser(dados.message);
+        console.log(dados);
+        console.log(dadosUser);
+        dispatch(changeUser(dados.message));
 
-      dispatch(addInfoUser(dadosUser));
+        dispatch(addInfoUser(dadosUser));
 
-      navigate("/");
-    } catch (error) {
-      console.error(error);
+        navigate("/");
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -73,7 +83,15 @@ const Login = () => {
               placeholder="Email"
               value={loginData.email}
               onChange={handleInputChange}
+              className={errorEmail ? "error" : ""}
             />
+            {errorEmail ? (
+              <span className="spanError">
+                Por favor preencher este campo...
+              </span>
+            ) : (
+              ""
+            )}
           </label>
           <label>
             <input
@@ -81,16 +99,27 @@ const Login = () => {
               placeholder="Senha"
               name="password"
               value={loginData.password}
-              className="password-input"
               onChange={handleInputChange}
+              className={errorSenha ? "password-input error" : "password-input"}
             />
             <button
               type="button"
               onClick={toggleShowPassword}
-              className="password-toggle-button"
+              className={
+                errorSenha
+                  ? "password-toggle-button error"
+                  : "password-toggle-button"
+              }
             >
               {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
+            {errorSenha ? (
+              <span className="spanError">
+                Por favor preencher este campo...
+              </span>
+            ) : (
+              ""
+            )}
           </label>
           <div className="functions">
             <Link to="/">Esqueceu a senha?</Link>

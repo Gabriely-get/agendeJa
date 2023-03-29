@@ -10,11 +10,11 @@ export default function Login() {
     birthday: "",
     phone: "",
     username: "",
+    surname: "",
     cpf: "",
   });
   const { registerUser } = useRegisterCliente();
 
-  // const [sobreNome, setSobreNome] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleInputChange = (event) => {
@@ -54,14 +54,23 @@ export default function Login() {
           <label>
             <input
               type="text"
-              value={register.phone}
-              name="phone"
+              value={register.surname}
+              name="surname"
               placeholder="Sobrenome"
               onChange={handleInputChange}
             />
           </label>
         </div>
         <div className="columnEmail">
+          <label>
+            <input
+              type="text"
+              value={register.phone}
+              name="phone"
+              placeholder="Telefone"
+              onChange={handleInputChange}
+            />
+          </label>
           <label>
             <input
               type="email"
@@ -76,7 +85,6 @@ export default function Login() {
         <div className="columnCpfDt">
           <label>
             <input
-              type="number"
               value={register.cpf}
               name="cpf"
               placeholder="CPF"

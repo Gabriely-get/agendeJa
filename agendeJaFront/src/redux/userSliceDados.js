@@ -3,17 +3,17 @@ import { createSlice } from "@reduxjs/toolkit";
 export const slice = createSlice({
   name: "userDados",
   initialState: {
-    id: "",
-    email: "",
-    password: "",
-    username: "",
-    birthday: "",
-    cpf: "",
-    phone: "",
-    isActive: "",
-    createAt: "",
-    updateAt: "",
-    roles: "",
+    id: null,
+    email: null,
+    password: null,
+    username: null,
+    birthday: null,
+    cpf: null,
+    phone: null,
+    isActive: null,
+    createAt: null,
+    updateAt: null,
+    roles: null,
   },
   reducers: {
     addInfoUser(state, { payload }) {
@@ -32,10 +32,26 @@ export const slice = createSlice({
         roles: payload.data.roles,
       };
     },
+    removeUser(state) {
+      return {
+        ...state,
+        id: null,
+        email: null,
+        password: null,
+        username: null,
+        birthday: null,
+        cpf: null,
+        phone: null,
+        isActive: null,
+        createAt: null,
+        updateAt: null,
+        roles: null,
+      };
+    },
   },
 });
 
-export const { addInfoUser } = slice.actions;
+export const { addInfoUser, removeUser } = slice.actions;
 
 export const selectUser = (state) => state.userDados;
 
