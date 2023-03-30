@@ -11,7 +11,13 @@ import java.util.Date;
 @UtilityClass
 public class UserFieldsValidation {
     public void userPOJOValidation(User user) {
-        validateComuns(user.getEmail(), user.getUsername(), user.getPassword(), user.getBirthday(), user.getPhone());
+        validateComuns(user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getPassword(),
+                user.getBirthday(),
+                user.getPhone());
+
         if (Strings.trimToNull(user.getCpf()) == null || user.getCpf().isEmpty() || user.getCpf().isBlank()) {
             throw new IllegalUserArgumentException("CPF is required");
         }
@@ -21,14 +27,17 @@ public class UserFieldsValidation {
 
     }
 
-    private static void validateComuns(String email, String name, String password, Date birthday, String phone) {
+    private static void validateComuns(String email, String name, String lastName, String password, Date birthday, String phone) {
         if (Strings.trimToNull(email) == null || email.isEmpty() || email.isBlank()) {
             throw new IllegalUserArgumentException("E-mail is required");
         }
         if (Strings.trimToNull(name) == null || name.isEmpty() || name.isBlank()) {
-            throw new IllegalUserArgumentException("Name is required");
+            throw new IllegalUserArgumentException("First name is required");
         }
         if (name.length() < 5) throw new IllegalUserArgumentException("Invalid username length!");
+        if (Strings.trimToNull(lastName) == null || lastName.isEmpty() || lastName.isBlank()) {
+            throw new IllegalUserArgumentException("Last name is required");
+        }
         if (Strings.trimToNull(password) == null || password.isEmpty() || password.isBlank()) {
             throw new IllegalUserArgumentException("Password is required");
         }
