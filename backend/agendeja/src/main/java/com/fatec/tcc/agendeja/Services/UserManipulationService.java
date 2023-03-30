@@ -1,5 +1,8 @@
 package com.fatec.tcc.agendeja.Services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fatec.tcc.agendeja.CustomExceptions.IllegalUserArgumentException;
+import com.fatec.tcc.agendeja.Entities.PaginationType;
 import com.fatec.tcc.agendeja.Entities.User;
 import com.fatec.tcc.agendeja.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,25 +17,60 @@ import java.util.List;
 
 @Service
 public class UserManipulationService {
+
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> findAllPageable(int offset, int limit) {
-        int findAllSize = this.userRepository.findAll().size();
-        if (findAllSize == 0 || offset*limit > findAllSize) return new ArrayList<>();
+    public List<User> findAllPageable(String paginationType, int offset, int limit) {
+        //TODO
+        // "welcome to baeldung", s.replace('s', 'e') replace / in date for -
+        // check if datew is vallid
 
+        if (offset < 0 || limit < 0) throw new IllegalArgumentException("Invalid pagination arguments!");
+
+        int paginationTypeId = 0;
         Pageable usersPageable = PageRequest.of(offset,limit);
-        Page<User> usersPage = this.userRepository.findAll(usersPageable);
+        Page<User> usersPage;
 
-        return usersPage.toList();
+        if (paginationType.matches("[0-9]+")) {
+            if ( !PaginationType.paginationTypeExists( Integer.parseInt(paginationType) ) )
+                throw new IllegalArgumentException("Is not possible to make pagination. This type of pagination does not exists!");
+            paginationTypeId = Integer.parseInt( paginationType );
+        } else {
+            if (!PaginationType.paginationTypeExists(paginationType))
+                throw new IllegalArgumentException("Is not possible to make pagination. This type of pagination does not exists!");
+        }
+
+        if (paginationType.equals("SNA") || paginationTypeId == 1) {
+            usersPage = this.userRepository.getAllOrderNameByAscPageable(usersPageable);
+            return usersPage.toList();
+        }
+
+        if (paginationType.equals("SND") || paginationTypeId == 2) {
+            usersPage = this.userRepository.getAllOrderNameByDescPageable(usersPageable);
+            return usersPage.toList();
+        }
+
+        if (paginationType.equals("SBA") || paginationTypeId == 3) {
+            usersPage = this.userRepository.getAllOrderBirthdayByAscPageable(usersPageable);
+            return usersPage.toList();
+        }
+
+        if (paginationType.equals("SBD") || paginationTypeId == 4) {
+            usersPage = this.userRepository.getAllOrderBirthdayByDescPageable(usersPageable);
+            return usersPage.toList();
+        }
+
+        throw new RuntimeException("Some error occurred on pagination");
     }
 
+    //TODO concatenar e fazer query select * e ordenar o selecionado
     public List<User> sortByUsernameAsc() {
-        return this.userRepository.findAll(Sort.by(Sort.Direction.ASC, "username"));
+        return this.userRepository.getAllOrderNameByAsc();
     }
 
     public List<User> sortByUsernameDesc() {
-        return this.userRepository.findAll(Sort.by(Sort.Direction.DESC, "username"));
+        return this.userRepository.getAllOrderNameByDesc();
     }
 
     public List<User> sortByBirthdayAsc() {
@@ -44,7 +82,7 @@ public class UserManipulationService {
     }
 
     public List<User> searchUsersByUsernameContains(String word) {
-        return this.userRepository.findAllByUsernameContains(word);
+        return this.userRepository.findAllByFullusernameContains(word);
     }
 
     public List<User> searchUsersByBirthdayContains(String date) {
@@ -62,11 +100,19 @@ public class UserManipulationService {
 
     public List<User> searchUsersByUsernameContainsOrderByAsc(String word) {
 
-        return this.userRepository.findAllByUsernameContainsOrderByAsc(word);
+        return this.userRepository.getAllFullusernameContainsOrderByAsc(word);
     }
 
     public List<User> searchUsersByUsernameContainsOrderByDesc(String word) {
-        return this.userRepository.findAllByUsernameContainsOrderByDesc(word);
+        return this.userRepository.findAllByFullusernameContainsOrderByDesc(word);
+    }
+
+    public List<User> getAllUsersOrderByOlder() {
+        return this.userRepository.findAllOrderByCreateAtAsc();
+    }
+
+    public List<User> getAllUsersOrderByNewest() {
+        return this.userRepository.findAllOrderByCreateAtDesc();
     }
 
 }

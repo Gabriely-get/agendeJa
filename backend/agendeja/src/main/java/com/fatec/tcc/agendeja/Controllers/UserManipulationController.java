@@ -1,8 +1,10 @@
 package com.fatec.tcc.agendeja.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
+import com.fatec.tcc.agendeja.Entities.PaginationType;
 import com.fatec.tcc.agendeja.Entities.User;
 import com.fatec.tcc.agendeja.Services.UserManipulationService;
 import com.fatec.tcc.agendeja.Services.UserService;
@@ -23,17 +25,18 @@ public class UserManipulationController {
     @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
-    @GetMapping("/pag/{offset}/{limit}")
+    @GetMapping("/pag/{offset}/{limit}/{typePagination}")
     public ResponseEntity<ObjectNode> getUsersPageable(
+            @PathVariable("typePagination") String paginationType,
             @PathVariable("offset") int offset,
             @PathVariable("limit") int limit
     ) throws JsonProcessingException {
         try {
-            List<User> usersPaged = this.userManipulationService.findAllPageable(offset, limit);
+            List<User> usersPaged = this.userManipulationService.findAllPageable(paginationType, offset, limit);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(usersPaged).build(), HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -44,7 +47,7 @@ public class UserManipulationController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(sortedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -55,7 +58,7 @@ public class UserManipulationController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(sortedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -66,7 +69,7 @@ public class UserManipulationController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(sortedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -77,7 +80,7 @@ public class UserManipulationController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(sortedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -88,7 +91,7 @@ public class UserManipulationController {
             System.out.println(word);
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(searchedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -99,7 +102,7 @@ public class UserManipulationController {
             System.out.println(date);
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(searchedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -111,7 +114,7 @@ public class UserManipulationController {
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(searchedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -123,7 +126,7 @@ public class UserManipulationController {
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(searchedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -135,7 +138,7 @@ public class UserManipulationController {
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(searchedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -147,7 +150,29 @@ public class UserManipulationController {
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(searchedUsers).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/sort/oldest")
+    public ResponseEntity<ObjectNode> getUsersOrderByOldest() {
+        try {
+            List<User> sortedUsers = this.userManipulationService.getAllUsersOrderByOlder();
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(sortedUsers).build(), HttpStatus.OK);
+        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/sort/newest")
+    public ResponseEntity<ObjectNode> getUsersOrderByNewest() {
+        try {
+            List<User> sortedUsers = this.userManipulationService.getAllUsersOrderByNewest();
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(sortedUsers).build(), HttpStatus.OK);
+        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
