@@ -35,9 +35,9 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withUser(user).build(), HttpStatus.OK);
         }catch (UserDoesNotExistsException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -48,7 +48,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(users).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -59,7 +59,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withAllUsers(users).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -70,7 +70,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (RuntimeException | SQLIntegrityConstraintViolationException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -81,7 +81,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -92,7 +92,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
