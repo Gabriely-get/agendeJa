@@ -1,78 +1,140 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useLogin from "../../hooks/useLogin";
+import useGetUserById from "../../hooks/useGetUserById";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import "./login.scss";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { changeUser } from "../../redux/userSlice";
+import { addInfoUser } from "../../redux/userSliceDados";
+import { useNavigate } from "react-router-dom";
+import Loader from "../../components/Loader/Loader";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+const Login = () => {
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorSenha, setErrorSenha] = useState(false);
+  const { performLogin } = useLogin();
+  const { addUser } = useGetUserById();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setLoginData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    axios
-      .post("http://localhost:8080/agenda/login", {
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        console.log(response.data);
-        console.log("Deubom" + response.data);
-        // atualizar o estado do componente com a mensagem de sucesso
-        alert("Logado com sucesso");
-      })
-      .catch((error) => {
-        console.log(error.response.data);
-        // atualizar o estado do componente com a mensagem de erro
-      });
+    if (loginData.email === "" && loginData.password === "") {
+      setErrorEmail(true);
+      setErrorSenha(true);
+    } else if (loginData.email === "") {
+      setErrorEmail(true);
+    } else if (loginData.password === "") {
+      setErrorSenha(true);
+    } else {
+      setIsFetching(true);
+
+      setTimeout(() => {
+        setIsFetching(false);
+      }, 3000);
+
+      try {
+        const dados = await performLogin(loginData);
+        const dadosUser = await addUser(dados.message);
+        console.log(dados);
+        console.log(dadosUser);
+        dispatch(changeUser(dados.message));
+
+        dispatch(addInfoUser(dadosUser));
+
+        navigate("/");
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
-    <div className="login">
-      <h1>Fazer login</h1>
-      <span>Entre com sua conta criada</span>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
-        <label>
-          <input
-            type={showPassword ? "text" : "password"}
-            placeholder="Senha"
-            value={password}
-            className="password-input"
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <button
-            type="button"
-            onClick={toggleShowPassword}
-            className="password-toggle-button"
-          >
-            {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible /> }
-          </button>
-        </label>
-        <div className="functions">
-          <Link>Esqueceu a senha?</Link>
-          <button type="submit">Entrar</button>
-        </div>
-        <div className="register">
-          <span>
-            Não possui uma conta? {""}
-            <Link to="/cadastrar">Crie uma!</Link>
-          </span>
-        </div>
-      </form>
-    </div>
+    <>
+      {isFetching ? <Loader /> : ""}
+      <div className="login">
+        <h1>Fazer login</h1>
+        <span>Entre com sua conta criada</span>
+        <form onSubmit={handleSubmit}>
+          <label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={loginData.email}
+              onChange={handleInputChange}
+              className={errorEmail ? "error" : ""}
+            />
+            {errorEmail ? (
+              <span className="spanError">
+                Por favor preencher este campo...
+              </span>
+            ) : (
+              ""
+            )}
+          </label>
+          <label>
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Senha"
+              name="password"
+              value={loginData.password}
+              onChange={handleInputChange}
+              className={errorSenha ? "password-input error" : "password-input"}
+            />
+            <button
+              type="button"
+              onClick={toggleShowPassword}
+              className={
+                errorSenha
+                  ? "password-toggle-button error"
+                  : "password-toggle-button"
+              }
+            >
+              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+            </button>
+            {errorSenha ? (
+              <span className="spanError">
+                Por favor preencher este campo...
+              </span>
+            ) : (
+              ""
+            )}
+          </label>
+          <div className="functions">
+            <Link to="/">Esqueceu a senha?</Link>
+            <button type="submit">Entrar</button>
+          </div>
+          <div className="register">
+            <span>
+              Não possui uma conta? {""}
+              <Link to="/cadastrar">Crie uma!</Link>
+            </span>
+          </div>
+        </form>
+      </div>
+    </>
   );
-}
+};
+
+export default Login;

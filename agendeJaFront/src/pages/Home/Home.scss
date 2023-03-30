@@ -1,3 +1,6 @@
+html{
+  scroll-behavior: smooth;
+}
 .section01 {
   .divBox {
     display: flex;
@@ -112,7 +115,6 @@
 }
 
 .section04 {
-  margin-top: 50px;
   background: #4b9fe1;
   position: absolute;
   left: 0;
@@ -161,7 +163,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   h2 {
     font-weight: 700;
     line-height: 59px;
@@ -178,6 +179,7 @@
 .section06 {
   position: relative;
   top: 950px;
+
   .divBox {
     display: flex;
     align-items: center;
@@ -256,6 +258,7 @@
     display: grid;
     text-align: center;
     justify-content: center;
+    margin-bottom: 40px;
 
     h2 {
       font-size: 26px;
@@ -267,7 +270,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      width: 80vw;
+      width: auto;
 
       .divSon {
         display: grid;
@@ -574,16 +577,16 @@
 }
 
 @media screen and (min-width: 1124px) {
-.section06 {
-  top: 700px;
-}
+  .section06 {
+    top: 700px;
+  }
 }
 
 @media screen and (min-width: 1230px) {
   .section06 {
     top: 715px;
   }
-  }
+}
 
 @media screen and (min-width: 1440px) {
   .section01 {

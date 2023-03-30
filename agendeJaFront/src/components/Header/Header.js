@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import LogoImg from "../../assets/agendeJa-logo.svg";
 import "./Header.scss";
+import MenuHeader from "./Menu/MenuHeader";
 
 export default function Header() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const state = useSelector((state) => state?.user?.isLogged);
+  const stateUser = useSelector((state) => state?.userDados);
 
   return (
     <nav className="navigation">
@@ -44,40 +48,36 @@ export default function Header() {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <Link to="/" className="anchor">
-                Funcionalidade
-              </Link>
+              <a  className="anchor" href="#section03">Funcionalidade</a>
             </li>
             <li
               onClick={() => {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <Link to="/" className="anchor">
-                Clientes
-              </Link>
+            <a  className="anchor" href="#section05">Clientes</a>
             </li>
             <li
               onClick={() => {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <Link to="/" className="anchor">
-                Suporte
-              </Link>
-            </li>
-            <li
-              className="boxLogin"
-              onClick={() => {
-                setIsExpanded(!isExpanded);
-              }}
-            >
-              <Link to="/login" className="anchor login">
-                Entrar
-              </Link>
+             <a  className="anchor" href="#section06">Suporte</a>
             </li>
           </ul>
         </div>
+        {state ? (
+          <div className={state ? "boxLogin user" : "boxLogin"}>
+            <span>Bem vindo {stateUser.username}</span>
+            <MenuHeader />
+          </div>
+        ) : (
+          <div className="boxLogin">
+            <Link to="/login" className="anchor login">
+              Entrar
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
   );
