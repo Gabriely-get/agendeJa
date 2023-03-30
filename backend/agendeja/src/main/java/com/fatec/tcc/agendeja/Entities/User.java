@@ -10,26 +10,32 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public @Data class User {
+    public User() {
+
+    }
+
     public User(User user) {
         UserFieldsValidation.userPOJOValidation(user);
 
-        this.setUsername(user.getUsername());
         this.setEmail(user.getEmail());
         this.setPassword(user.getPassword());
         this.setCpf(user.getCpf());
         this.setPhone(user.getPhone());
         this.setBirthday(user.getBirthday());
         this.setIsActive(user.getIsActive());
+        this.setFirstName(user.getFirstName());
+        this.setLastName(user.getLastName());
+        this.setRoles(user.getRoles());
     }
 
     @Id
@@ -42,7 +48,9 @@ public @Data class User {
     @NotBlank
     private String password;
     @NotBlank
-    private String username;
+    private String firstName;
+    @NotBlank
+    private String lastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "UTC-3")
     @Temporal(TemporalType.DATE)
     private Date birthday;
@@ -60,16 +68,37 @@ public @Data class User {
     @LastModifiedDate
     private Timestamp updateAt;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+            name = "user_role",
+            joinColumns = @JoinColumn(
+                    name = "user_id" ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id" ))
     private Set<Role> roles = new HashSet<>();
 
-    public User() {
-
+    private String getFullUsername() {
+        return this.getFirstName().trim() + ' ' + this.getLastName();
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName.trim();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName.trim();
+    }
+
+    public  void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+//    private Collection<? extends GrantedAuthority> getRoles(User user) {
+//    List<GrantedAuthority> authorities = new ArrayList<>();
+//    for (Role role : user.getRoles()) {
+//      authorities.add(new SimpleGrantedAuthority(role.getName()));
+//    }
+//    return authorities;
+//  }
 
 }
