@@ -4,11 +4,11 @@ import com.fatec.tcc.agendeja.Entities.User;
 import jakarta.persistence.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,29 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByEmail(String email);
     boolean existsUserByPhone(String phone);
     Optional<User> findUserByEmail(String email);
-    List<User> findAllByUsernameContains(String word);
+
+    @Query("Select u from User u order by concat(u.firstName, ' ', u.lastName) asc")
+    List<User> getAllOrderNameByAsc();
+
+    @Query("Select u from User u order by concat(u.firstName, ' ', u.lastName) desc")
+    List<User> getAllOrderNameByDesc();
+
+    @Query(value = "Select u from User u order by concat(u.firstName, ' ', u.lastName) asc")
+    Page<User> getAllOrderNameByAscPageable(Pageable pageable);
+    @Query(value = "Select u from User u order by concat(u.firstName, ' ', u.lastName) desc")
+    Page<User> getAllOrderNameByDescPageable(Pageable pageable);
+
+    @Query(value = "Select u from User u order by u.birthday asc")
+    Page<User> getAllOrderBirthdayByAscPageable(Pageable pageable);
+    @Query(value = "Select u from User u order by u.birthday desc")
+    Page<User> getAllOrderBirthdayByDescPageable(Pageable pageable);
+
+//    @Query("Select u from User u order by concat(u.firstName, ' ', u.lastName) desc limit 10 offset 5")
+//    List<User> getAllOrderByDesc();
+
+
+    @Query("Select u from User u where u.firstName like %:word% or u.lastName like %:word%")
+    List<User> findAllByFullusernameContains(String word);
 
     @Query("Select u from User u where cast(u.birthday as string) like %:date%")
     List<User> findAllByBirthdayContains(String date);
@@ -31,10 +53,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("Select u from User u where cast(u.birthday as string) like %:date% order by u.birthday desc")
     List<User> findAllByBirthdayContainsOrderByDesc(String date);
 
-    @Query("Select u from User u where u.username like %:word% order by u.username asc")
-    List<User> findAllByUsernameContainsOrderByAsc(String word);
+    @Query("Select u from User u where u.firstName like %:word% or u.lastName like %:word% order by concat(u.firstName,' ',u.lastName) asc")
+    List<User> getAllFullusernameContainsOrderByAsc(String word);
 
-    @Query("Select u from User u where u.username like %:word% order by u.username desc")
-    List<User> findAllByUsernameContainsOrderByDesc(String word);
+    @Query("Select u from User u where u.firstName like %:word% or u.lastName like %:word% order by concat(u.firstName,' ',u.lastName) desc")
+    List<User> findAllByFullusernameContainsOrderByDesc(String word);
+
+    @Query("Select u from User u order by u.createAt asc")
+    List<User> findAllOrderByCreateAtAsc();
+
+    @Query("Select u from User u order by u.createAt desc")
+    List<User> findAllOrderByCreateAtDesc();
 
 }
