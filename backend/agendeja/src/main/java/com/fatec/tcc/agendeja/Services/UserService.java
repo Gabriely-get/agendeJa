@@ -2,7 +2,9 @@ package com.fatec.tcc.agendeja.Services;
 
 import com.fatec.tcc.agendeja.CustomExceptions.IllegalUserArgumentException;
 import com.fatec.tcc.agendeja.CustomExceptions.UserDoesNotExistsException;
+import com.fatec.tcc.agendeja.Entities.Role;
 import com.fatec.tcc.agendeja.Entities.User;
+import com.fatec.tcc.agendeja.Repositories.RoleRepository;
 import com.fatec.tcc.agendeja.Repositories.UserRepository;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public User getUserById(Long id) {
         Optional<User> optionalUser = this.userRepository.findById(id);
@@ -71,6 +76,9 @@ public class UserService {
         user.setPassword(hashedPass);
 
         user.setIsActive(true);
+        System.out.println(this.roleRepository.findByName("USER"));
+        Role role = this.roleRepository.findByName("USER");
+        user.addRole(role);
         this.userRepository.save(new User(user));
 
     }
@@ -89,12 +97,17 @@ public class UserService {
         if (optionalUser.isEmpty()) throw new UserDoesNotExistsException("User does not exists");
         User userToUpdate = optionalUser.get();
 
-        if ( Objects.nonNull(user.getUsername()) || !(Strings.trimToNull(user.getUsername()) == null) ) {
-            if (user.getUsername().length() < 5)
+        if ( Objects.nonNull(user.getFirstName()) || !(Strings.trimToNull(user.getFirstName()) == null) ) {
+            if (user.getFirstName().length() < 2)
                 throw new IllegalUserArgumentException("Invalid username length!");
 
-            userToUpdate.setUsername(user.getUsername());
+            userToUpdate.setFirstName(user.getFirstName().trim());
         }
+
+        if ( Objects.nonNull(user.getLastName()) || !(Strings.trimToNull(user.getLastName()) == null) )
+            userToUpdate.setLastName(user.getLastName().trim());
+        else
+            throw new IllegalUserArgumentException("Invalid username length!");
 
         if (Objects.nonNull(user.getPhone()) || !(Strings.trimToNull(user.getPhone()) == null) ) {
             if (user.getPhone().length() != 11)
@@ -103,7 +116,7 @@ public class UserService {
             if (!user.getPhone().matches("[0-9]+"))
                 throw new IllegalUserArgumentException("Invalid phone!");
 
-            userToUpdate.setPhone(user.getPhone());
+            userToUpdate.setPhone(user.getPhone().trim());
         }
 
         userToUpdate.setUpdateAt(Timestamp.from(Instant.now()));
