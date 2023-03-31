@@ -74,7 +74,7 @@ export default function Header() {
         </div>
         {state ? (
           <div className={state ? "boxLogin user" : "boxLogin"}>
-            <span>Bem vindo {stateUser.username}</span>
+            <span>Bem vindo {stateUser.firstName}</span>
             <MenuHeader />
           </div>
         ) : (

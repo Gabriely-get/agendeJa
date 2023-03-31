@@ -11,6 +11,7 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import MinhaConta from "./pages/MinhaConta/MinhaConta";
+import Administrador from "./pages/Administrador/Administrador";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/minhaconta",
         element: <MinhaConta />,
+      },
+      {
+        path: "/administrador",
+        element: <Administrador />,
       },
     ],
   },

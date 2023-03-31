@@ -9,6 +9,7 @@ export default function useGetUserById() {
 
     try {
       const response = await axios.get(url);
+      console.log("url atual  " + url);
 
       return response.data;
     } catch (error) {

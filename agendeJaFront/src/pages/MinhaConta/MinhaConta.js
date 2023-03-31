@@ -10,8 +10,12 @@ export default function MinhaConta() {
   const state = useSelector((state) => state?.user);
   const userData = useSelector((state) => state?.userDados);
   const navigate = useNavigate();
-  const [newName, setNewName] = useState("");
-  const [newPhone, setNewPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [phone, setPhone] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [cpf, setCpf] = useState("");
   const { updateUser } = useUpdateDataUser();
   const { addUser } = useGetUserById();
   const dispatch = useDispatch();
@@ -20,17 +24,14 @@ export default function MinhaConta() {
     if (state?.isLogged === false) {
       navigate("/");
     } else {
-      setNewName(userData.username);
-      setNewPhone(userData.phone);
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setEmail(userData.email);
+      setCpf(userData.cpf);
+      setBirthday(userData.birthday);
+      setPhone(userData.phone);
     }
   }, [navigate, state, userData]);
-
-  function handleInputName(event) {
-    setNewName(event.target.value);
-  }
-  function handleInputPhone(event) {
-    setNewPhone(event.target.value);
-  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,8 +39,9 @@ export default function MinhaConta() {
     try {
       // eslint-disable-next-line no-unused-vars
       const dados = await updateUser(state?.id_user, {
-        username: newName,
-        phone: newPhone,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
       });
       const updateReduxUser = await addUser(state?.id_user);
       dispatch(addInfoUser(updateReduxUser));
@@ -57,17 +59,43 @@ export default function MinhaConta() {
           <label>
             <input
               type="text"
-              value={newName}
+              value={firstName}
               placeholder="Nome"
-              onChange={handleInputName}
+              onChange={(event) => {
+                setFirstName(event.target.value);
+              }}
             />
           </label>
           <label>
             <input
-              type="tel"
-              value={newPhone}
-              placeholder="Telefone"
-              onChange={handleInputPhone}
+              type="text"
+              value={lastName}
+              placeholder="Sobrenome"
+              onChange={(event) => {
+                setLastName(event.target.value);
+              }}
+            />
+          </label>
+        </div>
+        <div className="columnEmail">
+          <label>
+            <input type="text" value={phone} placeholder="Telefone" />
+          </label>
+          <label>
+            <input type="email" value={email} disabled placeholder="Email" />
+          </label>
+        </div>
+
+        <div className="columnCpfDt">
+          <label>
+            <input value={cpf} disabled placeholder="CPF" />
+          </label>
+          <label>
+            <input
+              type="date"
+              value={birthday}
+              disabled
+              placeholder="Data de nascimento"
             />
           </label>
         </div>

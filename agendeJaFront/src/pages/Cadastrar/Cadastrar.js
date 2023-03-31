@@ -2,35 +2,35 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useRegisterCliente from "../../hooks/useRegisterClient";
 import "./cadastrar.scss";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [register, setRegister] = useState({
-    email: "",
-    password: "",
-    birthday: "",
-    phone: "",
-    username: "",
-    surname: "",
-    cpf: "",
-  });
-  const { registerUser } = useRegisterCliente();
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [phone, setPhone] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [cpf, setCpf] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setRegister((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const { registerUser } = useRegisterCliente();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const dados = await registerUser(register);
+      const dados = await registerUser({
+        email: email,
+        password: password,
+        birthday: birthday,
+        phone: phone,
+        firstName: firstName,
+        lastName: lastName,
+        cpf: cpf,
+      });
       console.log(dados);
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -45,19 +45,21 @@ export default function Login() {
           <label>
             <input
               type="text"
-              value={register.username}
-              name="username"
+              value={firstName}
               placeholder="Nome"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setFirstName(event.target.value);
+              }}
             />
           </label>
           <label>
             <input
               type="text"
-              value={register.surname}
-              name="surname"
+              value={lastName}
               placeholder="Sobrenome"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setLastName(event.target.value);
+              }}
             />
           </label>
         </div>
@@ -65,19 +67,21 @@ export default function Login() {
           <label>
             <input
               type="text"
-              value={register.phone}
-              name="phone"
+              value={phone}
               placeholder="Telefone"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setPhone(event.target.value);
+              }}
             />
           </label>
           <label>
             <input
               type="email"
-              value={register.email}
-              name="email"
+              value={email}
               placeholder="Email"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setEmail(event.target.value);
+              }}
             />
           </label>
         </div>
@@ -85,19 +89,21 @@ export default function Login() {
         <div className="columnCpfDt">
           <label>
             <input
-              value={register.cpf}
-              name="cpf"
+              value={cpf}
               placeholder="CPF"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setCpf(event.target.value);
+              }}
             />
           </label>
           <label>
             <input
               type="date"
-              value={register.birthday}
-              name="birthday"
+              value={birthday}
               placeholder="Data de nascimento"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setBirthday(event.target.value);
+              }}
             />
           </label>
         </div>
@@ -106,10 +112,11 @@ export default function Login() {
           <label>
             <input
               type="password"
-              value={register.password}
-              name="password"
+              value={password}
               placeholder="Senha"
-              onChange={handleInputChange}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
             />
           </label>
           <label>

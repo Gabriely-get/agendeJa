@@ -56,10 +56,9 @@ const Login = () => {
       try {
         const dados = await performLogin(loginData);
         const dadosUser = await addUser(dados.message);
-        console.log(dados);
+
         console.log(dadosUser);
         dispatch(changeUser(dados.message));
-
         dispatch(addInfoUser(dadosUser));
 
         navigate("/");
