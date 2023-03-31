@@ -48,27 +48,21 @@ export default function Header() {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <Link to="/" className="anchor">
-                Funcionalidade
-              </Link>
+              <a  className="anchor" href="#section03">Funcionalidade</a>
             </li>
             <li
               onClick={() => {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <Link to="/" className="anchor">
-                Clientes
-              </Link>
+            <a  className="anchor" href="#section05">Clientes</a>
             </li>
             <li
               onClick={() => {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <Link to="/" className="anchor">
-                Suporte
-              </Link>
+             <a  className="anchor" href="#section06">Suporte</a>
             </li>
           </ul>
         </div>

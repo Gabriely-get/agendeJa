@@ -15,7 +15,7 @@ import "./Home.scss";
 function Home() {
   return (
     <>
-      <section className="section01">
+      <section className="section01" id="section01">
         <div className="divBox">
           <div className="text">
             <h2>
@@ -48,7 +48,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <section className="section03">
+      <section className="section03" id="section03">
         <h2>Tudo que você precisa...</h2>
         <div className="divBox">
           <div className="divSon">
@@ -94,7 +94,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <section className="section05">
+      <section className="section05" id="section05">
         <h2>Conheça nossos clientes</h2>
         <div className="divBox">
           <div className="divSon">
@@ -113,7 +113,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <section className="section06">
+      <section className="section06" id="section06">
         <div className="divBox">
           <div className="text">
             <h2>
