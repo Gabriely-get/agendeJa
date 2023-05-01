@@ -79,21 +79,26 @@ export default function MinhaConta() {
         </div>
         <div className="columnEmail">
           <label>
-            <input type="text" value={phone} placeholder="Telefone" />
+            <input type="text" defaultValue={phone} placeholder="Telefone" />
           </label>
           <label>
-            <input type="email" value={email} disabled placeholder="Email" />
+            <input
+              type="email"
+              defaultValue={email}
+              disabled
+              placeholder="Email"
+            />
           </label>
         </div>
 
         <div className="columnCpfDt">
           <label>
-            <input value={cpf} disabled placeholder="CPF" />
+            <input defaultValue={cpf} disabled placeholder="CPF" />
           </label>
           <label>
             <input
               type="date"
-              value={birthday}
+              defaultValue={birthday}
               disabled
               placeholder="Data de nascimento"
             />

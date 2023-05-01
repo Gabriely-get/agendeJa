@@ -2,10 +2,8 @@ import axios from "axios";
 
 export default function useUpdateDataUser() {
   const updateUser = async (value, { firstName, lastName, phone }) => {
-    let url =
-      "http://ec2-44-200-35-106.compute-1.amazonaws.com:5000/agenda/user/";
+    let url = `http://ec2-44-202-44-187.compute-1.amazonaws.com:5000/agenda/user/${value}`;
 
-    url += encodeURI(value);
     try {
       const response = await axios.put(url, {
         firstName: firstName,

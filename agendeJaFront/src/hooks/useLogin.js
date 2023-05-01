@@ -8,7 +8,7 @@ export default function useLogin() {
   const performLogin = async ({ email, password }) => {
     try {
       const response = await axios.post(
-        "http://ec2-44-200-35-106.compute-1.amazonaws.com:5000/agenda/login",
+        "http://ec2-44-202-44-187.compute-1.amazonaws.com:5000/agenda/login",
         {
           email,
           password,

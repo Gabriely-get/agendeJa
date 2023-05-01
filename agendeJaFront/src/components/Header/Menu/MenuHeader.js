@@ -7,7 +7,6 @@ import { logout } from "../../../redux/userSlice";
 import { removeUser } from "../../../redux/userSliceDados";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
 
 export default function MenuHeader() {
   const dispatch = useDispatch();
@@ -21,40 +20,38 @@ export default function MenuHeader() {
   }, [userData]);
 
   return (
-    <ChakraProvider>
-      <Menu>
-        {({ isOpen }) => (
-          <>
-            <MenuButton isActive={isOpen} as="Button">
-              {isOpen ? <RiArrowUpSFill /> : <RiArrowDownSFill />}
-            </MenuButton>
-            <MenuList>
+    <Menu>
+      {({ isOpen }) => (
+        <>
+          <MenuButton _active={isOpen}>
+            {isOpen ? <RiArrowUpSFill /> : <RiArrowDownSFill />}
+          </MenuButton>
+          <MenuList>
+            <MenuItem>
+              <Link to="/minhaconta" className="anchor">
+                Minha conta
+              </Link>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                dispatch(logout());
+                dispatch(removeUser());
+              }}
+            >
+              Sair
+            </MenuItem>
+            {isAdmin ? (
               <MenuItem>
-                <Link to="/minhaconta" className="anchor">
-                  Minha conta
+                <Link to="/administrador" className="anchor">
+                  Administrador
                 </Link>
               </MenuItem>
-              <MenuItem
-                onClick={() => {
-                  dispatch(logout());
-                  dispatch(removeUser());
-                }}
-              >
-                Sair
-              </MenuItem>
-              {isAdmin ? (
-                <MenuItem>
-                  <Link to="/administrador" className="anchor">
-                    Administrador
-                  </Link>
-                </MenuItem>
-              ) : (
-                ""
-              )}
-            </MenuList>
-          </>
-        )}
-      </Menu>
-    </ChakraProvider>
+            ) : (
+              ""
+            )}
+          </MenuList>
+        </>
+      )}
+    </Menu>
   );
 }

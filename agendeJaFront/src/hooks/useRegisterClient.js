@@ -12,7 +12,7 @@ export default function useLogin() {
   }) => {
     try {
       const response = await axios.post(
-        "http://ec2-44-200-35-106.compute-1.amazonaws.com:5000/agenda/user/",
+        "http://ec2-44-202-44-187.compute-1.amazonaws.com:5000/agenda/user/",
         {
           email: email,
           password: password,
