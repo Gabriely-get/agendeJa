@@ -11,7 +11,7 @@ export default function Header() {
   const stateUser = useSelector((state) => state?.userDados);
 
   return (
-    <nav className="navigation">
+    <header className="navigation">
       <div className="itens">
         <Link to="/" className="brand-name">
           <img className="logoImg" src={LogoImg} alt="AgendeJá" />
@@ -48,21 +48,27 @@ export default function Header() {
                 setIsExpanded(!isExpanded);
               }}
             >
-              <a  className="anchor" href="#section03">Funcionalidade</a>
+              <a className="anchor" href="#section03">
+                Funcionalidade
+              </a>
             </li>
             <li
               onClick={() => {
                 setIsExpanded(!isExpanded);
               }}
             >
-            <a  className="anchor" href="#section05">Clientes</a>
+              <a className="anchor" href="#section05">
+                Clientes
+              </a>
             </li>
             <li
               onClick={() => {
                 setIsExpanded(!isExpanded);
               }}
             >
-             <a  className="anchor" href="#section06">Suporte</a>
+              <a className="anchor" href="#section06">
+                Suporte
+              </a>
             </li>
           </ul>
         </div>
@@ -79,6 +85,6 @@ export default function Header() {
           </div>
         )}
       </div>
-    </nav>
+    </header>
   );
 }
