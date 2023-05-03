@@ -1,7 +1,7 @@
 import React from "react";
-import ClockHome from "../../../assets/clockHome.png";
-import ManageSearch from "../../../assets/manage_search.png";
-import NotificationsActive from "../../../assets/notifications_active.png";
+import ClockHome from "../../../../assets/clockHome.png";
+import ManageSearch from "../../../../assets/manage_search.png";
+import NotificationsActive from "../../../../assets/notifications_active.png";
 import "./everythingYouNeed.scss";
 
 export default function EverythingYouNeed() {
