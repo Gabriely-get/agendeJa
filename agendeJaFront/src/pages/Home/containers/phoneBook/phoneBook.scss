@@ -1,0 +1,123 @@
+.section06 {
+  position: relative;
+  top: 950px;
+
+  .divBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .text {
+      width: 384px;
+
+      h2 {
+        line-height: 39px;
+        font-weight: 700;
+        color: #4d4d4d;
+      }
+
+      p {
+        font-weight: 500;
+        line-height: 22px;
+        color: #666666;
+      }
+
+      a {
+        font-style: normal;
+        font-weight: 700;
+        line-height: 22px;
+        color: #4b9fe1;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .section06 {
+    .divBox {
+      display: grid;
+
+      .text,
+      .img {
+        width: auto;
+        text-align: center;
+      }
+
+      .img {
+        margin-top: 25px;
+
+        .cellphone {
+          width: 90%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .section06 {
+    top: 530px;
+
+    .divBox {
+      .img {
+        .cellphone {
+          width: 450px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .section06 {
+    top: 600px;
+
+    .divBox {
+      .text {
+        width: 310px;
+
+        h2 {
+          font-size: 32px;
+        }
+
+        p {
+          font-size: 18px;
+        }
+
+        a {
+          font-size: 18px;
+        }
+      }
+
+      .img {
+        .cellphone {
+          width: 592px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1124px) {
+  .section06 {
+    top: 700px;
+  }
+}
+
+@media screen and (min-width: 1230px) {
+  .section06 {
+    top: 715px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .section06 {
+    top: 815px;
+    .divBox {
+      .text {
+        width: 384px;
+      }
+    }
+  }
+}

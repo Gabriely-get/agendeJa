@@ -132,7 +132,9 @@ export default function Login() {
         </div>
         <div className="functions">
           <Link to="/login">Fazer login</Link>
-          <button type="submit">Cadastrar</button>
+          <button className="primaryDefault" type="submit">
+            Cadastrar
+          </button>
         </div>
       </form>
     </div>

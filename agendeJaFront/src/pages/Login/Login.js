@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import useLogin from "../../hooks/useLogin";
 import useGetUserById from "../../hooks/useGetUserById";
-import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import { Checkbox } from "@chakra-ui/react";
 import "./login.scss";
 import { useDispatch } from "react-redux";
 import { changeUser } from "../../redux/userSlice";
@@ -10,7 +10,7 @@ import { addInfoUser } from "../../redux/userSliceDados";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 
-const Login = () => {
+export default function Login() {
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -30,10 +30,6 @@ const Login = () => {
       ...prevData,
       [name]: value,
     }));
-  };
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (event) => {
@@ -57,21 +53,18 @@ const Login = () => {
         const dados = await performLogin(loginData);
         const dadosUser = await addUser(dados.message);
 
-        console.log(dadosUser);
         dispatch(changeUser(dados.message));
         dispatch(addInfoUser(dadosUser));
 
         navigate("/");
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     }
   };
 
   return (
     <>
       {isFetching ? <Loader /> : ""}
-      <div className="login">
+      <div className="pageLogin">
         <h1>Fazer login</h1>
         <span>Entre com sua conta criada</span>
         <form onSubmit={handleSubmit}>
@@ -101,17 +94,7 @@ const Login = () => {
               onChange={handleInputChange}
               className={errorSenha ? "password-input error" : "password-input"}
             />
-            <button
-              type="button"
-              onClick={toggleShowPassword}
-              className={
-                errorSenha
-                  ? "password-toggle-button error"
-                  : "password-toggle-button"
-              }
-            >
-              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-            </button>
+
             {errorSenha ? (
               <span className="spanError">
                 Por favor preencher este campo...
@@ -119,10 +102,20 @@ const Login = () => {
             ) : (
               ""
             )}
+            <Checkbox
+              isChecked={showPassword}
+              onChange={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              Mostrar senha
+            </Checkbox>
           </label>
           <div className="functions">
             <Link to="/">Esqueceu a senha?</Link>
-            <button type="submit">Entrar</button>
+            <button className="primaryDefault" type="submit">
+              Entrar
+            </button>
           </div>
           <div className="register">
             <span>
@@ -134,6 +127,4 @@ const Login = () => {
       </div>
     </>
   );
-};
-
-export default Login;
+}
