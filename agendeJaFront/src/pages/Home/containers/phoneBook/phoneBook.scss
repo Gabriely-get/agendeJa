@@ -10,6 +10,14 @@
     .text {
       width: 384px;
 
+      .imgsIcons {
+        margin-top: 20px;
+
+        img {
+          width: 156px;
+        }
+      }
+
       h2 {
         line-height: 39px;
         font-weight: 700;
@@ -20,14 +28,7 @@
         font-weight: 500;
         line-height: 22px;
         color: #666666;
-      }
-
-      a {
-        font-style: normal;
-        font-weight: 700;
-        line-height: 22px;
-        color: #4b9fe1;
-        text-decoration: none;
+        margin-top: 20px;
       }
     }
   }
@@ -60,6 +61,13 @@
     top: 530px;
 
     .divBox {
+      .text {
+        .imgsIcons {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+
       .img {
         .cellphone {
           width: 450px;
@@ -82,10 +90,6 @@
         }
 
         p {
-          font-size: 18px;
-        }
-
-        a {
           font-size: 18px;
         }
       }

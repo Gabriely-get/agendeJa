@@ -1,7 +1,7 @@
 import React from "react";
-import Cellphone from "../../../assets/cellphone.png";
-import IphoneDownLoad from "../../../assets/downloadIphone.png";
-import AndroidDownLoad from "../../../assets/downloadAndroid.png";
+import Cellphone from "../../../../assets/cellphone.png";
+import IphoneDownLoad from "../../../../assets/downloadIphone.png";
+import AndroidDownLoad from "../../../../assets/downloadAndroid.png";
 import "./phoneBook.scss";
 
 export default function PhoneBook() {
@@ -11,7 +11,7 @@ export default function PhoneBook() {
         <div className="text">
           <h2>Sua agenda disponível no seu celular</h2>
           <p>Acesse aonde estiver, em qualquer dispositivo.</p>
-          <div>
+          <div className="imgsIcons">
             <img
               className="btnIconIphone"
               src={IphoneDownLoad}

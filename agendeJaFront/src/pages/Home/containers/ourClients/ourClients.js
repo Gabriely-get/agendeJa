@@ -1,8 +1,8 @@
 import React from "react";
-import Google from "../../../assets/google.png";
-import MaryRocha from "../../../assets/maryRocha.png";
-import Meta from "../../../assets/meta.png";
-import Barbershop from "../../../assets/barbershop.png";
+import Google from "../../../../assets/google.png";
+import MaryRocha from "../../../../assets/maryRocha.png";
+import Meta from "../../../../assets/meta.png";
+import Barbershop from "../../../../assets/barbershop.png";
 import "./ourClients.scss";
 
 export default function OurClients() {

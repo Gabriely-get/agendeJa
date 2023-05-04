@@ -1,5 +1,5 @@
 import React from "react";
-import NotebookHome from "../../../assets/notebookHome.png";
+import NotebookHome from "../../../../assets/notebookHome.png";
 import "./notebookSection.scss";
 
 export default function notebookSection() {

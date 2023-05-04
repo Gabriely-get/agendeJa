@@ -1,5 +1,5 @@
 import React from "react";
-import Girl from "../../../assets/girl.png";
+import Girl from "../../../../assets/girl.png";
 import "./simpleScheduling.scss";
 
 export default function SimpleScheduling() {

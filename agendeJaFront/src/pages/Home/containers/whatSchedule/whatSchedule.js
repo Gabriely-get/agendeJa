@@ -1,5 +1,5 @@
 import React from "react";
-import Meeting from "../../../assets/meeting.png";
+import Meeting from "../../../../assets/meeting.png";
 import "./whatSchedule.scss";
 
 export default function WhatSchedule() {
