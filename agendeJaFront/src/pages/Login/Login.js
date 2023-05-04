@@ -113,7 +113,7 @@ export default function Login() {
           </label>
           <div className="functions">
             <Link to="/">Esqueceu a senha?</Link>
-            <button className="primaryDefault" type="submit">
+            <button className="primaryBtn" type="submit">
               Entrar
             </button>
           </div>

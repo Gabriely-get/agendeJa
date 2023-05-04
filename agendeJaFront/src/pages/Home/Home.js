@@ -6,6 +6,7 @@ import SimpleScheduling from "./containers/simpleScheduling/simpleScheduling";
 import OurClients from "./containers/ourClients/ourClients";
 import PhoneBook from "./containers/phoneBook/phoneBook";
 import "./Home.scss";
+import NewsLetter from "./containers/newsLetter/newsLetter";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <SimpleScheduling />
       <OurClients />
       <PhoneBook />
+      <NewsLetter />
     </>
   );
 }

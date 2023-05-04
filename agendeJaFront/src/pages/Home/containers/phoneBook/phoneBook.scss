@@ -43,14 +43,15 @@
       .img {
         width: auto;
         text-align: center;
+
+        .imgsIcons {
+          display: grid;
+          justify-content: center;
+        }
       }
 
       .img {
         margin-top: 25px;
-
-        .cellphone {
-          width: 90%;
-        }
       }
     }
   }

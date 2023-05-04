@@ -13,6 +13,10 @@ body,
 
 body {
   margin: 0;
+
+  :where(img, svg, video, canvas, audio, iframe, embed, object) {
+    display: unset;
+  }
 }
 
 input {
@@ -23,7 +27,7 @@ input {
   padding: 16px;
 }
 
-button.primaryDefault {
+button.primaryBtn {
   background: #4b9fe1;
   border-radius: 8px;
   color: #fff;
