@@ -1,7 +1,4 @@
 .section06 {
-  position: relative;
-  top: 950px;
-
   .divBox {
     display: flex;
     align-items: center;
@@ -59,8 +56,6 @@
 
 @media screen and (min-width: 769px) {
   .section06 {
-    top: 530px;
-
     .divBox {
       .text {
         .imgsIcons {
@@ -80,8 +75,6 @@
 
 @media screen and (min-width: 1024px) {
   .section06 {
-    top: 600px;
-
     .divBox {
       .text {
         width: 310px;
@@ -104,21 +97,8 @@
   }
 }
 
-@media screen and (min-width: 1124px) {
-  .section06 {
-    top: 700px;
-  }
-}
-
-@media screen and (min-width: 1230px) {
-  .section06 {
-    top: 715px;
-  }
-}
-
 @media screen and (min-width: 1440px) {
   .section06 {
-    top: 815px;
     .divBox {
       .text {
         width: 384px;
