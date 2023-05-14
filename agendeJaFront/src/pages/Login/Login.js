@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import useLogin from "../../hooks/useLogin";
-import useGetUserById from "../../hooks/useGetUserById";
+import useLogin from "../../hooks/login/useLogin";
+import useGetUserById from "../../hooks/user/useGetUserById";
 import { Checkbox } from "@chakra-ui/react";
 import "./login.scss";
 import { useDispatch } from "react-redux";

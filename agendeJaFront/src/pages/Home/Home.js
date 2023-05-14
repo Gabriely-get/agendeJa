@@ -11,10 +11,10 @@ import NewsLetter from "./containers/newsLetter/newsLetter";
 export default function Home() {
   return (
     <>
-      <NotebookSection />
+      <SimpleScheduling />
       <WhatSchedule />
       <EverythingYouNeed />
-      <SimpleScheduling />
+      <NotebookSection />
       <OurClients />
       <PhoneBook />
       <NewsLetter />

@@ -1,0 +1,32 @@
+.secondStepContainer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 50px;
+
+  .containerCentral {
+    width: 100%;
+
+    .categoryInfos {
+      margin-top: 50px;
+      gap: 16px;
+      display: flex;
+      justify-content: center;
+
+      .ghostBtn {
+        border: 1px solid #4b9fe1;
+        color: #4b9fe1;
+        font-weight: 700;
+        font-size: 18px;
+        padding: 16px 32px;
+        border-radius: 50px;
+
+        &:hover {
+          background-color: #4b9fe1;
+          border-color: #4b9fe1;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

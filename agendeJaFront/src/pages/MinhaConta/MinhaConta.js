@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import useUpdateDataUser from "../../hooks/useUpdateDataUser";
-import useGetUserById from "../../hooks/useGetUserById";
+import useUpdateDataUser from "../../hooks/user/useUpdateDataUser";
+import useGetUserById from "../../hooks/user/useGetUserById";
 import { useDispatch } from "react-redux";
 import { addInfoUser } from "../../redux/userSliceDados";
 

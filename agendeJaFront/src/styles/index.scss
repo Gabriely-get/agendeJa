@@ -34,3 +34,12 @@ button.primaryBtn {
   border: unset;
   cursor: pointer;
 }
+
+@media screen and (min-width: 1024px) {
+  h2 {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 39px;
+    color: #333333;
+  }
+}

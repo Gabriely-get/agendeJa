@@ -7,11 +7,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Cadastrar from "./pages/Cadastrar/Cadastrar";
+import CadastrarEmpresa from "./pages/CadastrarEmpresa/CadastrarEmpresa";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import MinhaConta from "./pages/MinhaConta/MinhaConta";
 import Administrador from "./pages/Administrador/Administrador";
+import RegistroCategoriaEmpresa from "./pages/RegistroCategoriaEmpresa/RegistroCategoriaEmpresa";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
       {
         path: "/cadastrar",
         element: <Cadastrar />,
+      },
+      {
+        path: "/cadastro-empresa",
+        element: <CadastrarEmpresa />,
+      },
+      {
+        path: "/cadastro-empresa/seu-negocio",
+        element: <RegistroCategoriaEmpresa />,
       },
       {
         path: "/minhaconta",

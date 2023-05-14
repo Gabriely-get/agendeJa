@@ -1,0 +1,74 @@
+.firstStepContainer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 50px;
+
+  .containerCentral {
+    width: 480px;
+
+    p {
+      margin-top: 10px;
+      font-weight: 500;
+      line-height: 22px;
+      color: #666666;
+      font-size: 18px;
+    }
+
+    .nameFantasy {
+      width: 100%;
+      margin-top: 35px;
+    }
+
+    .divInputRadio {
+      display: flex;
+      justify-content: space-between;
+
+      label {
+        display: flex;
+        align-items: center;
+
+        input {
+          width: 20px;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .isFormAtendLocal {
+      display: block;
+      text-align: initial;
+
+      .formRegisterAtend {
+        gap: 16px;
+        display: grid;
+        margin-top: 20px;
+
+        .labelLogra,
+        .labelComplement {
+          display: block;
+          width: 100%;
+          height: auto;
+
+          input {
+            width: 100%;
+          }
+        }
+
+        .columNumberAndBar,
+        .columnCityAndState {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
+    }
+
+    .primaryBtn {
+      width: 143px;
+      height: 54px;
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 20px;
+    }
+  }
+}

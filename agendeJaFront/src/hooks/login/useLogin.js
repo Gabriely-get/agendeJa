@@ -4,17 +4,14 @@ import axios from "axios";
 export default function useLogin() {
   const [user, setUser] = useState(null);
   const [erro, setErro] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_AGENDEJA_AWS;
 
   const performLogin = async ({ email, password }) => {
     try {
-      const response = await axios.post(
-        "http://ec2-44-202-44-187.compute-1.amazonaws.com:5000/agenda/login",
-        {
-          email,
-          password,
-        }
-      );
-
+      const response = await axios.post(`${apiUrl}:5000/agenda/login`, {
+        email,
+        password,
+      });
       setUser(response.data);
       setErro(null);
 

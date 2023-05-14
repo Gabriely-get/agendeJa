@@ -95,7 +95,6 @@
 
 @media screen and (min-width: 1024px) {
   .section04 {
-    margin-top: 50px;
     background: #4b9fe1;
     height: auto;
 
@@ -104,10 +103,10 @@
 
       .text {
         width: 260px;
+        gap: 15px;
 
         h2 {
           font-size: 32px;
-          padding-right: 50px;
           margin-bottom: 0;
         }
 
