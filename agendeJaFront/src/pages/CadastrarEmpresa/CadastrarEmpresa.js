@@ -20,7 +20,7 @@ export default function CadastrarEmpresa() {
       localStorage.removeItem("registrarEmpresa");
       navigate("/");
     } else {
-      dados.atendimentoLocal = atendimentoLocal;
+      dados.hasAddress = atendimentoLocal;
       dados.fantasyName = fantasyName;
     }
   }, [dados, navigate, atendimentoLocal, fantasyName]);

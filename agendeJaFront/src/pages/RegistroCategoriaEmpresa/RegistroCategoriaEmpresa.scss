@@ -7,8 +7,9 @@
   .containerCentral {
     width: 100%;
 
-    .categoryInfos {
-      margin-top: 50px;
+    .categoryInfos,
+    .subCategoryInfos {
+      margin-top: 30px;
       gap: 16px;
       display: flex;
       justify-content: center;
@@ -21,12 +22,29 @@
         padding: 16px 32px;
         border-radius: 50px;
 
+        &.selected {
+          background-color: #4b9fe1;
+          border-color: #4b9fe1;
+          color: #fff;
+        }
+
         &:hover {
           background-color: #4b9fe1;
           border-color: #4b9fe1;
           color: #fff;
         }
       }
+    }
+
+    .subCategorieTitle {
+      margin-top: 30px;
+    }
+
+    .primaryBtn {
+      margin-top: 40px;
+      padding: 16px 32px;
+      font-weight: 700;
+      font-size: 18px;
     }
   }
 }

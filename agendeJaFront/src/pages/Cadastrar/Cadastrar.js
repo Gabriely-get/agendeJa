@@ -18,12 +18,11 @@ export default function Login() {
   const { registerUser } = useRegisterCliente();
   const navigate = useNavigate();
 
-  const dadosJson = localStorage.getItem("registrarEmpresa");
-  const dados = JSON.parse(dadosJson);
-
   useEffect(() => {
+    const dadosJson = localStorage.getItem("registrarEmpresa");
+    const dados = JSON.parse(dadosJson);
     if (dados) {
-      setSwitchValue(dados.provideService);
+      setSwitchValue(dados.isJobProvider);
       setEmail(dados.email);
       setPassword(dados.password);
       setBirthday(dados.birthday);
@@ -32,10 +31,9 @@ export default function Login() {
       setLastName(dados.lastName);
       setCpf(dados.cpf);
     }
-  }, [dados]);
+  }, []);
 
   const info = {
-    provideService: switchValue,
     email: email,
     password: password,
     birthday: birthday,
@@ -43,6 +41,7 @@ export default function Login() {
     firstName: firstName,
     lastName: lastName,
     cpf: cpf,
+    isJobProvider: switchValue,
   };
 
   const handleSubmit = async (event) => {

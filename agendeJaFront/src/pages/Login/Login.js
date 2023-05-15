@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useLogin from "../../hooks/login/useLogin";
 import useGetUserById from "../../hooks/user/useGetUserById";
@@ -19,7 +19,7 @@ export default function Login() {
   const [isFetching, setIsFetching] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorSenha, setErrorSenha] = useState(false);
-  const { performLogin } = useLogin();
+  const { performLogin, loading } = useLogin();
   const { addUser } = useGetUserById();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,6 +32,14 @@ export default function Login() {
     }));
   };
 
+  useEffect(() => {
+    if (loading === true) {
+      setIsFetching(true);
+    } else {
+      setIsFetching(false);
+    }
+  }, [loading]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -43,12 +51,6 @@ export default function Login() {
     } else if (loginData.password === "") {
       setErrorSenha(true);
     } else {
-      setIsFetching(true);
-
-      setTimeout(() => {
-        setIsFetching(false);
-      }, 3000);
-
       try {
         const dados = await performLogin(loginData);
         const dadosUser = await addUser(dados.message);
