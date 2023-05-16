@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./newsLetter.scss";
 
 export default function NewsLetter() {
-  const [email, setEmail] = useState("");
+  const [, setEmail] = useState("");
   return (
     <section className="section07">
       <div className="divBox">

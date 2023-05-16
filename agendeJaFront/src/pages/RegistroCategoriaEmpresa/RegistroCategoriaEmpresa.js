@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useDisplayCategory from "../../hooks/display/category/useDisplayCategory";
-import useDisplaySubCategory from "../../hooks/display/subcategory/useDisplaySubCategory";
+import useDisplaySubCategoryById from "../../hooks/display/subcategory/useDisplaySubCategoryById";
 import useRegisterCliente from "../../hooks/register/useRegisterClient";
 import "./RegistroCategoriaEmpresa.scss";
 
@@ -9,8 +9,9 @@ export default function RegistroCategoriaEmpresa() {
   const dadosJson = localStorage.getItem("registrarEmpresa");
   const dados = JSON.parse(dadosJson);
   const navigate = useNavigate();
+  var count = 0;
   const { displayCategory } = useDisplayCategory();
-  const { displaySubCategory } = useDisplaySubCategory();
+  const { displaySubCategoryById } = useDisplaySubCategoryById();
   const [isCategory, setIsCategory] = useState(false);
   const [isSubCategory, setIsSubCategory] = useState(false);
   const [categorySelect, setCategorySelect] = useState(false);
@@ -26,12 +27,16 @@ export default function RegistroCategoriaEmpresa() {
   }, [dados, navigate, displayCategory, isCategory]);
 
   useEffect(() => {
-    async function searchCategory() {
-      const resultCategory = await displayCategory();
-      setIsCategory(resultCategory);
+    if (count === 0) {
+      async function searchCategory() {
+        let resultCategory = await displayCategory();
+        setIsCategory(resultCategory);
+      }
+      searchCategory();
+      count++;
     }
-    searchCategory();
-  }, [displayCategory]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
 
   function selectCategory(name) {
     const btn = document.getElementById(name.id);
@@ -74,7 +79,7 @@ export default function RegistroCategoriaEmpresa() {
   }
 
   async function searchSubCategory(id) {
-    const resultSubCategory = await displaySubCategory(id);
+    const resultSubCategory = await displaySubCategoryById(id);
     setIsSubCategory(resultSubCategory);
   }
 

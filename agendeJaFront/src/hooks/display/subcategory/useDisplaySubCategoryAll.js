@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 
-export default function useDisplayCategory() {
+export default function useDisplaySubCategoryAll() {
   const apiUrl = process.env.REACT_APP_API_AGENDEJA_AWS;
   const [data, setData] = useState(null);
 
-  async function displayCategory() {
-    let url = `${apiUrl}:5000/agenda/category/`;
+  async function displaySubCategoryAll() {
+    let url = `${apiUrl}:5000/agenda/subcategory/`;
 
     if (data == null) {
       const response = await axios.get(url);
@@ -16,6 +16,6 @@ export default function useDisplayCategory() {
   }
 
   return {
-    displayCategory,
+    displaySubCategoryAll,
   };
 }

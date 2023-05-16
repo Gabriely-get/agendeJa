@@ -14,6 +14,11 @@ import store from "./redux/store";
 import MinhaConta from "./pages/MinhaConta/MinhaConta";
 import Administrador from "./pages/Administrador/Administrador";
 import RegistroCategoriaEmpresa from "./pages/RegistroCategoriaEmpresa/RegistroCategoriaEmpresa";
+import ADMSearchUser from "./pages/Administrador/User/ADMSearchUser";
+import ADMCreateCategory from "./pages/Administrador/Category/Create/ADMCreateCategory";
+import ADMCreateSubCategory from "./pages/Administrador/SubCategory/Create/ADMCreateSubCategory";
+import ADMUpdateCategory from "./pages/Administrador/Category/Update/ADMUpdateCategory";
+import ADMUpdateSubCategory from "./pages/Administrador/SubCategory/Update/ADMUpdateSubCategory";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +53,26 @@ const router = createBrowserRouter([
       {
         path: "/administrador",
         element: <Administrador />,
+      },
+      {
+        path: "/administrador/visualizar_todos_usuarios",
+        element: <ADMSearchUser />,
+      },
+      {
+        path: "/administrador/criar_categoria",
+        element: <ADMCreateCategory />,
+      },
+      {
+        path: "/administrador/editar_categoria",
+        element: <ADMUpdateCategory />,
+      },
+      {
+        path: "/administrador/criar_subcategoria",
+        element: <ADMCreateSubCategory />,
+      },
+      {
+        path: "/administrador/editar_subcategoria",
+        element: <ADMUpdateSubCategory />,
       },
     ],
   },
