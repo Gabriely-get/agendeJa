@@ -139,10 +139,16 @@ export default function DrawerComponent() {
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>
-                <AccordionPanel pb={4}>Criar</AccordionPanel>
-                <AccordionPanel pb={4}>Editar</AccordionPanel>
-                <AccordionPanel pb={4}>Visualizar</AccordionPanel>
-                <AccordionPanel pb={4}>Excluir</AccordionPanel>
+                <AccordionPanel pb={4}>
+                  <Link to="/administrador/criar_job" className="anchor">
+                    Criar
+                  </Link>
+                </AccordionPanel>
+                <AccordionPanel pb={4}>
+                  <Link to="/administrador/editar_job" className="anchor">
+                    Visualizar/Editar/Excluir
+                  </Link>
+                </AccordionPanel>
               </AccordionItem>
             </Accordion>
           </DrawerBody>

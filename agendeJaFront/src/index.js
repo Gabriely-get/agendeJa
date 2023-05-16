@@ -19,6 +19,8 @@ import ADMCreateCategory from "./pages/Administrador/Category/Create/ADMCreateCa
 import ADMCreateSubCategory from "./pages/Administrador/SubCategory/Create/ADMCreateSubCategory";
 import ADMUpdateCategory from "./pages/Administrador/Category/Update/ADMUpdateCategory";
 import ADMUpdateSubCategory from "./pages/Administrador/SubCategory/Update/ADMUpdateSubCategory";
+import ADMCreateJob from "./pages/Administrador/Job/Create/ADMCreateJob";
+import ADMUpdateJob from "./pages/Administrador/Job/Update/ADMUpdateJob";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +75,14 @@ const router = createBrowserRouter([
       {
         path: "/administrador/editar_subcategoria",
         element: <ADMUpdateSubCategory />,
+      },
+      {
+        path: "/administrador/criar_job",
+        element: <ADMCreateJob />,
+      },
+      {
+        path: "/administrador/editar_job",
+        element: <ADMUpdateJob />,
       },
     ],
   },
