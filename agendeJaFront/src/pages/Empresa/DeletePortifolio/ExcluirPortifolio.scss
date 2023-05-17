@@ -26,19 +26,39 @@
 
       .divSubCategories {
         margin-top: 20px;
-        display: flex;
-        justify-content: left;
-        gap: 15px;
-        align-items: baseline;
 
         .name {
           font-weight: bold;
           font-size: 20px;
+          margin-top: 20px;
         }
 
         .nameSubCategory {
           font-size: 15px;
         }
+
+        .chakra-table__container {
+          border: 1px solid #c3c3c3;
+          margin-top: 15px;
+          border-radius: 10px;
+
+          thead {
+            tr {
+              border-bottom: 2px solid #c3c3c3;
+              th {
+                color: #000;
+                font-size: 16px;
+              }
+            }
+          }
+        }
+      }
+
+      .deleteAll {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
       }
     }
   }

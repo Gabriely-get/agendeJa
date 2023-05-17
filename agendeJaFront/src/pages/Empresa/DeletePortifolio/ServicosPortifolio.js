@@ -14,8 +14,10 @@ import {
 } from "@chakra-ui/react";
 import ModalDeletePortifolio from "./ModalPortifolio/ModalDeletePortifolio";
 import "./ExcluirPortifolio.scss";
+import ModalDeleteSubCategory from "./ModalPortifolio/ModalDeleteSubcategory";
+import ModalAddSubCategory from "./ModalPortifolio/ModalAddSubcategory";
 
-export default function ExcluirPortifolio() {
+export default function ServicosPortifolio() {
   const userData = useSelector((state) => state?.userDados?.role);
   const [isPortifolio, setIsPortifolio] = useState(false);
   const navigate = useNavigate();
@@ -53,7 +55,7 @@ export default function ExcluirPortifolio() {
   return (
     <div className="DeletePortifolio">
       <div className="containerCentral">
-        <h2>Exclua Todo o seu Portifolio</h2>
+        <h2>Seu Portifolio</h2>
         <p>Aqui estão os serviços que sua empresa faz...</p>
 
         <div className="containerInfos">
@@ -64,20 +66,45 @@ export default function ExcluirPortifolio() {
             )}{" "}
           </div>
           <div className="divSubCategories">
-            <p className="name">Suas subcategorias:</p>
+            {isVerifica && (
+              <p className="name">
+                Suas subcategorias: <ModalAddSubCategory data={id} />
+              </p>
+            )}
+
             {isVerifica && (
               <>
-                {isData.data.subCategories.map((a) => {
-                  return (
-                    <p key={a.id} className="nameSubCategory">
-                      {a.name}
-                    </p>
-                  );
-                })}
+                <TableContainer>
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>SubCategoria</Th>
+                        <Th>Excluir</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {isData.data.subCategories.map((a) => {
+                        return (
+                          <Tr key={a.id}>
+                            <Td>{a.name}</Td>
+                            <Td>
+                              <ModalDeleteSubCategory
+                                idSubcategory={a.id}
+                                idPortifolio={isData.data.id}
+                                nameSubcategory={a.name}
+                              />
+                            </Td>
+                          </Tr>
+                        );
+                      })}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
               </>
             )}
           </div>
-          <div>
+          <div className="deleteAll">
+            <p>Deseja excluir o portifolio inteiro?</p>
             <ModalDeletePortifolio data={id} />
           </div>
         </div>

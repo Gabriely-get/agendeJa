@@ -76,8 +76,6 @@ export default function CadastrarEmpresa() {
     }
   }, [isValue]);
 
-  console.log(isValue);
-
   return (
     <div className="firstStepContainer">
       <div className="containerCentral">
