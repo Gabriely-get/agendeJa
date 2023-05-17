@@ -9,12 +9,18 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import useDeleteSubcategoryPortifolio from "../../../../hooks/delete/useDeleteSubcategoryPortifolio";
 import { useNavigate } from "react-router-dom";
-import useDeletePortifolio from "../../../../hooks/delete/useDeletePortifolio";
 
-export default function ModalDeletePortifolio({ data }) {
+export default function ModalDeleteSubCategory({
+  idSubcategory,
+  idPortifolio,
+  nameSubcategory,
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const { deletePortifolio } = useDeletePortifolio();
+  const { deleteSubcategoryPortifolio } = useDeleteSubcategoryPortifolio();
+  const userData = useSelector((state) => state?.userDados?.id);
   const navigate = useNavigate();
 
   const handleOpen = () => {
@@ -26,8 +32,7 @@ export default function ModalDeletePortifolio({ data }) {
   };
 
   async function handleFunction() {
-    await deletePortifolio(data);
-    setIsOpen(false);
+    await deleteSubcategoryPortifolio(idPortifolio, userData, idSubcategory);
     navigate("/");
   }
 
@@ -40,10 +45,13 @@ export default function ModalDeletePortifolio({ data }) {
       <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Excluir subcategoria</ModalHeader>
+          <ModalHeader>Excluir subcategoria do portfolio</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <p>Tem certeza que deseja excluir?</p>
+            <p>
+              Tem certeza que deseja excluir a subcategoria
+              <b>{" " + nameSubcategory}</b> do seu portifolio?
+            </p>
           </ModalBody>
           <ModalFooter>
             <Button mr={3} onClick={handleClose}>

@@ -22,7 +22,8 @@ import ADMUpdateSubCategory from "./pages/Administrador/SubCategory/Update/ADMUp
 import ADMCreateJob from "./pages/Administrador/Job/Create/ADMCreateJob";
 import ADMUpdateJob from "./pages/Administrador/Job/Update/ADMUpdateJob";
 import CreateFilial from "./pages/Empresa/CreateFilial/CreateFilial";
-import ExcluirPortifolio from "./pages/Empresa/DeletePortifolio/ExcluirPortifolio";
+import ServicosPortifolio from "./pages/Empresa/DeletePortifolio/ServicosPortifolio";
+import CreatePortifolio from "./pages/Empresa/CreatePortifolio/CreatePortifolio";
 
 const router = createBrowserRouter([
   {
@@ -91,8 +92,12 @@ const router = createBrowserRouter([
         element: <CreateFilial />,
       },
       {
+        path: "/empresa/criar_portifolio",
+        element: <CreatePortifolio />,
+      },
+      {
         path: "/empresa/Excluir_portifolio/:id",
-        element: <ExcluirPortifolio />,
+        element: <ServicosPortifolio />,
       },
     ],
   },
