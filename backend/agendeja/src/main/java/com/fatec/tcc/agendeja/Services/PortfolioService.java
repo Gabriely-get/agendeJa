@@ -64,6 +64,18 @@ public class PortfolioService {
         return categoriesPortfolioDoesNotHave;
     }
 
+    public void addSubcategoryToPortfolio(Long portfolioId, Long subId) {
+        //TODO finish validations here too
+        Optional<Portfolio> optionalPortfolio = this.portfolioRepository.findById(portfolioId);
+        Portfolio portfolio = optionalPortfolio.get();
+
+        Optional<SubCategory> optionalSubCategory = this.subCategoryRepository.findById(subId);
+        SubCategory subCategory1 = optionalSubCategory.get();
+
+        portfolio.getSubCategories().add(subCategory1);
+        this.portfolioRepository.save(portfolio);
+    }
+
     public Portfolio createPortfolio(Long companyBranchId, Long categoryId, List<Long> subCategories) {
         Set<SubCategory> validSubCategories = new HashSet<>();
         Optional<CompanyBranch> optionalCompanyBranch = this.companyRepository.findById(companyBranchId);
