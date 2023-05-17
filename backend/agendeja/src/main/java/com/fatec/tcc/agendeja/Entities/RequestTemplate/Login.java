@@ -1,4 +1,4 @@
-package com.fatec.tcc.agendeja.Entities.Request;
+package com.fatec.tcc.agendeja.Entities.RequestTemplate;
 
 import lombok.Data;
 

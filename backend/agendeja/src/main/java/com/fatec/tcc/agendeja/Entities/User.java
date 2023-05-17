@@ -1,6 +1,7 @@
 package com.fatec.tcc.agendeja.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fatec.tcc.agendeja.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendeja.Utils.UserFieldsValidation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -35,7 +36,27 @@ public @Data class User {
         this.setIsActive(user.getIsActive());
         this.setFirstName(user.getFirstName());
         this.setLastName(user.getLastName());
-        this.setRoles(user.getRoles());
+//        this.setRoles(user.getRoles());
+        this.setRole(user.getRole());
+        this.setImageId(user.getImageId());
+        this.setIsJobProvider(user.getIsJobProvider());
+    }
+
+    public User(UserBody user) {
+        UserFieldsValidation.userPOJOValidation(user);
+
+        this.setEmail(user.getEmail());
+        this.setPassword(user.getPassword());
+        this.setCpf(user.getCpf());
+        this.setPhone(user.getPhone());
+        this.setBirthday(user.getBirthday());
+        this.setIsActive(user.getIsActive());
+        this.setFirstName(user.getFirstName());
+        this.setLastName(user.getLastName());
+//        this.setRoles(user.getRoles());
+        this.setRole(user.getRole());
+        this.setImageId(user.getImageId());
+        this.setIsJobProvider(user.getIsJobProvider());
     }
 
     @Id
@@ -54,28 +75,29 @@ public @Data class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "UTC-3")
     @Temporal(TemporalType.DATE)
     private Date birthday;
-    @Size(min = 11, max = 11, message = "CPF is mandatory")
     @NotBlank
     private String cpf;
 
-    @Size(min = 11, max = 11, message = "Phone is mandatory")
     private String phone;
 
     private Boolean isActive;
+    private Boolean isJobProvider;
     @CreationTimestamp
     private Timestamp createAt;
 
     @LastModifiedDate
     private Timestamp updateAt;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(
-                    name = "user_id" ),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id" ))
-    private Set<Role> roles = new HashSet<>();
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(
+//            name = "user_role",
+//            joinColumns = @JoinColumn(
+//                    name = "user_id" ),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "role_id" ))
+//    private Set<Role> roles = new HashSet<>();
+    private RoleType role;
+    private Long imageId;
 
     private String getFullUsername() {
         return this.getFirstName().trim() + ' ' + this.getLastName();
@@ -89,9 +111,9 @@ public @Data class User {
         this.lastName = lastName.trim();
     }
 
-    public  void addRole(Role role) {
-        this.roles.add(role);
-    }
+//    public  void addRole(Role role) {
+//        this.roles.add(role);
+//    }
 
 //    private Collection<? extends GrantedAuthority> getRoles(User user) {
 //    List<GrantedAuthority> authorities = new ArrayList<>();
