@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
-import com.fatec.tcc.agendeja.Entities.RequestTemplate.UserBody;
-import com.fatec.tcc.agendeja.Entities.User;
-import com.fatec.tcc.agendeja.Services.UserService;
+import com.fatec.tcc.agendeja.Entities.RequestTemplate.NameAndIdBody;
+import com.fatec.tcc.agendeja.Entities.JobCategory;
+import com.fatec.tcc.agendeja.Services.JobCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +16,20 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/agenda/user")
-public class UserController {
+@RequestMapping("/agenda/job")
+public class JobCategoryController {
     @Autowired
-    private UserService userService;
+    private JobCategoryService jobCategoryService;
 
     @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ObjectNode> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ObjectNode> getJob(@PathVariable("id") Long id) {
         try {
-            User user = this.userService.getUserById(id);
+            JobCategory jobCategory = this.jobCategoryService.getById(id);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(jobCategory).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
@@ -38,42 +38,32 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ObjectNode> getUsers() {
+    public ResponseEntity<ObjectNode> getJobs() {
         try {
-            List<User> users = this.userService.getAllUsers();
+            List<JobCategory> jobCategories = this.jobCategoryService.getAll();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(jobCategories).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/provider")
-    public ResponseEntity<ObjectNode> getUsersEnterprise() {
+    @PostMapping("/")
+    public ResponseEntity<ObjectNode> createJob(@RequestBody NameAndIdBody nameAndIdBody) {
         try {
-            List<User> users = this.userService.getAllUsersEnterprise();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
-        }
-    }
+            this.jobCategoryService.createJob(nameAndIdBody);
 
-    @GetMapping("/active")
-    public ResponseEntity<ObjectNode> getActiveUsers() {
-        try {
-            List<User> users = this.userService.getActiveUsers();
-
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ObjectNode> updateUser(@PathVariable("id") Long id, @RequestBody UserBody user) {
+    public ResponseEntity<ObjectNode> updateJob(@PathVariable("id") Long id, @RequestBody NameAndIdBody nameAndIdBody) {
         try {
-            this.userService.updateUser(id, user);
+            this.jobCategoryService.updateJob(id, nameAndIdBody.getName(), nameAndIdBody.getId());
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -82,17 +72,13 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ObjectNode> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ObjectNode> deleteJob(@PathVariable("id") Long id) {
         try {
-            this.userService.deleteUser(id);
+            this.jobCategoryService.deleteJob(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    //TODO method restore/active user, with permission from ADMIN
-    // discover what is needed be active -> update, delete prob
-
 }

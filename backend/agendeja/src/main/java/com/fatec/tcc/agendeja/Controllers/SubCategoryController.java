@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
-import com.fatec.tcc.agendeja.Entities.RequestTemplate.UserBody;
-import com.fatec.tcc.agendeja.Entities.User;
-import com.fatec.tcc.agendeja.Services.UserService;
+import com.fatec.tcc.agendeja.Entities.SubCategory;
+import com.fatec.tcc.agendeja.Entities.RequestTemplate.NameAndIdBody;
+import com.fatec.tcc.agendeja.Services.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +16,20 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/agenda/user")
-public class UserController {
+@RequestMapping("/agenda/subcategory")
+public class SubCategoryController {
     @Autowired
-    private UserService userService;
+    private SubCategoryService subCategoryService;
 
     @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ObjectNode> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ObjectNode> getSubCategory(@PathVariable("id") Long id) {
         try {
-            User user = this.userService.getUserById(id);
+            SubCategory subCategory = this.subCategoryService.getById(id);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(subCategory).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
@@ -37,43 +37,44 @@ public class UserController {
         }
     }
 
+    @GetMapping("/by/{id}")
+    public ResponseEntity<ObjectNode> getSubCategoryByCategoryId(@PathVariable("id") Long id) {
+        try {
+            List<SubCategory> subCategory = this.subCategoryService.getByCategoryId(id);
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(subCategory).build(), HttpStatus.OK);
+        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/")
-    public ResponseEntity<ObjectNode> getUsers() {
+    public ResponseEntity<ObjectNode> getSubCategories() {
         try {
-            List<User> users = this.userService.getAllUsers();
+            List<SubCategory> subCategories = this.subCategoryService.getAll();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(subCategories).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/provider")
-    public ResponseEntity<ObjectNode> getUsersEnterprise() {
+    @PostMapping("/")
+    public ResponseEntity<ObjectNode> createSubCategory(@RequestBody NameAndIdBody nameAndIdBody) {
         try {
-            List<User> users = this.userService.getAllUsersEnterprise();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
-        }
-    }
+            this.subCategoryService.createSubCategory(nameAndIdBody);
 
-    @GetMapping("/active")
-    public ResponseEntity<ObjectNode> getActiveUsers() {
-        try {
-            List<User> users = this.userService.getActiveUsers();
-
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ObjectNode> updateUser(@PathVariable("id") Long id, @RequestBody UserBody user) {
+    public ResponseEntity<ObjectNode> updateSubCategory(@PathVariable("id") Long id, @RequestBody NameAndIdBody nameAndIdBody) {
         try {
-            this.userService.updateUser(id, user);
+            this.subCategoryService.updateSubCategory(id, nameAndIdBody.getName(), nameAndIdBody.getId());
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -82,17 +83,14 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ObjectNode> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ObjectNode> deleteSubCategory(@PathVariable("id") Long id) {
         try {
-            this.userService.deleteUser(id);
+            this.subCategoryService.deleteSubCategory(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    //TODO method restore/active user, with permission from ADMIN
-    // discover what is needed be active -> update, delete prob
 
 }

@@ -3,10 +3,9 @@ package com.fatec.tcc.agendeja.Controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
-import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
-import com.fatec.tcc.agendeja.Entities.RequestTemplate.UserBody;
-import com.fatec.tcc.agendeja.Entities.User;
-import com.fatec.tcc.agendeja.Services.UserService;
+import com.fatec.tcc.agendeja.Entities.PortfolioJob;
+import com.fatec.tcc.agendeja.Entities.RequestTemplate.PortfolioJobBody;
+import com.fatec.tcc.agendeja.Services.PortfolioJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,83 +15,80 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/agenda/user")
-public class UserController {
+@RequestMapping("/agenda/userjob")
+public class PortfolioJobController {
+
     @Autowired
-    private UserService userService;
+    private PortfolioJobService userJobService;
 
     @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ObjectNode> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ObjectNode> getPortfolioById(@PathVariable("id") Long id) {
         try {
-            User user = this.userService.getUserById(id);
+            PortfolioJob portfolioJob = this.userJobService.getById(id);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(portfolioJob).build(), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @GetMapping("/")
-    public ResponseEntity<ObjectNode> getUsers() {
+    public ResponseEntity<ObjectNode> getPortfolioJobs() {
         try {
-            List<User> users = this.userService.getAllUsers();
+            List<PortfolioJob> portfolioJobs = this.userJobService.getAll();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolioJobs).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/provider")
-    public ResponseEntity<ObjectNode> getUsersEnterprise() {
+    @GetMapping("/by/{id}")
+    public ResponseEntity<ObjectNode> getAllPortfolioJobsByUserId(@PathVariable("id") Long id) {
         try {
-            List<User> users = this.userService.getAllUsersEnterprise();
+            List<PortfolioJob> portfolioJobs = this.userJobService.getAllByUserId(id);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolioJobs).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<ObjectNode> getActiveUsers() {
+    @PostMapping("/")
+    public ResponseEntity<ObjectNode> createPortfolioJob(@RequestBody PortfolioJobBody portfolioBody) {
         try {
-            List<User> users = this.userService.getActiveUsers();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
+            PortfolioJob portfolioJob = this.userJobService.createPortfolioJob(portfolioBody);
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(portfolioJob).build(), HttpStatus.CREATED);
+        } catch (Exception e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ObjectNode> updateUser(@PathVariable("id") Long id, @RequestBody UserBody user) {
+    public ResponseEntity<ObjectNode> updatePortfolioJob(@PathVariable("id") Long id, @RequestBody PortfolioJob portfolioJob) {
         try {
-            this.userService.updateUser(id, user);
+            this.userJobService.updatePortfolioJob(id, portfolioJob);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ObjectNode> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ObjectNode> deletePortfolioJob(@PathVariable("id") Long id) {
         try {
-            this.userService.deleteUser(id);
+            this.userJobService.deletePortfolioJob(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    //TODO method restore/active user, with permission from ADMIN
-    // discover what is needed be active -> update, delete prob
 
 }
