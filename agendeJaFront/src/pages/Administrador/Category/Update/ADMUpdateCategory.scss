@@ -1,0 +1,25 @@
+.ADMCategoryContainer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 50px;
+  .containerCentral {
+    width: 680px;
+
+    .primaryBtn {
+      width: 143px;
+      height: 54px;
+      font-size: 18px;
+      font-weight: 700;
+      margin-top: 20px;
+
+      &.change {
+        background-color: orange;
+      }
+
+      &.delete {
+        background-color: #cc6363;
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+.chakra-accordion__panel {
+  margin-left: 15px;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: pointer;
+  }
+}

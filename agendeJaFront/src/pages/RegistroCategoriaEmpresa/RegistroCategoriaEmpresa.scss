@@ -1,0 +1,50 @@
+.secondStepContainer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 50px;
+
+  .containerCentral {
+    width: 100%;
+
+    .categoryInfos,
+    .subCategoryInfos {
+      margin-top: 30px;
+      gap: 16px;
+      display: flex;
+      justify-content: center;
+
+      .ghostBtn {
+        border: 1px solid #4b9fe1;
+        color: #4b9fe1;
+        font-weight: 700;
+        font-size: 18px;
+        padding: 16px 32px;
+        border-radius: 50px;
+
+        &.selected {
+          background-color: #4b9fe1;
+          border-color: #4b9fe1;
+          color: #fff;
+        }
+
+        &:hover {
+          background-color: #4b9fe1;
+          border-color: #4b9fe1;
+          color: #fff;
+        }
+      }
+    }
+
+    .subCategorieTitle {
+      margin-top: 30px;
+    }
+
+    .primaryBtn {
+      margin-top: 40px;
+      padding: 16px 32px;
+      font-weight: 700;
+      font-size: 18px;
+    }
+  }
+}

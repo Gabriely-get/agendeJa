@@ -5,14 +5,25 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/userSlice";
 import { removeUser } from "../../../redux/userSliceDados";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 export default function MenuHeader() {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state?.userDados?.role);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (userData === "ADMIN") {
+      setIsAdmin(true);
+    }
+  }, [userData]);
+
   return (
     <Menu>
       {({ isOpen }) => (
         <>
-          <MenuButton isActive={isOpen} as="Button">
+          <MenuButton _active={isOpen}>
             {isOpen ? <RiArrowUpSFill /> : <RiArrowDownSFill />}
           </MenuButton>
           <MenuList>
@@ -29,6 +40,15 @@ export default function MenuHeader() {
             >
               Sair
             </MenuItem>
+            {isAdmin ? (
+              <MenuItem>
+                <Link to="/administrador" className="anchor">
+                  Administrador
+                </Link>
+              </MenuItem>
+            ) : (
+              ""
+            )}
           </MenuList>
         </>
       )}

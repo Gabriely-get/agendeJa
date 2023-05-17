@@ -1,0 +1,147 @@
+.section03 {
+  display: grid;
+  text-align: center;
+  justify-content: center;
+
+  h2 {
+    font-weight: 700;
+    line-height: 59px;
+    text-align: center;
+    color: #333333;
+  }
+
+  .divBox {
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+    .divSon {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+
+      .text {
+        width: 200px;
+
+        h3 {
+          font-weight: 700;
+          font-size: 18px;
+          line-height: 22px;
+          text-align: center;
+          color: #333333;
+          padding: 0 30px;
+        }
+
+        p {
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 20px;
+          text-align: center;
+          color: #666666;
+        }
+      }
+    }
+
+    a {
+      font-style: normal;
+      font-weight: 700;
+      line-height: 22px;
+      color: #4b9fe1;
+      text-decoration: none;
+      font-size: 16px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .section03 {
+    display: grid;
+    text-align: center;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    h2 {
+      font-size: 26px;
+    }
+
+    .divBox {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: auto;
+
+      .divSon {
+        display: grid;
+        padding: 20px 0;
+
+        .text {
+          margin-top: 20px;
+        }
+      }
+
+      a {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .section03 {
+    display: grid;
+    text-align: center;
+    justify-content: center;
+
+    h2 {
+      font-size: 35px;
+    }
+
+    .divBox {
+      width: 90vw;
+      height: 280px;
+
+      .text {
+        width: 200px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .section03 {
+    display: grid;
+    text-align: center;
+    justify-content: center;
+
+    h2 {
+      font-size: 48px;
+    }
+
+    .divBox {
+      width: 85vw;
+      height: 308px;
+
+      .text {
+        width: 200px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .section03 {
+    display: grid;
+    text-align: center;
+    justify-content: center;
+
+    .divBox {
+      width: 1216px;
+      height: 308px;
+
+      .text {
+        width: 200px;
+      }
+    }
+  }
+}

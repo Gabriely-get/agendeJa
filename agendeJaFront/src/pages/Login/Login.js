@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useLogin from "../../hooks/useLogin";
-import useGetUserById from "../../hooks/useGetUserById";
-import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import useLogin from "../../hooks/login/useLogin";
+import useGetUserById from "../../hooks/user/useGetUserById";
+import { Checkbox } from "@chakra-ui/react";
 import "./login.scss";
 import { useDispatch } from "react-redux";
 import { changeUser } from "../../redux/userSlice";
@@ -10,7 +10,7 @@ import { addInfoUser } from "../../redux/userSliceDados";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader/Loader";
 
-const Login = () => {
+export default function Login() {
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -19,7 +19,7 @@ const Login = () => {
   const [isFetching, setIsFetching] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorSenha, setErrorSenha] = useState(false);
-  const { performLogin } = useLogin();
+  const { performLogin, loading } = useLogin();
   const { addUser } = useGetUserById();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,9 +32,13 @@ const Login = () => {
     }));
   };
 
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+  useEffect(() => {
+    if (loading === true) {
+      setIsFetching(true);
+    } else {
+      setIsFetching(false);
+    }
+  }, [loading]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,32 +51,22 @@ const Login = () => {
     } else if (loginData.password === "") {
       setErrorSenha(true);
     } else {
-      setIsFetching(true);
-
-      setTimeout(() => {
-        setIsFetching(false);
-      }, 3000);
-
       try {
         const dados = await performLogin(loginData);
         const dadosUser = await addUser(dados.message);
-        console.log(dados);
-        console.log(dadosUser);
-        dispatch(changeUser(dados.message));
 
+        dispatch(changeUser(dados.message));
         dispatch(addInfoUser(dadosUser));
 
         navigate("/");
-      } catch (error) {
-        console.error(error);
-      }
+      } catch (error) {}
     }
   };
 
   return (
     <>
       {isFetching ? <Loader /> : ""}
-      <div className="login">
+      <div className="pageLogin">
         <h1>Fazer login</h1>
         <span>Entre com sua conta criada</span>
         <form onSubmit={handleSubmit}>
@@ -102,17 +96,7 @@ const Login = () => {
               onChange={handleInputChange}
               className={errorSenha ? "password-input error" : "password-input"}
             />
-            <button
-              type="button"
-              onClick={toggleShowPassword}
-              className={
-                errorSenha
-                  ? "password-toggle-button error"
-                  : "password-toggle-button"
-              }
-            >
-              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
-            </button>
+
             {errorSenha ? (
               <span className="spanError">
                 Por favor preencher este campo...
@@ -120,10 +104,20 @@ const Login = () => {
             ) : (
               ""
             )}
+            <Checkbox
+              isChecked={showPassword}
+              onChange={() => {
+                setShowPassword(!showPassword);
+              }}
+            >
+              Mostrar senha
+            </Checkbox>
           </label>
           <div className="functions">
             <Link to="/">Esqueceu a senha?</Link>
-            <button type="submit">Entrar</button>
+            <button className="primaryBtn" type="submit">
+              Entrar
+            </button>
           </div>
           <div className="register">
             <span>
@@ -135,6 +129,4 @@ const Login = () => {
       </div>
     </>
   );
-};
-
-export default Login;
+}

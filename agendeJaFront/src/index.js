@@ -7,10 +7,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Cadastrar from "./pages/Cadastrar/Cadastrar";
+import CadastrarEmpresa from "./pages/CadastrarEmpresa/CadastrarEmpresa";
 import ErrorPage from "./pages/ErrorPage/ErrorPage";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import MinhaConta from "./pages/MinhaConta/MinhaConta";
+import Administrador from "./pages/Administrador/Administrador";
+import RegistroCategoriaEmpresa from "./pages/RegistroCategoriaEmpresa/RegistroCategoriaEmpresa";
+import ADMSearchUser from "./pages/Administrador/User/ADMSearchUser";
+import ADMCreateCategory from "./pages/Administrador/Category/Create/ADMCreateCategory";
+import ADMCreateSubCategory from "./pages/Administrador/SubCategory/Create/ADMCreateSubCategory";
+import ADMUpdateCategory from "./pages/Administrador/Category/Update/ADMUpdateCategory";
+import ADMUpdateSubCategory from "./pages/Administrador/SubCategory/Update/ADMUpdateSubCategory";
+import ADMCreateJob from "./pages/Administrador/Job/Create/ADMCreateJob";
+import ADMUpdateJob from "./pages/Administrador/Job/Update/ADMUpdateJob";
+import CreateFilial from "./pages/Empresa/CreateFilial/CreateFilial";
+import ExcluirPortifolio from "./pages/Empresa/DeletePortifolio/ExcluirPortifolio";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +43,56 @@ const router = createBrowserRouter([
         element: <Cadastrar />,
       },
       {
+        path: "/cadastro-empresa",
+        element: <CadastrarEmpresa />,
+      },
+      {
+        path: "/cadastro-empresa/seu-negocio",
+        element: <RegistroCategoriaEmpresa />,
+      },
+      {
         path: "/minhaconta",
         element: <MinhaConta />,
+      },
+      {
+        path: "/administrador",
+        element: <Administrador />,
+      },
+      {
+        path: "/administrador/visualizar_todos_usuarios",
+        element: <ADMSearchUser />,
+      },
+      {
+        path: "/administrador/criar_categoria",
+        element: <ADMCreateCategory />,
+      },
+      {
+        path: "/administrador/editar_categoria",
+        element: <ADMUpdateCategory />,
+      },
+      {
+        path: "/administrador/criar_subcategoria",
+        element: <ADMCreateSubCategory />,
+      },
+      {
+        path: "/administrador/editar_subcategoria",
+        element: <ADMUpdateSubCategory />,
+      },
+      {
+        path: "/administrador/criar_job",
+        element: <ADMCreateJob />,
+      },
+      {
+        path: "/administrador/editar_job",
+        element: <ADMUpdateJob />,
+      },
+      {
+        path: "/empresa/criar_filial",
+        element: <CreateFilial />,
+      },
+      {
+        path: "/empresa/Excluir_portifolio/:id",
+        element: <ExcluirPortifolio />,
       },
     ],
   },

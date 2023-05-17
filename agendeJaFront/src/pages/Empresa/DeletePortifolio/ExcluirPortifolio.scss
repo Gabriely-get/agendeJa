@@ -1,0 +1,45 @@
+.DeletePortifolio {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+
+  .containerCentral {
+    text-align: center;
+
+    .containerInfos {
+      margin-top: 20px;
+
+      .divCategories {
+        display: flex;
+        justify-content: left;
+
+        .name {
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        .nameCategory {
+          font-size: 20px;
+          margin-left: 15px;
+        }
+      }
+
+      .divSubCategories {
+        margin-top: 20px;
+        display: flex;
+        justify-content: left;
+        gap: 15px;
+        align-items: baseline;
+
+        .name {
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        .nameSubCategory {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}
