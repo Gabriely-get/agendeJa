@@ -46,6 +46,24 @@ public class PortfolioService {
         return this.portfolioRepository.findAllByCompanyBranch_User_Id(id);
     }
 
+    public List<SubCategory> getAllSubcategoriesPortfolioDoesNotHave(Long portfolioId) {
+        //TODO finish validations here
+        Optional<Portfolio> optionalPortfolio = this.portfolioRepository.findById(portfolioId);
+        Portfolio portfolio = optionalPortfolio.get();
+
+        List<SubCategory> userCategories = portfolio.getSubCategories().stream().toList();
+
+        List<SubCategory> categories = this.subCategoryRepository.getAllByCategory_Id(portfolio.getCategory().getId());
+        List<SubCategory> categoriesPortfolioDoesNotHave = new ArrayList<>();
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (!userCategories.contains(categories.get(i)))
+                categoriesPortfolioDoesNotHave.add(categories.get(i));
+        }
+
+        return categoriesPortfolioDoesNotHave;
+    }
+
     public Portfolio createPortfolio(Long companyBranchId, Long categoryId, List<Long> subCategories) {
         Set<SubCategory> validSubCategories = new HashSet<>();
         Optional<CompanyBranch> optionalCompanyBranch = this.companyRepository.findById(companyBranchId);

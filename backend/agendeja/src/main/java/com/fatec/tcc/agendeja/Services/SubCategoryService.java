@@ -4,6 +4,7 @@ import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendeja.Entities.Category;
 import com.fatec.tcc.agendeja.Entities.SubCategory;
 import com.fatec.tcc.agendeja.Entities.RequestTemplate.NameAndIdBody;
+import com.fatec.tcc.agendeja.Entities.User;
 import com.fatec.tcc.agendeja.Repositories.CategoryRepository;
 import com.fatec.tcc.agendeja.Repositories.SubCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,16 @@ public class SubCategoryService {
 
         return subCategoryList;
     }
+
+//    public List<SubCategory> getAll(Long userId, Long portfolioId){
+//        Optional<User> optionalUser = this.
+//
+//        Iterable<SubCategory> iterableUsers = this.subCategoryRepository.findAll();
+//        List<SubCategory> subCategoryList = new ArrayList<>();
+//        iterableUsers.forEach(subCategoryList::add);
+//
+//        return subCategoryList;
+//    }
 
     public SubCategory getById(Long id) {
         Optional<SubCategory> optionalSubCategory = this.subCategoryRepository.findById(id);
