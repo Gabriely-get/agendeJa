@@ -1,15 +1,15 @@
 package com.fatec.tcc.agendeja.CustomExceptions;
 
-public class UserDoesNotExistsException extends RuntimeException {
-    public UserDoesNotExistsException() {
+public class NotFoundException extends RuntimeException {
+    public NotFoundException() {
         super();
     }
 
-    public UserDoesNotExistsException(String errorMessage) {
+    public NotFoundException(String errorMessage) {
         super(errorMessage);
     }
 
-    public UserDoesNotExistsException(String errorMessage, Exception e) {
+    public NotFoundException(String errorMessage, Exception e) {
         super(errorMessage, e);
     }
 

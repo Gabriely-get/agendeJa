@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fatec.tcc.agendeja.Entities.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +11,10 @@ import java.util.List;
 @Service
 public class JsonResponseBuilder {
     ObjectMapper mapper = new ObjectMapper();
-    ObjectNode user = null;
-    String userList = null;
+    ObjectNode body = null;
+    String list = null;
     ObjectNode withJwtResponse = null;
-    ObjectNode withUser = null;
+    ObjectNode withBody = null;
     ObjectNode withMessage = null;
     ObjectNode withError = null;
     ObjectNode withoutMessage;
@@ -29,18 +28,18 @@ public class JsonResponseBuilder {
         return new JsonResponseBuilder();
     }
 
-    public JsonResponseBuilder withUser(User user) {
-        this.user = mapper.valueToTree(user);
-        this.withUser = mapper.createObjectNode();
-        this.withUser.set("data", this.user);
-        this.response = this.withUser;
+    public JsonResponseBuilder withBody(Object body) {
+        this.body = mapper.valueToTree(body);
+        this.withBody = mapper.createObjectNode();
+        this.withBody.set("data", this.body);
+        this.response = this.withBody;
         return this;
     }
 
-    public JsonResponseBuilder withAllUsers(List<User> user) throws JsonProcessingException {
-        JsonNode userListToJson = mapper.readTree( mapper.writeValueAsString(user) );
-        this.withUser = mapper.createObjectNode();
-        this.response = this.withUser.set("data", userListToJson);
+    public JsonResponseBuilder withList(List<?> list) throws JsonProcessingException {
+        JsonNode listToJson = mapper.readTree( mapper.writeValueAsString(list) );
+        this.withBody = mapper.createObjectNode();
+        this.response = this.withBody.set("data", listToJson);
         return this;
     }
 
