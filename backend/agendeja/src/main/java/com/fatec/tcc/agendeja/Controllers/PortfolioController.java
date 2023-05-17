@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendeja.Entities.Portfolio;
 import com.fatec.tcc.agendeja.Entities.RequestTemplate.PortfolioBody;
+import com.fatec.tcc.agendeja.Entities.SubCategory;
 import com.fatec.tcc.agendeja.Services.PortfolioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +52,17 @@ public class PortfolioController {
             List<Portfolio> portfolios = this.portfolioService.getAll();
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolios).build(), HttpStatus.OK);
+        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/subcategories/{id}")
+    public ResponseEntity<ObjectNode> getSubcategoriesPortfolioDoesNotHave(@PathVariable("id") Long portfolioId) {
+        try {
+            List<SubCategory> subCategories = this.portfolioService.getAllSubcategoriesPortfolioDoesNotHave(portfolioId);
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(subCategories).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
