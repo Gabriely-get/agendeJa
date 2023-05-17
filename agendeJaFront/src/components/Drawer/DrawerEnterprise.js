@@ -55,7 +55,7 @@ export default function DrawerEnterpriseComponent() {
           <DrawerHeader>O que deseja fazer?</DrawerHeader>
           <DrawerBody>
             <Accordion allowToggle>
-              <AccordionItem>
+              <AccordionItem onClick={() => setIsData(false)}>
                 <h2>
                   <AccordionButton>
                     <Box
@@ -71,17 +71,13 @@ export default function DrawerEnterpriseComponent() {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <Link
-                    to="/empresa/criar_filial"
-                    className="anchor"
-                    onClick={() => setIsData(false)}
-                  >
+                  <Link to="/empresa/criar_filial" className="anchor">
                     Criar Filial
                   </Link>
                 </AccordionPanel>
               </AccordionItem>
 
-              <AccordionItem>
+              <AccordionItem onClick={() => setIsData(false)}>
                 <h2>
                   <AccordionButton>
                     <Box
@@ -97,11 +93,7 @@ export default function DrawerEnterpriseComponent() {
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                  <Link
-                    to="/empresa/criar_portifolio"
-                    className="anchor"
-                    onClick={() => setIsData(false)}
-                  >
+                  <Link to="/empresa/criar_portifolio" className="anchor">
                     Criar Portifolio
                   </Link>
                 </AccordionPanel>
@@ -111,7 +103,6 @@ export default function DrawerEnterpriseComponent() {
                       <Link
                         to={`/empresa/Excluir_portifolio/${category.id}`}
                         className="anchor"
-                        onClick={() => setIsData(false)}
                       >
                         {category?.category?.name}
                       </Link>
