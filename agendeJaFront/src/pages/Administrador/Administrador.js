@@ -6,7 +6,7 @@ import DrawerComponent from "../../components/Drawer/Drawer";
 
 export default function Administrador() {
   const state = useSelector((state) => state?.user);
-  const userData = useSelector((state) => state?.userDados?.roles?.[0]?.name);
+  const userData = useSelector((state) => state?.userDados?.role);
   const navigate = useNavigate();
   const [, setIsAdmin] = useState(true);
 

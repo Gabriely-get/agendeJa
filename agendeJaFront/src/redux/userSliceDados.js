@@ -14,7 +14,7 @@ export const slice = createSlice({
     isActive: null,
     createAt: null,
     updateAt: null,
-    roles: null,
+    role: null,
   },
   reducers: {
     addInfoUser(state, { payload }) {
@@ -31,7 +31,7 @@ export const slice = createSlice({
         isActive: payload.data.isActive,
         createAt: payload.data.createAt,
         updateAt: payload.data.updateAt,
-        roles: payload.data.roles,
+        role: payload.data.role,
       };
     },
     removeUser(state) {
@@ -48,7 +48,7 @@ export const slice = createSlice({
         isActive: null,
         createAt: null,
         updateAt: null,
-        roles: null,
+        role: null,
       };
     },
   },

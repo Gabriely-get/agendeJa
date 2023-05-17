@@ -22,7 +22,7 @@ export default function ADMUpdateSubCategory() {
   var count = 0;
   const { displaySubCategoryAll } = useDisplaySubCategoryAll();
   const state = useSelector((state) => state?.user);
-  const userData = useSelector((state) => state?.userDados?.roles?.[0]?.name);
+  const userData = useSelector((state) => state?.userDados?.role);
   const navigate = useNavigate();
 
   useEffect(() => {

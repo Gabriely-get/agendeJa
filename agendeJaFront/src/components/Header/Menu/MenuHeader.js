@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 export default function MenuHeader() {
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state?.userDados?.roles?.[0]?.name);
+  const userData = useSelector((state) => state?.userDados?.role);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {

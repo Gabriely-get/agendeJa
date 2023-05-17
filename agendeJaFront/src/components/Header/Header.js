@@ -1,14 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import LogoImg from "../../assets/agendeJa-logo.svg";
 import "./Header.scss";
 import MenuHeader from "./Menu/MenuHeader";
+import DrawerEnterpriseComponent from "../Drawer/DrawerEnterprise";
 
 export default function Header() {
   const [isExpanded, setIsExpanded] = useState(false);
   const state = useSelector((state) => state?.user?.isLogged);
+  const userData = useSelector((state) => state?.userDados?.role);
   const stateUser = useSelector((state) => state?.userDados);
+  const [isEnterprise, setIsEnterprise] = useState(false);
+
+  useEffect(() => {
+    if (userData === "ENTERPRISE") {
+      setIsEnterprise(true);
+    } else {
+      setIsEnterprise(false);
+    }
+  }, [userData]);
 
   return (
     <header className="navigation">
@@ -73,10 +84,14 @@ export default function Header() {
           </ul>
         </div>
         {state ? (
-          <div className={state ? "boxLogin user" : "boxLogin"}>
-            <span>Bem vindo {stateUser.firstName}</span>
-            <MenuHeader />
-          </div>
+          <>
+            <div className={state ? "boxLogin user" : "boxLogin"}>
+              <span>Bem vindo {stateUser.firstName}</span>
+              <MenuHeader />
+            </div>
+
+            {isEnterprise && <DrawerEnterpriseComponent />}
+          </>
         ) : (
           <div className="boxLogin">
             <Link to="/login" className="anchor login">

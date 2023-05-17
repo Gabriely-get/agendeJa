@@ -19,7 +19,7 @@ export default function ADMCreateSubCategory() {
   const [isData, setIsData] = useState(null);
   var count = 0;
   const state = useSelector((state) => state?.user);
-  const userData = useSelector((state) => state?.userDados?.roles?.[0]?.name);
+  const userData = useSelector((state) => state?.userDados?.role);
   const navigate = useNavigate();
   const [, setIsAdmin] = useState(true);
   const { displayCategory } = useDisplayCategory();

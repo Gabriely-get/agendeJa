@@ -21,6 +21,8 @@ import ADMUpdateCategory from "./pages/Administrador/Category/Update/ADMUpdateCa
 import ADMUpdateSubCategory from "./pages/Administrador/SubCategory/Update/ADMUpdateSubCategory";
 import ADMCreateJob from "./pages/Administrador/Job/Create/ADMCreateJob";
 import ADMUpdateJob from "./pages/Administrador/Job/Update/ADMUpdateJob";
+import CreateFilial from "./pages/Empresa/CreateFilial/CreateFilial";
+import ExcluirPortifolio from "./pages/Empresa/DeletePortifolio/ExcluirPortifolio";
 
 const router = createBrowserRouter([
   {
@@ -83,6 +85,14 @@ const router = createBrowserRouter([
       {
         path: "/administrador/editar_job",
         element: <ADMUpdateJob />,
+      },
+      {
+        path: "/empresa/criar_filial",
+        element: <CreateFilial />,
+      },
+      {
+        path: "/empresa/Excluir_portifolio/:id",
+        element: <ExcluirPortifolio />,
       },
     ],
   },

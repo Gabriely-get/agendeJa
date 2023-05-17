@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export default function useDeleteSubCategory() {
+export default function useDeletePortifolio() {
   const apiUrl = process.env.REACT_APP_API_AGENDEJA_AWS;
-  const deleteSubCategory = async (value) => {
-    let url = `${apiUrl}:5000/agenda/subcategory/${value}`;
+  const deletePortifolio = async (value) => {
+    let url = `${apiUrl}:5000/agenda/portfolio/${value}`;
 
     try {
       const response = await axios.delete(url).catch((response) => {});
@@ -15,6 +15,6 @@ export default function useDeleteSubCategory() {
   };
 
   return {
-    deleteSubCategory,
+    deletePortifolio,
   };
 }
