@@ -1,15 +1,13 @@
 package com.fatec.tcc.agendeja.Repositories;
 
+import com.fatec.tcc.agendeja.Entities.RoleType;
 import com.fatec.tcc.agendeja.Entities.User;
-import jakarta.persistence.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +18,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByEmail(String email);
     boolean existsUserByPhone(String phone);
     Optional<User> findUserByEmail(String email);
+
+    @Query("Select u from User u where u.role = :roleType")
+    List<User> findAllByRole_Value(RoleType roleType);
 
     @Query("Select u from User u order by concat(u.firstName, ' ', u.lastName) asc")
     List<User> getAllOrderNameByAsc();
