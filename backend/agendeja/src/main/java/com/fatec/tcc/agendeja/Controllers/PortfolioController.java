@@ -95,6 +95,18 @@ public class PortfolioController {
         }
     }
 
+    @PutMapping("/add/{id}")
+    public ResponseEntity<ObjectNode> addSubcategoryToPortfolio(@PathVariable("id") Long id, @RequestBody PortfolioBody portfolioBody) {
+        try {
+            this.portfolioService.addSubcategoryToPortfolio(id, portfolioBody.getSubCategoryId());
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ObjectNode> deletePortfolio(@PathVariable("id") Long id) {
         try {
@@ -109,7 +121,7 @@ public class PortfolioController {
     @PutMapping("/subcategory/{id}")
     public ResponseEntity<ObjectNode> deleteSubcategoryFromPortfolio(@PathVariable("id") Long portfolioId, @RequestBody() PortfolioBody portfolioBody) {
         try {
-            this.portfolioService.deleteSubcategoryFromPortfolio(portfolioBody.getUserId(), portfolioId, portfolioBody.getSubcategoryId());
+            this.portfolioService.deleteSubcategoryFromPortfolio(portfolioBody.getUserId(), portfolioId, portfolioBody.getSubCategoryId());
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
