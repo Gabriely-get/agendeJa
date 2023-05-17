@@ -1,11 +1,13 @@
 package com.fatec.tcc.agendeja.Services;
 
-import com.fatec.tcc.agendeja.CustomExceptions.UserDoesNotExistsException;
+import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendeja.Entities.User;
 import com.fatec.tcc.agendeja.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class LoginService {
@@ -15,21 +17,20 @@ public class LoginService {
 
     public Long login(String email, String password) {
         BCryptPasswordEncoder bCryptPasswordEncoder;
+        Optional<User> optionalUser = this.userRepository.findUserByEmail(email);
 
-        if (this.userRepository.existsUserByEmail(email)) {
-            User user = this.userRepository.findUserByEmail(email).get();
-
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
             bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            boolean passMatches = bCryptPasswordEncoder.matches(password, user.getPassword());
 
-            if (passMatches) {
+            if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
                 return user.getId();
             }
 
-            throw new UserDoesNotExistsException("Verify fields!");
+            throw new NotFoundException("Invalid password!");
         }
 
-         throw new UserDoesNotExistsException("User not registered!");
+         throw new NotFoundException("User not registered!");
 
     }
 

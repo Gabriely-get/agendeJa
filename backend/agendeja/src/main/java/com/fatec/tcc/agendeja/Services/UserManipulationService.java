@@ -25,6 +25,8 @@ public class UserManipulationService {
         //TODO
         // "welcome to baeldung", s.replace('s', 'e') replace / in date for -
         // check if datew is vallid
+        // asc or desc -> isAsc true or false :) ; maybe turn pageable a boolean param too
+        // refactor to make equals(?) rick and morty api
 
         if (offset < 0 || limit < 0) throw new IllegalArgumentException("Invalid pagination arguments!");
 

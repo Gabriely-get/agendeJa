@@ -1,16 +1,23 @@
 package com.fatec.tcc.agendeja.Services;
 
 import com.fatec.tcc.agendeja.CustomExceptions.IllegalUserArgumentException;
-import com.fatec.tcc.agendeja.CustomExceptions.UserDoesNotExistsException;
-import com.fatec.tcc.agendeja.Entities.Role;
+import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
+import com.fatec.tcc.agendeja.Entities.Portfolio;
+import com.fatec.tcc.agendeja.Entities.RequestTemplate.CompanyBranchBody;
+import com.fatec.tcc.agendeja.Entities.RequestTemplate.UserBody;
+import com.fatec.tcc.agendeja.Entities.RoleType;
 import com.fatec.tcc.agendeja.Entities.User;
-import com.fatec.tcc.agendeja.Repositories.RoleRepository;
+import com.fatec.tcc.agendeja.Repositories.Address.AddressRepository;
+import com.fatec.tcc.agendeja.Repositories.PortfolioRepository;
 import com.fatec.tcc.agendeja.Repositories.UserRepository;
 import org.apache.logging.log4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -21,12 +28,31 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    Logger logger = LoggerFactory.getLogger(User.class);
 
     @Autowired
     private UserRepository userRepository;
 
+//    @Autowired
+//    private RoleRepository roleRepository;
+
     @Autowired
-    private RoleRepository roleRepository;
+    private ImageDataService imageDataService;
+
+    @Autowired
+    private CompanyBranchService companyBranchService;
+
+    @Autowired
+    private AddressService addressService;
+
+    @Autowired
+    private PortfolioService portfolioService;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private PortfolioRepository portfolioRepository;
 
     public User getUserById(Long id) {
         Optional<User> optionalUser = this.userRepository.findById(id);
@@ -38,7 +64,7 @@ public class UserService {
                 return user;
         }
 
-        throw new UserDoesNotExistsException("User does not exists");
+        throw new NotFoundException("User does not exists");
     }
 
     public List<User> getAllUsers() {
@@ -49,41 +75,107 @@ public class UserService {
         return userList;
     }
 
+    public List<User> getAllUsersEnterprise() {
+        return this.userRepository.findAllByRole_Value(RoleType.ENTERPRISE);
+    }
+
     public List<User> getActiveUsers() {
         List<User> users = this.userRepository.findAll();
 
         return users.stream().filter(User::getIsActive).toList();
     }
 
-    public void createUser(User user) throws SQLIntegrityConstraintViolationException {
+    public void createUser(UserBody user) throws SQLIntegrityConstraintViolationException, IOException {
         BCryptPasswordEncoder bCryptPasswordEncoder;
         boolean userAlreadyExistsByCpf = this.userRepository.existsUserByCpf(user.getCpf());
         boolean userAlreadyExistsByEmail = this.userRepository.existsUserByEmail(user.getEmail());
         boolean userAlreadyExistsByPhone = this.userRepository.existsUserByPhone(user.getPhone());
+        User userId = new User();
+        Portfolio portfolio = new Portfolio();
 
-        if (userAlreadyExistsByCpf) {
-            throw new SQLIntegrityConstraintViolationException("CPF is already registered");
+        try {
+            if (userAlreadyExistsByCpf) {
+                throw new SQLIntegrityConstraintViolationException("CPF is already registered");
+            }
+            if (userAlreadyExistsByEmail) {
+                throw new SQLIntegrityConstraintViolationException("E-mail is already registered");
+            }
+            if (userAlreadyExistsByPhone) {
+                throw new SQLIntegrityConstraintViolationException("Phone is already registered");
+            }
+
+//            if (Objects.nonNull(user.getFile())) {
+//                Long id = this.imageDataService.uploadImage(user.getFile(), null);
+//                user.setImageId(id);
+//            }
+
+            bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            String hashedPass = bCryptPasswordEncoder.encode(user.getPassword());
+            user.setPassword(hashedPass);
+
+            user.setIsActive(true);
+            if (Objects.isNull(user.getImageId())) {
+                user.setImageId(0L);
+                logger.info("Image as null");
+            }
+            if (user.getIsJobProvider()) {
+//                Role role = this.roleRepository.findByName("ENTERPRISE");
+//                user.addRole(role);
+                user.setRole(RoleType.ENTERPRISE);
+
+                userId = this.userRepository.save(new User(user));
+//                if (Objects.isNull(user.getAddress())) {
+//                    this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
+//                            new CompanyBranchBody(
+//                                    user.getFantasyName(),
+//                                    userId.getId(),
+//                                    null
+//                            )
+//                    );
+//                } else {
+//                    Address address = this.addressService.createAddress(user.getAddress());
+                    this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
+                            new CompanyBranchBody(
+                                    user.getFantasyName(),
+                                    userId.getId(),
+                                    user.getAddress(),
+                                    user.getCategory(),
+                                    user.getSubCategories()
+                            )
+                    );
+//                }
+
+//                CompanyBranch companyCreated =
+//                        this.companyBranchService.createCompanyBranch(
+//                                new CompanyBranchBody(
+//                                        user.getFantasyName(),
+//                                        userId.getId(),
+//                                        address
+//                                )
+//                        );
+//
+//                portfolio = this.portfolioService.createPortfolio(
+//                        companyCreated.getId(),
+//                        user.getCategory(),
+//                        user.getSubCategories());
+            } else {
+//                Role role = this.roleRepository.findByName("USER");
+//                user.addRole(role);
+                user.setRole(RoleType.USER);
+                this.userRepository.save(new User(user));
+            }
+
+        } catch (Exception e) {
+            if (userId.getId() != null ) this.userRepository.delete(userId);
+//            if (address != null ) this.addressRepository.delete(address);
+            if (portfolio.getId() != null ) this.portfolioRepository.delete(portfolio);
+
+            logger.error("User register unexpected error: " + e.getMessage());
+            throw e;
         }
-        if (userAlreadyExistsByEmail) {
-            throw new SQLIntegrityConstraintViolationException("E-mail is already registered");
-        }
-        if (userAlreadyExistsByPhone) {
-            throw new SQLIntegrityConstraintViolationException("Phone is already registered");
-        }
-
-        bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String hashedPass = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(hashedPass);
-
-        user.setIsActive(true);
-        System.out.println(this.roleRepository.findByName("USER"));
-        Role role = this.roleRepository.findByName("USER");
-        user.addRole(role);
-        this.userRepository.save(new User(user));
-
     }
 
-    public void updateUser(Long id, User user) {
+    public void updateUser(Long id, UserBody user) {
         //TODO
         // save user picture too
         // validate date birth day
@@ -94,7 +186,7 @@ public class UserService {
 
         Optional<User> optionalUser = this.userRepository.findById(id);
 
-        if (optionalUser.isEmpty()) throw new UserDoesNotExistsException("User does not exists");
+        if (optionalUser.isEmpty()) throw new NotFoundException("User does not exists");
         User userToUpdate = optionalUser.get();
 
         if ( Objects.nonNull(user.getFirstName()) || !(Strings.trimToNull(user.getFirstName()) == null) ) {
