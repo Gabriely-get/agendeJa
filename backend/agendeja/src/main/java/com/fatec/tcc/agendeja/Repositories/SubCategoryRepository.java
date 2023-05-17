@@ -13,4 +13,5 @@ public interface SubCategoryRepository extends CrudRepository<SubCategory, Long>
     boolean existsById(Long id);
 //    Optional<SubCategory> get
     List<SubCategory> getAllByCategory_Id(Long id);
+//    List<SubCategory> findAllBy
 }
