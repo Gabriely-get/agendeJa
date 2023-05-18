@@ -16,4 +16,5 @@ public interface AddressRepository extends CrudRepository<Address, Long> {
             String complement,
             Long neighborhoodId
     );
+
 }
