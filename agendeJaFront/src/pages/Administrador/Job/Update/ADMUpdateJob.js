@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import useDisplayJobAll from "../../../../hooks/display/job/useDisplayJobAll";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import DrawerComponent from "../../../../components/Drawer/Drawer";
 import {
   Table,
   Thead,
@@ -47,7 +46,6 @@ export default function ADMUpdateJob() {
 
   return (
     <>
-      <DrawerComponent />
       <div className="ADMJobContainer">
         <div className="containerCentral">
           <h2>Crie um job para a sua SubCategoria</h2>
