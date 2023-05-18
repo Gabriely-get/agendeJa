@@ -13,4 +13,5 @@ public interface CompanyBranchRepository extends CrudRepository<CompanyBranch, L
     boolean existsById(Long id);
     List<CompanyBranch> findAllByUser_Id(Long id);
     int countAllByAddress_Id(Long id);
+//    boolean existsByNameAndUser_Id(String name, Long userId);
 }

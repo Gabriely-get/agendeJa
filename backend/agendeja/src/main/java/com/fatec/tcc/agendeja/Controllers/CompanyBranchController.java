@@ -62,7 +62,7 @@ public class CompanyBranchController {
     @PostMapping("/")
     public ResponseEntity<ObjectNode> createCompanyBranch(@RequestBody CompanyBranchBody company) {
         try {
-            this.companyBranchService.createCompanyBranch(company);
+            this.companyBranchService.create(company);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (RuntimeException e) {
@@ -82,9 +82,9 @@ public class CompanyBranchController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ObjectNode> updateCompanyBranch(@PathVariable("id") Long id, @RequestBody CompanyBranch company) {
+    public ResponseEntity<ObjectNode> updateCompanyBranch(@PathVariable("id") Long companyId, @RequestBody CompanyBranchBody company) {
         try {
-            this.companyBranchService.updateCompanyBranch(id, company.getAddress());
+            this.companyBranchService.updateCompanyBranch(companyId, company);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {

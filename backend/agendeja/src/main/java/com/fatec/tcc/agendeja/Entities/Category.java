@@ -4,6 +4,8 @@ import com.fatec.tcc.agendeja.CustomExceptions.IllegalUserArgumentException;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.apache.logging.log4j.util.Strings;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -30,6 +32,7 @@ public @Data class Category {
 //    @OneToMany(cascade = CascadeType.ALL)
 //    @JoinColumn(name = "category_id", referencedColumnName = "id")
 //    private Set<SubCategory> subCategories = new HashSet<>();
+
 
     public void setName(String name) {
         if (Strings.trimToNull(name) == null || name.isEmpty() || name.isBlank()) {

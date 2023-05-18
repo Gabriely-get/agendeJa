@@ -30,6 +30,13 @@ public @Data class SubCategory {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Category category;
 
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "subCategories")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private Set<Portfolio> portfolios;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "subCategory")
+//    private Set<Portfolio> portfolios;
+
     public void setName(String name) {
         if (Strings.trimToNull(name) == null || name.isEmpty() || name.isBlank()) {
             throw new IllegalArgumentException("Sub category name is required");

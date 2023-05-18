@@ -7,7 +7,6 @@ import com.fatec.tcc.agendeja.Entities.Address.Neighborhood;
 import com.fatec.tcc.agendeja.Entities.Address.State;
 import com.fatec.tcc.agendeja.Entities.CompanyBranch;
 import com.fatec.tcc.agendeja.Entities.RequestTemplate.CepApi;
-import com.fatec.tcc.agendeja.Entities.User;
 import com.fatec.tcc.agendeja.Repositories.Address.AddressRepository;
 import com.fatec.tcc.agendeja.Repositories.Address.CityRepository;
 import com.fatec.tcc.agendeja.Repositories.Address.NeighborhoodRepository;
@@ -43,7 +42,7 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public Address createAddress(CepApi addressCepApi) {
+    public Address createAndGetAddress(CepApi addressCepApi) {
         State stateObject;
         City cityObject;
         Neighborhood neighborhoodObject;
@@ -135,7 +134,7 @@ public class AddressService {
                         ) {
 
                             if (this.companyRepository.countAllByAddress_Id(company.getAddress().getId()) > 1) {
-                                Address addressCreated = this.createAddress(newAddress);
+                                Address addressCreated = this.createAndGetAddress(newAddress);
                                 company.setAddress(addressCreated);
                                 logger.info("\u001B[32m" + "Address " + addressId + " updated by creation" + "\u001B[0m");
                             } else {

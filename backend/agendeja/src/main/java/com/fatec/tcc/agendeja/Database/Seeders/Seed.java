@@ -22,15 +22,13 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class Seed {
     Logger logger = LoggerFactory.getLogger(Seed.class);
     @Autowired
     private UserRepository userRepository;
-//    @Autowired
-//    private RoleRepository roleRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -60,18 +58,25 @@ public class Seed {
     private PortfolioJobRepository portfolioJobRepository;
 
     @EventListener
-    public void seed(ContextRefreshedEvent event) throws ParseException {
+    public void seed(ContextRefreshedEvent event) throws ParseException, InterruptedException {
 
+        try {
+            this.seedUser(true);
+            this.seedRCategory();
+            this.seedRSubCategory();
+            this.seedJobCategory();
+            this.seedAddressAndOthersNecessariesTables();
+            this.seedCompany();
+            this.seedPortfolio();
+            this.seedPortfolioJob();
+
+            System.out.println();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
 //        this.seedRoles();
-        this.seedUser(true);
-        this.seedRCategory();
-        this.seedRSubCategory();
-        this.seedJobCategory();
-        this.seedAddressAndOthersNecessariesTables();
-        this.seedCompany();
-        this.seedPortfolio();
 
-        System.out.println();
     }
 
 //    private void seedRoles() {
@@ -118,20 +123,43 @@ public class Seed {
         }
     }
 
-    private void seedJobCategory() {
-        int qt = ((List<JobCategory>) this.jobCategoryRepository.findAll()).size();
+//    @Transactional
+    private void seedJobCategory() throws InterruptedException {
+//        Thread.sleep(500);
+        try {
+            int qt = ((List<JobCategory>) this.jobCategoryRepository.findAll()).size();
 
-        if (qt < 1) {
-            JobCategory jobCategory1 =
-                    new JobCategory("Micropigmentação", this.subCategoryRepository.findByName("Design de Sobrancelha").get());
-            JobCategory jobCategory2 =
-                    new JobCategory("Massagem Transversal", this.subCategoryRepository.findByName("Esteticista").get());
-            JobCategory jobCategory3 =
-                    new JobCategory("Aula de Inglês", this.subCategoryRepository.findByName("Aulas de idiomas").get());
+            if (qt < 1) {
+                Optional<SubCategory> optionalSubCategory = this.subCategoryRepository.findById(1L);
+                Optional<SubCategory> optionalSubCategory2 = this.subCategoryRepository.findById(3L);
+                Optional<SubCategory> optionalSubCategory3 = this.subCategoryRepository.findById(4L);
 
-            this.jobCategoryRepository.saveAll(List.of(jobCategory1, jobCategory2, jobCategory3));
-            logger.info("Job seeded");
+                if (
+                        optionalSubCategory3.isPresent()
+                        && optionalSubCategory2.isPresent()
+                        && optionalSubCategory.isPresent()
+                ) {
+                    SubCategory subCategory = optionalSubCategory.get();
+                    SubCategory subCategory2 = optionalSubCategory2.get();
+                    SubCategory subCategory3 = optionalSubCategory3.get();
+
+                    JobCategory jobCategory1 =
+                            new JobCategory("Micropigmentação", subCategory);
+                    JobCategory jobCategory2 =
+                            new JobCategory("Massagem Transversal", subCategory2);
+                    JobCategory jobCategory3 =
+                            new JobCategory("Aula de Inglês", subCategory3);
+                    this.jobCategoryRepository.saveAll(List.of(jobCategory1, jobCategory2, jobCategory3));
+                    logger.info("Job seeded");
+                }
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Error on seed job: " + e);
         }
+
     }
 
     private void seedAddressAndOthersNecessariesTables() {
@@ -184,39 +212,67 @@ public class Seed {
         }
     }
 
+    @Transactional
     private void seedPortfolio() {
         int qt = ((List<Portfolio>) this.portfolioRepository.findAll()).size();
 
         if (qt < 1) {
 
-            Portfolio portfolio1 =
-                    new Portfolio(
-                            this.companyRepository.findById(1L).get(),
-                            this.categoryRepository.findById(2L).get(),
-                            new HashSet<>(
-                                    Set.of(this.subCategoryRepository.findById(3L).get()))
-                    );
+            Optional<CompanyBranch> ocb = this.companyRepository.findById(1L);
+            Optional<CompanyBranch> ocb2 = this.companyRepository.findById(3L);
+            Optional<CompanyBranch> ocb3 = this.companyRepository.findById(2L);
 
-            Portfolio portfolio2 =
-                    new Portfolio(
-                            this.companyRepository.findById(2L).get(),
-                            this.categoryRepository.findById(1L).get(),
-                            Set.of(
-                                    this.subCategoryRepository.findById(1L).get(),
-                                    this.subCategoryRepository.findById(2L).get()
-                            ));
+            Optional<Category> category = this.categoryRepository.findById(2L);
+            Optional<Category> category2 = this.categoryRepository.findById(1L);
+            Optional<Category> category3 = this.categoryRepository.findById(3L);
 
-            Portfolio portfolio3 =
-                    new Portfolio(
-                            this.companyRepository.findById(3L).get(),
-                            this.categoryRepository.findById(3L).get(),
-                            new HashSet<>(
-                                    Set.of(this.subCategoryRepository.findById(4L).get()))
-                    );
+            Optional<SubCategory> subCategory = this.subCategoryRepository.findById(3L);
+            Optional<SubCategory> subCategory1 = this.subCategoryRepository.findById(1L);
+            Optional<SubCategory> subCategory2 = this.subCategoryRepository.findById(2L);
+            Optional<SubCategory> subCategory3 = this.subCategoryRepository.findById(4L);
 
-            this.portfolioRepository.saveAll(List.of(portfolio1, portfolio2, portfolio3));
+            if (
+                ocb.isPresent()
+                        && ocb2.isPresent()
+                        && ocb3.isPresent()
+                && category.isPresent()
+                        && category2.isPresent()
+                        && category3.isPresent()
+                && subCategory.isPresent()
+                        && subCategory1.isPresent()
+                        && subCategory2.isPresent()
+                        && subCategory3.isPresent()
+            ) {
 
-            logger.info("Portfolio seeded");
+                Portfolio portfolio1 =
+                        new Portfolio(
+                                ocb.get(),
+                                category.get(),
+                                new HashSet<>(
+                                        Set.of(subCategory.get()))
+                        );
+
+                Portfolio portfolio2 =
+                        new Portfolio(
+                                ocb2.get(),
+                                category2.get(),
+                                Set.of(
+                                        subCategory1.get(),
+                                       subCategory2.get()
+                                ));
+
+                Portfolio portfolio3 =
+                        new Portfolio(
+                                ocb3.get(),
+                                category3.get(),
+                                new HashSet<>(
+                                        Set.of(subCategory3.get()))
+                        );
+
+                this.portfolioRepository.saveAll(List.of(portfolio1, portfolio2, portfolio3));
+
+                logger.info("Portfolio seeded");
+            }
         }
     }
 
@@ -256,7 +312,7 @@ public class Seed {
         }
     }
 
-    @Transactional
+//    @Transactional
     private void seedUser(boolean active) throws ParseException {
         int qt = this.userRepository.findAll().size();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);

@@ -52,7 +52,7 @@ public class CompanyBranchService {
         return this.companyBranchRepository.findAllByUser_Id(id);
     }
 
-    public CompanyBranch createCompanyBranch(CompanyBranchBody companyBranch) {
+    public CompanyBranch create(CompanyBranchBody companyBranch) {
         try {
             if (Strings.trimToNull(companyBranch.getFantasyName()) == null
                     || companyBranch.getFantasyName().isEmpty()
@@ -85,7 +85,7 @@ public class CompanyBranchService {
             if (companyBranchList.isEmpty() || !existsUserCompanyWithName) {
                 return this.companyBranchRepository.save(
                         new CompanyBranch(branchName,
-                                this.addressService.createAddress(address),
+                                this.addressService.createAndGetAddress(address),
                                 user)
                 );
             }
@@ -101,7 +101,7 @@ public class CompanyBranchService {
     public void createCompanyBranchWithCategoriesAndSubcategories(CompanyBranchBody companyBranch) {
 
         CompanyBranch companyCreated =
-                this.createCompanyBranch(
+                this.create(
                         companyBranch
                 );
 
@@ -111,21 +111,46 @@ public class CompanyBranchService {
                 companyBranch.getSubCategories());
 
     }
+// TODO renomear public place para street name
+    public void updateCompanyBranch(Long companyId, CompanyBranchBody companyBranchBody) {
+        Optional<CompanyBranch> optionalCompanyBranch = this.companyBranchRepository.findById(companyId);
+        Optional<User> optionalUser = this.userRepository.findById(companyBranchBody.getUserId());
 
-    public void updateCompanyBranch(Long id, Address address) {
-        Optional<CompanyBranch> optionalCompanyBranch = this.companyBranchRepository.findById(id);
+        if (optionalUser.isEmpty()) throw new IllegalArgumentException("Invalid user id! Owner not found");
+        User user = optionalUser.get();
 
-        if (optionalCompanyBranch.isPresent()) {
-            CompanyBranch companyBranchToUpdate = optionalCompanyBranch.get();
+        if (optionalCompanyBranch.isEmpty())
+            throw new NotFoundException("Company does not exists!");
+        CompanyBranch companyBranchToUpdate = optionalCompanyBranch.get();
 
-            if (Objects.nonNull(address)) {
-                companyBranchToUpdate.setAddress(address);
-                this.companyBranchRepository.save(companyBranchToUpdate);
-                return;
-            }
-
+        if (Objects.nonNull(companyBranchBody.getAddress())) {
+            Address address1 = this.addressService.createAndGetAddress(companyBranchBody.getAddress());
+            companyBranchToUpdate.setAddress(address1);
+            this.companyBranchRepository.save(companyBranchToUpdate);
         }
-        throw new NotFoundException("Company does not exists!");
+
+//        if (Objects.isNull(companyBranchBody.getFantasyName()) || this.companyBranchRepository
+//                .existsByNameAndUser_Id(companyBranchToUpdate.getName(), user.getId())
+//        )
+        List<CompanyBranch> companyBranchList = this.companyBranchRepository.findByName(companyBranchBody.getFantasyName());
+        boolean existsUserCompanyWithName = false;
+
+        for (int i = 0; i < companyBranchList.size(); i++) {
+            if (Objects.equals(companyBranchList.get(i).getUser().getId(), companyBranchBody.getUserId())) {
+                existsUserCompanyWithName = true;
+                break;
+            }
+        }
+
+        if (companyBranchList.isEmpty() || !existsUserCompanyWithName) {
+            companyBranchToUpdate.setName(companyBranchBody.getFantasyName());
+            this.companyBranchRepository.save(companyBranchToUpdate);
+            return;
+        }
+        throw new IllegalArgumentException("This company name is already registered in this user account");
+
+//        companyBranchToUpdate.setName(companyBranchBody.getFantasyName());
+
 
     }
 
