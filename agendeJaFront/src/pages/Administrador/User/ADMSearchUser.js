@@ -11,7 +11,6 @@ import {
   Td,
   TableContainer,
 } from "@chakra-ui/react";
-import DrawerComponent from "../../../components/Drawer/Drawer";
 import "./ADMSearchUser.scss";
 
 export default function ADMSearchUser() {
@@ -75,7 +74,6 @@ export default function ADMSearchUser() {
 
   return (
     <>
-      <DrawerComponent />
       <TableContainer>
         <Table variant="striped" colorScheme="teal">
           <Thead>

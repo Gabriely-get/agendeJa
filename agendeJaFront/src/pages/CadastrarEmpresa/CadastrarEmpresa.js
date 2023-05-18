@@ -76,6 +76,17 @@ export default function CadastrarEmpresa() {
     }
   }, [isValue]);
 
+  useEffect(() => {
+    if (isCep.length <= 7) {
+      setIsValue(false);
+      setIsNumero("");
+      setIsComplemento("");
+      setIsBairro("");
+      setIsCidade("");
+      setIsEstado("");
+    }
+  }, [isCep]);
+
   return (
     <div className="firstStepContainer">
       <div className="containerCentral">

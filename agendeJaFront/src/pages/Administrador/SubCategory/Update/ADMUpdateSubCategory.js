@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import useDisplaySubCategoryAll from "../../../../hooks/display/subcategory/useDisplaySubCategoryAll";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import DrawerComponent from "../../../../components/Drawer/Drawer";
 import {
   Table,
   Thead,
@@ -47,7 +46,6 @@ export default function ADMUpdateSubCategory() {
 
   return (
     <>
-      <DrawerComponent />
       <div className="ADMSubCategoryContainer">
         <div className="containerCentral">
           <h2>Atualize ou delete uma SubCategoria</h2>

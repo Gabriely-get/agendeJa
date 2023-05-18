@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import useRegisterCategory from "../../../../hooks/register/useRegisterCategory";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import DrawerComponent from "../../../../components/Drawer/Drawer";
 import Loader from "../../../../components/Loader/Loader";
 import "./ADMCreateCategory.scss";
 
@@ -46,7 +45,6 @@ export default function ADMCreateCategory() {
   return (
     <>
       {loading ? <Loader /> : ""}
-      <DrawerComponent />
       <div className="firstStepContainer">
         <div className="containerCentral">
           <h2>Cadastre uma Categoria</h2>

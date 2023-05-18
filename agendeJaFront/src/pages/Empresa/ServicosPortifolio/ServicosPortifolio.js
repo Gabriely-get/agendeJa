@@ -13,13 +13,12 @@ import {
   TableContainer,
 } from "@chakra-ui/react";
 import ModalDeletePortifolio from "./ModalPortifolio/ModalDeletePortifolio";
-import "./ExcluirPortifolio.scss";
+import "./ServicosPortifolio.scss";
 import ModalDeleteSubCategory from "./ModalPortifolio/ModalDeleteSubcategory";
 import ModalAddSubCategory from "./ModalPortifolio/ModalAddSubcategory";
 
 export default function ServicosPortifolio() {
   const userData = useSelector((state) => state?.userDados?.role);
-  const [isPortifolio, setIsPortifolio] = useState(false);
   const navigate = useNavigate();
   var count = 0;
   const { displayCompanyById } = useDisplayCompanyById();
@@ -45,12 +44,6 @@ export default function ServicosPortifolio() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
-
-  function getSelectedValue() {
-    var selectElement = document.getElementById("mySubcategories");
-    var selectedValue = selectElement.value;
-    setIsPortifolio(selectedValue);
-  }
 
   return (
     <div className="DeletePortifolio">
@@ -108,52 +101,6 @@ export default function ServicosPortifolio() {
             <ModalDeletePortifolio data={id} />
           </div>
         </div>
-
-        {/* <TableContainer>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Categoria</Th>
-                <Th>SubCategoria</Th>
-                <Th>Excluir</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {isData?.data?.map((portfolio) => {
-                return (
-                  <Tr key={portfolio.id}>
-                    <Td>{portfolio.category.name}</Td>
-
-                    <Td>
-                      <select
-                        id="mySubcategories"
-                        onChange={() => getSelectedValue()}
-                      >
-                        {portfolio.subCategories.map((index) => {
-                          return (
-                            <>
-                              <option>Selecione</option>
-                              <option key={index.id} value={index.id}>
-                                {index.name}
-                              </option>
-                            </>
-                          );
-                        })}
-                      </select>
-                    </Td>
-
-                    <Td>
-                      <ModalDeletePortifolio
-                        data={portfolio}
-                        portifolio={isPortifolio}
-                      />
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-        </TableContainer> */}
       </div>
     </div>
   );

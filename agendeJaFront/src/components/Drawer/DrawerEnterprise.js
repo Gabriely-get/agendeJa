@@ -17,21 +17,26 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import "./Drawer.scss";
-import useDisplayCompanyByUserId from "../../hooks/display/company/useDisplayCompanyByUserId";
+import useDisplayCompanyPortiByUserId from "../../hooks/display/company/useDisplayCompanyPortiByUserId";
+import useDisplayCompanyFilialByUserId from "../../hooks/display/company/useDisplayCompanyFilialByUserId";
 import { useSelector } from "react-redux";
 
 export default function DrawerEnterpriseComponent() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
-  const [isData, setIsData] = useState(false);
-  const { displayCompanyByUserId } = useDisplayCompanyByUserId();
+  const [isDataPortifolio, setIsDataPortifolio] = useState(false);
+  const [isDataFilial, setIsDataFilial] = useState(false);
+  const { displayCompanyPortiByUserId } = useDisplayCompanyPortiByUserId();
+  const { displayCompanyFilialByUserId } = useDisplayCompanyFilialByUserId();
   const userData = useSelector((state) => state?.userDados?.id);
 
   useEffect(() => {
-    if (isData === false) {
+    if (isDataPortifolio === false) {
       async function searchData() {
-        const result = await displayCompanyByUserId(userData);
-        setIsData(result);
+        const result = await displayCompanyPortiByUserId(userData);
+        const result2 = await displayCompanyFilialByUserId(userData);
+        setIsDataPortifolio(result);
+        setIsDataFilial(result2);
       }
       searchData();
     }
@@ -55,7 +60,12 @@ export default function DrawerEnterpriseComponent() {
           <DrawerHeader>O que deseja fazer?</DrawerHeader>
           <DrawerBody>
             <Accordion allowToggle>
-              <AccordionItem onClick={() => setIsData(false)}>
+              <AccordionItem
+                onClick={() => {
+                  setIsDataPortifolio(false);
+                  setIsDataFilial(false);
+                }}
+              >
                 <h2>
                   <AccordionButton>
                     <Box
@@ -75,9 +85,26 @@ export default function DrawerEnterpriseComponent() {
                     Criar Filial
                   </Link>
                 </AccordionPanel>
+                {isDataFilial?.data?.map((filial) => {
+                  return (
+                    <AccordionPanel key={filial.id}>
+                      <Link
+                        to={`/empresa/servicos_filial/${filial.id}`}
+                        className="anchor"
+                      >
+                        {filial?.name}
+                      </Link>
+                    </AccordionPanel>
+                  );
+                })}
               </AccordionItem>
 
-              <AccordionItem onClick={() => setIsData(false)}>
+              <AccordionItem
+                onClick={() => {
+                  setIsDataPortifolio(false);
+                  setIsDataFilial(false);
+                }}
+              >
                 <h2>
                   <AccordionButton>
                     <Box
@@ -97,14 +124,14 @@ export default function DrawerEnterpriseComponent() {
                     Criar Portifolio
                   </Link>
                 </AccordionPanel>
-                {isData?.data?.map((category) => {
+                {isDataPortifolio?.data?.map((portifolio) => {
                   return (
-                    <AccordionPanel key={category.id}>
+                    <AccordionPanel key={portifolio.id}>
                       <Link
-                        to={`/empresa/Excluir_portifolio/${category.id}`}
+                        to={`/empresa/servicos_portifolio/${portifolio.id}`}
                         className="anchor"
                       >
-                        {category?.category?.name}
+                        {portifolio?.category?.name}
                       </Link>
                     </AccordionPanel>
                   );

@@ -21,7 +21,9 @@ export default function Administrador() {
 
   return (
     <>
-      <DrawerComponent />
+      <div>
+        <h2>Sem criatividade aqui</h2>
+      </div>
     </>
   );
 }

@@ -1,0 +1,38 @@
+.chakra-modal__body {
+  .containerCentral {
+    text-align: center;
+
+    .categoryInfos,
+    .subCategoryInfos {
+      display: grid;
+      justify-content: center;
+      gap: 10px;
+
+      .ghostBtn {
+        border: 1px solid #4b9fe1;
+        color: #4b9fe1;
+        font-weight: 700;
+        font-size: 18px;
+        padding: 16px 32px;
+        border-radius: 50px;
+        max-width: 300px;
+
+        &.selected {
+          background-color: #4b9fe1;
+          border-color: #4b9fe1;
+          color: #fff;
+        }
+
+        &:hover {
+          background-color: #4b9fe1;
+          border-color: #4b9fe1;
+          color: #fff;
+        }
+      }
+    }
+
+    .subCategorieTitle {
+      margin-top: 20px;
+    }
+  }
+}

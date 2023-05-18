@@ -1,9 +1,9 @@
 import axios from "axios";
 
-export default function useDisplayCompanyByUserId() {
+export default function useDisplayCompanyPortiByUserId() {
   const apiUrl = process.env.REACT_APP_API_AGENDEJA_AWS;
 
-  async function displayCompanyByUserId(id) {
+  async function displayCompanyPortiByUserId(id) {
     let url = `${apiUrl}:5000/agenda/portfolio/user/${id}`;
 
     const response = await axios.get(url);
@@ -11,6 +11,6 @@ export default function useDisplayCompanyByUserId() {
   }
 
   return {
-    displayCompanyByUserId,
+    displayCompanyPortiByUserId,
   };
 }

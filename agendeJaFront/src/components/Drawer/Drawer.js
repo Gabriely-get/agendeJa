@@ -29,7 +29,7 @@ export default function DrawerComponent() {
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="left"
+        placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
         size="sm"

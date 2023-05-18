@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useDisplayCategory from "../../../hooks/display/category/useDisplayCategory";
 import useDisplaySubCategoryById from "../../../hooks/display/subcategory/useDisplaySubCategoryById";
 import useRegisterPortifolio from "../../../hooks/register/useRegisterPortifolio";
-import useDisplayCompanyByUserId from "../../../hooks/display/company/useDisplayCompanyByUserId";
+import useDisplayCompanyPortiByUserId from "../../../hooks/display/company/useDisplayCompanyPortiByUserId";
 
 export default function CreatePortifolio() {
   const userData = useSelector((state) => state?.userDados);
@@ -19,7 +19,7 @@ export default function CreatePortifolio() {
   const [categorySelect, setCategorySelect] = useState(false);
   const [subCategorySelect, setSubCategorySelect] = useState(false);
   const { registerPortifolio } = useRegisterPortifolio();
-  const { displayCompanyByUserId } = useDisplayCompanyByUserId();
+  const { displayCompanyPortiByUserId } = useDisplayCompanyPortiByUserId();
 
   useEffect(() => {
     if (userData?.role !== "ENTERPRISE") {
@@ -91,7 +91,9 @@ export default function CreatePortifolio() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const resultCompanyBranchSearch = await displayCompanyByUserId(userData.id);
+    const resultCompanyBranchSearch = await displayCompanyPortiByUserId(
+      userData.id
+    );
     const info = {
       categoryId: dados.category,
       companyBranchId: resultCompanyBranchSearch?.data[0]?.companyBranch?.id,

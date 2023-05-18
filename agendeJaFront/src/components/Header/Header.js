@@ -5,6 +5,7 @@ import LogoImg from "../../assets/agendeJa-logo.svg";
 import "./Header.scss";
 import MenuHeader from "./Menu/MenuHeader";
 import DrawerEnterpriseComponent from "../Drawer/DrawerEnterprise";
+import DrawerComponent from "../Drawer/Drawer";
 
 export default function Header() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -12,12 +13,21 @@ export default function Header() {
   const userData = useSelector((state) => state?.userDados?.role);
   const stateUser = useSelector((state) => state?.userDados);
   const [isEnterprise, setIsEnterprise] = useState(false);
+  const [isAdm, setIsAdm] = useState(false);
 
   useEffect(() => {
     if (userData === "ENTERPRISE") {
       setIsEnterprise(true);
     } else {
       setIsEnterprise(false);
+    }
+  }, [userData]);
+
+  useEffect(() => {
+    if (userData === "ADMIN") {
+      setIsAdm(true);
+    } else {
+      setIsAdm(false);
     }
   }, [userData]);
 
@@ -91,6 +101,7 @@ export default function Header() {
             </div>
 
             {isEnterprise && <DrawerEnterpriseComponent />}
+            {isAdm && <DrawerComponent />}
           </>
         ) : (
           <div className="boxLogin">
