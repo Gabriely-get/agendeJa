@@ -137,6 +137,32 @@ export default function DrawerEnterpriseComponent() {
                   );
                 })}
               </AccordionItem>
+              <AccordionItem
+                onClick={() => {
+                  setIsDataPortifolio(false);
+                  setIsDataFilial(false);
+                }}
+              >
+                <h2>
+                  <AccordionButton>
+                    <Box
+                      as="span"
+                      flex="1"
+                      fontWeight="extrabold"
+                      textAlign="left"
+                      color="#4b9fe1"
+                    >
+                      Serviços
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <Link to="/empresa/criar_servicos" className="anchor">
+                    Criar Serviços
+                  </Link>
+                </AccordionPanel>
+              </AccordionItem>
             </Accordion>
           </DrawerBody>
         </DrawerContent>

@@ -25,6 +25,7 @@ import CreateFilial from "./pages/Empresa/CreateFilial/CreateFilial";
 import ServicosPortifolio from "./pages/Empresa/ServicosPortifolio/ServicosPortifolio";
 import CreatePortifolio from "./pages/Empresa/CreatePortifolio/CreatePortifolio";
 import ServicosFilial from "./pages/Empresa/ServicosFilial/ServicosFilial";
+import CreateJob from "./pages/Empresa/CreateJob/CreateJob";
 
 const router = createBrowserRouter([
   {
@@ -103,6 +104,10 @@ const router = createBrowserRouter([
       {
         path: "/empresa/servicos_portifolio/:id",
         element: <ServicosPortifolio />,
+      },
+      {
+        path: "/empresa/criar_servicos",
+        element: <CreateJob />,
       },
     ],
   },
