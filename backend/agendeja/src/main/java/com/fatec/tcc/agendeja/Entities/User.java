@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -98,6 +100,9 @@ public @Data class User {
 //    private Set<Role> roles = new HashSet<>();
     private RoleType role;
     private Long imageId;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+//    private Set<JobCategory> jobCategories;
 
     private String getFullUsername() {
         return this.getFirstName().trim() + ' ' + this.getLastName();

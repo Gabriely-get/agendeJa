@@ -41,7 +41,12 @@ public @Data class Portfolio {
                     name = "portfolio_id" ),
             inverseJoinColumns = @JoinColumn(
                     name = "subcategory_id" ))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<SubCategory> subCategories = new HashSet<>();
+
+//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "portfolio")
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private Set<PortfolioJob> portfolioJobs;
 
     public void setCompanyBranch(CompanyBranch companyBranch) {
         if (Objects.isNull(companyBranch)) {

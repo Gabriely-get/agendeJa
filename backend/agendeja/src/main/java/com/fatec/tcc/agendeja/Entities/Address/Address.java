@@ -1,6 +1,7 @@
 package com.fatec.tcc.agendeja.Entities.Address;
 
 import com.fatec.tcc.agendeja.Entities.CompanyBranch;
+import com.fatec.tcc.agendeja.Entities.JobCategory;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 public @Data class Address {
@@ -28,6 +30,9 @@ public @Data class Address {
     // TODO field update at for verify on front and make an alert on enterprise page about the new address
     @LastModifiedDate
     private Timestamp updateAt;
+
+//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "address")
+//    private Set<JobCategory> jobCategories;
 
     public Address(String cep, String logradouro, String number, String complement, Neighborhood neighborhoodObject) {
         this.cep = cep;
