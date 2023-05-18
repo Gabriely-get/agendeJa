@@ -162,6 +162,24 @@ export default function DrawerEnterpriseComponent() {
                     Criar Serviços
                   </Link>
                 </AccordionPanel>
+                {isDataPortifolio?.data?.map((portifolio) => {
+                  return (
+                    <span>
+                      {portifolio?.subCategories?.map((subcat) => {
+                        return (
+                          <AccordionPanel key={subcat.id}>
+                            <Link
+                              to={`/empresa/servicos_job_portfolio/${subcat.id}`}
+                              className="anchor"
+                            >
+                              {subcat?.name}
+                            </Link>
+                          </AccordionPanel>
+                        );
+                      })}
+                    </span>
+                  );
+                })}
               </AccordionItem>
             </Accordion>
           </DrawerBody>

@@ -23,6 +23,7 @@ import ADMCreateJob from "./pages/Administrador/Job/Create/ADMCreateJob";
 import ADMUpdateJob from "./pages/Administrador/Job/Update/ADMUpdateJob";
 import CreateFilial from "./pages/Empresa/CreateFilial/CreateFilial";
 import ServicosPortifolio from "./pages/Empresa/ServicosPortifolio/ServicosPortifolio";
+import ServicosPortifolioJob from "./pages/Empresa/ServicosPortfolioJob/ServicosPortfolioJob";
 import CreatePortifolio from "./pages/Empresa/CreatePortifolio/CreatePortifolio";
 import ServicosFilial from "./pages/Empresa/ServicosFilial/ServicosFilial";
 import CreateJob from "./pages/Empresa/CreateJob/CreateJob";
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
       {
         path: "/empresa/criar_servicos",
         element: <CreateJob />,
+      },
+      {
+        path: "/empresa/servicos_job_portfolio/:id",
+        element: <ServicosPortifolioJob />,
       },
     ],
   },

@@ -1,0 +1,65 @@
+.servicesPortifolio {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+
+  .containerCentral {
+    text-align: center;
+
+    .containerInfos {
+      margin-top: 20px;
+
+      .divCategories {
+        display: flex;
+        justify-content: left;
+
+        .name {
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        .nameCategory {
+          font-size: 20px;
+          margin-left: 15px;
+        }
+      }
+
+      .divSubCategories {
+        margin-top: 20px;
+
+        .name {
+          font-weight: bold;
+          font-size: 20px;
+          margin-top: 20px;
+        }
+
+        .nameSubCategory {
+          font-size: 15px;
+        }
+
+        .chakra-table__container {
+          border: 1px solid #c3c3c3;
+          margin-top: 15px;
+          border-radius: 10px;
+
+          thead {
+            tr {
+              border-bottom: 2px solid #c3c3c3;
+              th {
+                color: #000;
+                font-size: 16px;
+              }
+            }
+          }
+        }
+      }
+
+      .deleteAll {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+    }
+  }
+}

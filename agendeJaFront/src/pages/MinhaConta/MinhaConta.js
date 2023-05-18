@@ -45,9 +45,7 @@ export default function MinhaConta() {
       });
       const updateReduxUser = await addUser(state?.id_user);
       dispatch(addInfoUser(updateReduxUser));
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   return (
