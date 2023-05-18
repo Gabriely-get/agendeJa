@@ -68,7 +68,8 @@ public class AddressController {
     @PostMapping("/")
     public ResponseEntity<ObjectNode> createAddress(@RequestBody CepApi address) {
         try {
-            this.addressService.createAddress(address);
+            Address address1 = this.addressService.createAndGetAddress(address);
+            System.out.println(address1);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (RuntimeException e) {
