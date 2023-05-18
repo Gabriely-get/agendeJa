@@ -1,7 +1,7 @@
 package com.fatec.tcc.agendeja.Services;
 
 import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
-import com.fatec.tcc.agendeja.Database.Seeders.Seed;
+//import com.fatec.tcc.agendeja.Database.Seeders.Seed;
 import com.fatec.tcc.agendeja.Entities.*;
 import com.fatec.tcc.agendeja.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendeja.Repositories.ScheduleRepository;
@@ -18,7 +18,7 @@ import java.util.*;
 
 @Service
 public class ScheduleService {
-    Logger logger = LoggerFactory.getLogger(Seed.class);
+    Logger logger = LoggerFactory.getLogger(ScheduleService.class);
 
     @Autowired
     private ScheduleRepository scheduleRepository;
