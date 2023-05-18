@@ -32,11 +32,11 @@ export default function ADMCreateJob() {
 
   useEffect(() => {
     if (count === 0) {
-      async function searchCategory() {
+      async function searchJob() {
         let resultCategory = await displayJobAll();
         setIsData(resultCategory);
       }
-      searchCategory();
+      searchJob();
       count++;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

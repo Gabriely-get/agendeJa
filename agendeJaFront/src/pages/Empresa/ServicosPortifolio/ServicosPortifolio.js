@@ -34,19 +34,19 @@ export default function ServicosPortifolio() {
 
   useEffect(() => {
     if (count === 0) {
-      async function searchCategory() {
+      async function searchCompanyById() {
         let resultCategory = await displayCompanyById(id);
         setIsData(resultCategory);
         setIsVerifica(true);
       }
-      searchCategory();
+      searchCompanyById();
       count++;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [count]);
 
   return (
-    <div className="DeletePortifolio">
+    <div className="servicesPortifolio">
       <div className="containerCentral">
         <h2>Seu Portifolio</h2>
         <p>Aqui estão os serviços que sua empresa faz...</p>

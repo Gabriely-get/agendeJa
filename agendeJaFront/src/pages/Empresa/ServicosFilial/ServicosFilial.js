@@ -41,12 +41,12 @@ export default function ServicosFilial() {
 
   useEffect(() => {
     if (count === 0) {
-      async function searchCategory() {
+      async function searchCompanyFilial() {
         let resultCategory = await displayCompanyFilialById(id);
         setIsData(resultCategory);
         setIsVerifica(true);
       }
-      searchCategory();
+      searchCompanyFilial();
       count++;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

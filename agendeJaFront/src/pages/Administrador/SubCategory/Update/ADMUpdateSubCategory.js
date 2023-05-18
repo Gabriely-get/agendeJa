@@ -34,11 +34,11 @@ export default function ADMUpdateSubCategory() {
 
   useEffect(() => {
     if (count === 0) {
-      async function searchCategory() {
+      async function searchSubCategory() {
         let resultCategory = await displaySubCategoryAll();
         setIsData(resultCategory);
       }
-      searchCategory();
+      searchSubCategory();
       count++;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -34,11 +34,11 @@ export default function CreatePortifolio() {
 
   useEffect(() => {
     if (count === 0) {
-      async function searchCategory() {
+      async function searchDisplayCategory() {
         let resultCategory = await displayCategory();
         setIsCategory(resultCategory);
       }
-      searchCategory();
+      searchDisplayCategory();
       count++;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
