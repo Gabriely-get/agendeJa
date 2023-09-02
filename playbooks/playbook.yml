@@ -1,6 +1,6 @@
 ---
 
-- hosts: lcoalhost
+- hosts: localhost
   become: yes
   roles:
     - java
