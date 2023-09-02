@@ -1,0 +1,7 @@
+---
+
+- name: Install Java (CentOS/RHEL)
+  yum:
+    name: java-17-openjdk	
+    state: present
+    update_cache: yes

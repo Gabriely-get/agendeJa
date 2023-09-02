@@ -1,0 +1,36 @@
+---
+
+- name: Install mariadb-server
+  yum:
+    name: mariadb-server
+    state: present
+    update_cache: yes
+
+- name: Enable and start mariadb
+  ansible.builtin.systemd:
+    name: mariadb-server
+    state: started
+    enabled: true
+
+
+
+- name: Set mysql config
+  expect:
+    command: "sudo mysql_secure_installation"
+    responses:
+      'Enter current password for root \(enter for none\):' : ''
+      'Set root password [Y/n]': 'Y'
+      'New Password:': 'root'
+      'Re-enter new Password:': 'root'
+      'Remove anonymous users? [Y/n]': 'Y'
+      'Disallow root login remotely? [Y/n]': 'Y'
+      'Remove test database and access to it? [Y/n]': 'Y'
+      'Reload privilege tables now? [Y/n]': 'Y'
+
+- name: Set mysql user & database
+  expect:
+    command: "mysql -h localhost -u root -p"
+    responses:
+      'Enter current password for root \(enter for none\):' : ''
+      'Set root password [Y/n]': 'Y'
+  become: yes

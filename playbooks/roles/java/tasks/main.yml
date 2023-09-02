@@ -1,0 +1,4 @@
+---
+
+- name: Include java
+  include: install_java.yml

@@ -1,0 +1,4 @@
+---
+
+- name: Include gradle
+  include: install_gradle.yml

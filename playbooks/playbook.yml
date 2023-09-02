@@ -1,0 +1,8 @@
+---
+
+- hosts: lcoalhost
+  become: yes
+  roles:
+    - java
+    - gradle
+    - mysql
