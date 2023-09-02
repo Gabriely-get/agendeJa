@@ -9,6 +9,7 @@ import com.fatec.tcc.agendeja.Repositories.PortfolioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,6 +44,7 @@ public class PortfolioJobService {
 //    }
 
     public PortfolioJob createPortfolioJob(PortfolioJobBody portfolioJobBody) {
+        //TODO add desc character limit 100
         try {
             Optional<Portfolio> optionalPortfolio = this.portfolioRepository.findById(portfolioJobBody.getPortfolioId());
             Optional<JobCategory> optionalJob = this.jobCategoryRepository.findById(portfolioJobBody.getJobId());
@@ -59,7 +61,12 @@ public class PortfolioJobService {
             if (!Objects.equals(portfolio.getCategory().getId(), jobCategory.getSubCategory().getCategory().getId()))
                 throw new IllegalArgumentException("An error occurred! The job selected does not belong to the portfolio category!");
 
-            String name = portfolioJobBody.getName() == null ? jobCategory.getName() : portfolioJobBody.getName();
+            String name = portfolioJobBody.getName() == null || portfolioJobBody.getName().isEmpty()
+                    ? jobCategory.getName()
+                    : portfolioJobBody.getName();
+
+            if (portfolioJobBody.getPrice() <= 0)
+                throw new IllegalArgumentException("An error occurred! Invalid job price!");
 
             return this.portfolioJobRepository.save( new PortfolioJob(
                     name,
@@ -105,8 +112,21 @@ public class PortfolioJobService {
         return (List<PortfolioJob>) this.portfolioJobRepository.findAll();
     }
 
+//    public List<PortfolioJob> getAllFormatted(){
+//        List<PortfolioJob> portfolioJobList = this.portfolioJobRepository.findAll();
+//        List<PortfolioJob> portfolioJobListToSend = new ArrayList<>();
+//
+//
+//
+//    }
+
     public List<PortfolioJob> getAllByUserId(Long id){
         return this.portfolioJobRepository.findAllByPortfolio_CompanyBranch_User_Id(id);
+    }
+
+    public List<PortfolioJob> getAllByUserIdAndSubCategoryId(Long userId, Long subCatId){
+        return this.portfolioJobRepository
+                .findAllByPortfolio_CompanyBranch_User_IdAndJobCategory_SubCategory_Id(userId, subCatId);
     }
 
     public PortfolioJob getById(Long id) {

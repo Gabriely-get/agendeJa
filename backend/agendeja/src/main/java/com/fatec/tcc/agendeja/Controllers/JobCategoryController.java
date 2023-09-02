@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendeja.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendeja.CustomExceptions.NotFoundException;
+import com.fatec.tcc.agendeja.Entities.PortfolioJob;
 import com.fatec.tcc.agendeja.Entities.RequestTemplate.NameAndIdBody;
 import com.fatec.tcc.agendeja.Entities.JobCategory;
 import com.fatec.tcc.agendeja.Services.JobCategoryService;
@@ -34,6 +35,17 @@ public class JobCategoryController {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/subcategory/{id}")
+    public ResponseEntity<ObjectNode> getJobCategoriesBySubcategoryId(@PathVariable("id") Long id) {
+        try {
+            List<JobCategory> jobCategory = this.jobCategoryService.getAllJobCategoriesBySubcategory(id);
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(jobCategory).build(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         }
     }
 

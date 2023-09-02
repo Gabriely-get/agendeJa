@@ -57,6 +57,18 @@ public class PortfolioJobController {
         }
     }
 
+    @GetMapping("/by/{userId}/{subCatId}")
+    public ResponseEntity<ObjectNode> getAllPortfolioJobsByUserIdAndSubCategoryId(
+            @PathVariable("userId") Long userId, @PathVariable("subCatId") Long subCategoryId) {
+        try {
+            List<PortfolioJob> portfolioJobs = this.userJobService.getAllByUserIdAndSubCategoryId(userId, subCategoryId);
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolioJobs).build(), HttpStatus.OK);
+        } catch (RuntimeException | JsonProcessingException e) {
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping("/")
     public ResponseEntity<ObjectNode> createPortfolioJob(@RequestBody PortfolioJobBody portfolioBody) {
         try {

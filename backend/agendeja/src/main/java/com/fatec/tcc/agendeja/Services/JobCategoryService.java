@@ -60,6 +60,10 @@ public class JobCategoryService {
         return jobCategoryList;
     }
 
+    public List<JobCategory> getAllJobCategoriesBySubcategory(Long subCategoryId){
+        return this.jobCategoryRepository.findAllBySubCategory_Id(subCategoryId);
+    }
+
     public JobCategory getById(Long id) {
         Optional<JobCategory> optionalJob = this.jobCategoryRepository.findById(id);
 
