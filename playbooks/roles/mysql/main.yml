@@ -1,0 +1,4 @@
+---
+
+- name: Include mysql
+  include: install_mysql.yml
