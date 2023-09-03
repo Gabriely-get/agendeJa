@@ -1,15 +1,11 @@
 ---
 
-- name: Get gradle zip
-  get_url: 
-    url: https://gradle.org/next-steps/?version=8.3&format=bin
-    dest: /
-
-- name: Unzip gradle
-  unarchive:
-    src: gradle-8.3-bin.zip
-    dest: /opt/gradle
-
-- name: Export PATH with gradle
-  shell: export PATH=$PATH:/opt/gradle/gradle-8.3/bin
+- name:  Get and unzip gradle file
+  shell:  wget -c https://services.gradle.org/distributions/gradle-8.3-bin.zip -P /tmp && sudo unzip -d /opt/ /tmp/gradle-*.zip
   become: yes
+
+- name: Add a line to the end of a file
+  lineinfile:
+    path: /etc/profile
+    insertafter: EOF
+    line: export PATH=$PATH:/opt/gradle-8.3/bin"
