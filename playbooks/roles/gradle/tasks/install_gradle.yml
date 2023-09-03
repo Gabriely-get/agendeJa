@@ -9,3 +9,6 @@
     path: /etc/profile
     insertafter: EOF
     line: export PATH=$PATH:/opt/gradle-8.3/bin
+
+- name: Relaod environment
+  shell: source /etc/profile
