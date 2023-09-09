@@ -8,7 +8,7 @@
 
 - name: Enable and start mariadb
   ansible.builtin.systemd:
-    name: mariadb-server
+    name: mariadb
     state: started
     enabled: true
 
@@ -19,9 +19,9 @@
     command: "sudo mysql_secure_installation"
     responses:
       'Enter current password for root \(enter for none\):' : ''
-      'Set root password [Y/n]': 'Y'
+      'Set root password? [Y/n]': 'y'
       'New Password:': 'root'
-      'Re-enter new Password:': 'root'
+      'Re-enter new password:': 'root'
       'Remove anonymous users? [Y/n]': 'Y'
       'Disallow root login remotely? [Y/n]': 'Y'
       'Remove test database and access to it? [Y/n]': 'Y'
