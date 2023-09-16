@@ -7,7 +7,8 @@ echo "---------- install ansible----------"
 
 if ! command -v ansible &> /dev/null; then
     echo "Ansible is not installed. Installing..."
-    sudo amazon-linux-extras install ansible2 -y
+    sudo yum install epel-release -y
+    sudo yum install ansible -y
 else
     echo "Ansible is already installed."
 fi
