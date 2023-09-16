@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "---------- update yum ----------"
-sudo yum update
+sudo yum update -y
 
 echo "---------- install ansible----------"
 
