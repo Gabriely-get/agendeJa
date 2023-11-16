@@ -27,8 +27,8 @@ public class PortfolioJobService {
     @Autowired
     private JobCategoryRepository jobCategoryRepository;
 
-    @Autowired
-    private ImageDataService imageDataService;
+//    @Autowired
+//    private ImageDataService imageDataService;
 
 //    public List<PortfolioJob> getAll(){
 //        return (List<PortfolioJob>) this.portfolioJobRepository.findAll();
@@ -47,8 +47,8 @@ public class PortfolioJobService {
     public PortfolioJob createPortfolioJob(PortfolioJobBody portfolioJobBody) {
         //TODO add desc character limit 100
         try {
-            Optional<Portfolio> optionalPortfolio = this.portfolioRepository.findById(portfolioJobBody.getPortfolioId());
-            Optional<JobCategory> optionalJob = this.jobCategoryRepository.findById(portfolioJobBody.getJobId());
+            Optional<Portfolio> optionalPortfolio = this.portfolioRepository.findById(portfolioJobBody.portfolioId());
+            Optional<JobCategory> optionalJob = this.jobCategoryRepository.findById(portfolioJobBody.jobId());
 
             if (optionalPortfolio.isEmpty()) throw new IllegalArgumentException("Invalid portfolio for portfolio job!");
             if (optionalJob.isEmpty()) throw new IllegalArgumentException("Invalid job for portfolio job!");
@@ -62,17 +62,17 @@ public class PortfolioJobService {
             if (!Objects.equals(portfolio.getCategory().getId(), jobCategory.getSubCategory().getCategory().getId()))
                 throw new IllegalArgumentException("An error occurred! The job selected does not belong to the portfolio category!");
 
-            String name = portfolioJobBody.getName() == null || portfolioJobBody.getName().isEmpty()
+            String name = portfolioJobBody.name() == null || portfolioJobBody.name().isEmpty()
                     ? jobCategory.getName()
-                    : portfolioJobBody.getName();
+                    : portfolioJobBody.name();
 
-            if (portfolioJobBody.getPrice() <= 0)
+            if (portfolioJobBody.price() <= 0)
                 throw new IllegalArgumentException("An error occurred! Invalid job price!");
 
             return this.portfolioJobRepository.save( new PortfolioJob(
                     name,
-                    portfolioJobBody.getPrice(),
-                    portfolioJobBody.getDescription(),
+                    portfolioJobBody.price(),
+                    portfolioJobBody.description(),
                     portfolio,
                     jobCategory));
         } catch (Exception e) {

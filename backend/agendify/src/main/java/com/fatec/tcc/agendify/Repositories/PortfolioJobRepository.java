@@ -11,7 +11,7 @@ import java.util.List;
 public interface PortfolioJobRepository extends CrudRepository<PortfolioJob, Long> {
     boolean existsByJobCategory_IdAndPortfolio_IdAndPrice(Long jobId, Long portfolioId, Double price);
 
-    @Query("Select j, i from PortfolioJob j join ImageData i where i.portfolioJob.id = :id")
+//    @Query("Select j, i from PortfolioJob j join ImageData i where i.portfolioJob.id = :id")
 
     PortfolioJob findPortfolioJobCompleteById(Long id);
 
