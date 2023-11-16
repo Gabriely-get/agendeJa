@@ -1,6 +1,6 @@
 package com.fatec.tcc.agendify.Repositories;
 
-import com.fatec.tcc.agendify.Entities.RoleType;
+import com.fatec.tcc.agendify.Entities.Role;
 import com.fatec.tcc.agendify.Entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
 
     @Query("Select u from User u where u.role = :roleType")
-    List<User> findAllByRole_Value(RoleType roleType);
+    List<User> findAllByRole_Value(Role roleType);
 
     @Query("Select u from User u order by concat(u.firstName, ' ', u.lastName) asc")
     List<User> getAllOrderNameByAsc();

@@ -5,7 +5,7 @@ import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.Portfolio;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.CompanyBranchBody;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
-import com.fatec.tcc.agendify.Entities.RoleType;
+import com.fatec.tcc.agendify.Entities.Role;
 import com.fatec.tcc.agendify.Entities.User;
 import com.fatec.tcc.agendify.Repositories.Address.AddressRepository;
 import com.fatec.tcc.agendify.Repositories.PortfolioRepository;
@@ -36,8 +36,8 @@ public class UserService {
 //    @Autowired
 //    private RoleRepository roleRepository;
 
-    @Autowired
-    private ImageDataService imageDataService;
+//    @Autowired
+//    private ImageDataService imageDataService;
 
     @Autowired
     private CompanyBranchService companyBranchService;
@@ -76,7 +76,7 @@ public class UserService {
     }
 
     public List<User> getAllUsersEnterprise() {
-        return this.userRepository.findAllByRole_Value(RoleType.ENTERPRISE);
+        return this.userRepository.findAllByRole_Value(Role.ENTERPRISE);
     }
 
     public List<User> getActiveUsers() {
@@ -121,7 +121,7 @@ public class UserService {
             if (user.getIsJobProvider()) {
 //                Role role = this.roleRepository.findByName("ENTERPRISE");
 //                user.addRole(role);
-                user.setRole(RoleType.ENTERPRISE);
+                user.setRole(Role.ENTERPRISE);
 
                 userId = this.userRepository.save(new User(user));
 //                if (Objects.isNull(user.getAddress())) {
@@ -161,7 +161,7 @@ public class UserService {
             } else {
 //                Role role = this.roleRepository.findByName("USER");
 //                user.addRole(role);
-                user.setRole(RoleType.USER);
+                user.setRole(Role.USER);
                 this.userRepository.save(new User(user));
             }
 

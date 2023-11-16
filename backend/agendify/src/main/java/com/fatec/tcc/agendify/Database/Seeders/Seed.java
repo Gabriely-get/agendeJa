@@ -340,7 +340,7 @@ public class Seed {
                     user.setBirthday(formatter.parse(dateInString));
                     user.setPassword(new BCryptPasswordEncoder().encode("test123"));
 //                    user.setRoles(Set.of(this.roleRepository.findById(1L).get()));
-                    user.setRole(RoleType.USER);
+                    user.setRole(Role.USER);
                     user.setIsJobProvider(false);
 
                     this.userRepository.save(user);
@@ -366,7 +366,7 @@ public class Seed {
                     user.setIsJobProvider(true);
 
 //                    user.addRole(this.roleRepository.findById(3L).get());
-                    user.setRole(RoleType.ENTERPRISE);
+                    user.setRole(Role.ENTERPRISE);
                     this.userRepository.save(user);
                     change = true;
                 }
@@ -389,7 +389,7 @@ public class Seed {
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
 //                user.setRoles(Set.of(this.roleRepository.findById(2L).get()));
                 user.setIsJobProvider(false);
-                user.setRole(RoleType.ADMIN);
+                user.setRole(Role.ADMIN);
                 this.userRepository.save(user);
             }
             logger.info("User seeded");

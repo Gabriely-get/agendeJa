@@ -89,7 +89,7 @@ public @Data class User {
 //            inverseJoinColumns = @JoinColumn(
 //                    name = "role_id" ))
 //    private Set<Role> roles = new HashSet<>();
-    private RoleType role;
+    private Role role;
     private Long imageId;
 
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")

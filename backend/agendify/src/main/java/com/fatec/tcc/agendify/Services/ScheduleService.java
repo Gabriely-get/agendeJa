@@ -8,7 +8,7 @@ import com.fatec.tcc.agendify.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendify.Repositories.ScheduleRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
 import com.fatec.tcc.agendify.Entities.PortfolioJob;
-import com.fatec.tcc.agendify.Entities.RoleType;
+import com.fatec.tcc.agendify.Entities.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +74,10 @@ public class ScheduleService {
                 throw new NotFoundException("Can not create schedule! Portfolio job does not exists!");
             PortfolioJob portfolioJob = optionalPortfolioJob.get();
 
-            if (!RoleType.roleTypeExists(
-                    portfolioJob.getPortfolio().getCompanyBranch().getUser().getRole().getValue()
-            ) || portfolioJob.getPortfolio().getCompanyBranch().getUser().getRole() != RoleType.ENTERPRISE)
+            if (!this.roleExists(
+                    portfolioJob.getPortfolio().getCompanyBranch().getUser().getRole() )
+                    || portfolioJob.getPortfolio().getCompanyBranch().getUser().getRole() != Role.ENTERPRISE
+            )
                 throw new IllegalArgumentException("Can not create schedule! Invalid user role!");
 
             if (date.isBefore(LocalDate.now()))
@@ -140,7 +141,7 @@ public class ScheduleService {
 
         Schedule schedule = optionalSchedule.get();
         User user = optionalUser.get();
-        if (!RoleType.roleTypeExists(user.getRole().getValue()) || user.getRole() != RoleType.ENTERPRISE)
+        if (!this.roleExists(user.getRole()) || user.getRole() != Role.ENTERPRISE)
             throw new IllegalArgumentException("Can not update schedule! Invalid user role!");
 
         if (schedule.getIsScheduled())
@@ -172,6 +173,15 @@ public class ScheduleService {
                 this.scheduleRepository.deleteById(scheduleId);
         }
 
+    }
+
+    public boolean roleExists(Role role) {
+        for (Role roleValue : Role.values()) {
+            if (role.name().equals(roleValue.name())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //TODO criar, alterar e agendar. 3 coisas diferentes
