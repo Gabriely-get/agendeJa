@@ -30,12 +30,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-//    @Autowired
-//    private RoleRepository roleRepository;
-
-//    @Autowired
-//    private ImageDataService imageDataService;
-
     @Autowired
     private CompanyBranchService companyBranchService;
 
@@ -129,7 +123,6 @@ public class UserService {
                 user.setRole(Role.ENTERPRISE);
 
                 if (Objects.nonNull(user.getCoverImage())) {
-                    System.out.println("NON NULL::" + user.getCoverImage());
                     imageCover = this.imageService.saveImage(user.getCoverImage());
 
                     user.setImageCoverId(imageCover.getId());

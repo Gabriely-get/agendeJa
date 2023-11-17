@@ -13,7 +13,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length = 16777215, columnDefinition = "mediumtext")
     private String base64;
 
     @Column

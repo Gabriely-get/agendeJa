@@ -27,13 +27,7 @@ public class ImageService {
     }
 
     public Image getImage(Long id) throws IOException {
-        if (id == null) throw new RuntimeException("Can't get image. Id is null.");
-
-        Optional<Image> image = imageRepository.findById(id);
-        if (image.isPresent())
-            return image.get();
-
-        throw new NotFoundException("This user does not have a cover.");
+        return imageRepository.findById(id).get();
     }
 
     public List<String> getImage() throws IOException {
