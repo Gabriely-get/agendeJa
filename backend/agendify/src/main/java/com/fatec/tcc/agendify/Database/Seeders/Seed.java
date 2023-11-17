@@ -78,18 +78,20 @@ public class Seed {
 
     }
 
-//    private void seedRoles() {
-//        int qt = this.roleRepository.findAll().size();
-//
-//        if (qt < 1) {
-//            Role role1 = new Role("USER");
-//            Role role2 = new Role("ENTERPRISE");
-//            Role role3 = new Role("ADMIN");
-//
-//            this.roleRepository.saveAll(List.of(role1, role2, role3));
-//            logger.info("Role seeded");
-//        }
-//    }
+    /*
+    private void seedRoles() {
+        int qt = this.roleRepository.findAll().size();
+
+        if (qt < 1) {
+            Role role1 = new Role("USER");
+            Role role2 = new Role("ENTERPRISE");
+            Role role3 = new Role("ADMIN");
+
+            this.roleRepository.saveAll(List.of(role1, role2, role3));
+            logger.info("Role seeded");
+        }
+    }
+     */
 
     private void seedRCategory() {
         int qt = ((List<Category>) this.categoryRepository.findAll()).size();
@@ -322,57 +324,54 @@ public class Seed {
         if (qt < 6) {
             boolean change = false;
 
-            for (int i = 1; i < 9; i++) {
-                if (change) {
-                    String email = "teste"+i+"@gmail.com";
-                    String cpf = "1234567898" + i;
-                    String dateInString = "2002-07-0" + i;
+            //3 cliente
+            for (int i = 1; i < 4; i++) {
+                String email = "teste" + i + "@gmail.com";
+                String cpf = "1234567898" + i;
+                String dateInString = "2002-07-0" + i;
 
-                    active = !active;
+                User user = new User();
+                user.setCpf(cpf);
+                user.setEmail(email);
+                user.setFirstName("Gabriely");
+                user.setLastName(" Santos " + i);
+                user.setIsActive(true);
+                user.setPhone(cpf);
+                user.setBirthday(formatter.parse(dateInString));
+                user.setPassword(new BCryptPasswordEncoder().encode("test123"));
+                user.setRole(Role.USER);
+                user.setIsJobProvider(false);
+                user.setImageProfileId(Long.parseLong(String.valueOf(i)));
 
-                    User user = new User();
-                    user.setCpf(cpf);
-                    user.setEmail(email);
-                    user.setFirstName("Gabriely");
-                    user.setLastName(" Santos " + i);
-                    user.setIsActive(active);
-                    user.setPhone(cpf);
-                    user.setBirthday(formatter.parse(dateInString));
-                    user.setPassword(new BCryptPasswordEncoder().encode("test123"));
-//                    user.setRoles(Set.of(this.roleRepository.findById(1L).get()));
-                    user.setRole(Role.USER);
-                    user.setIsJobProvider(false);
-
-                    this.userRepository.save(user);
-                    change = false;
-                } else {
-                    String email = "gab"+i+"@gmail.com";
-                    String cpf = i+"266567898" + i;
-                    String dateInString = "200"+i+"-08-0" + i;
-
-//TODO validate if older than 17 years old
-
-                    active = !active;
-
-                    User user = new User();
-                    user.setCpf(cpf);
-                    user.setEmail(email);
-                    user.setFirstName("Rodrigo");
-                    user.setLastName(" Ablu " + i);
-                    user.setIsActive(active);
-                    user.setPhone(cpf);
-                    user.setBirthday(formatter.parse(dateInString));
-                    user.setPassword(new BCryptPasswordEncoder().encode("test123"));
-                    user.setIsJobProvider(true);
-
-//                    user.addRole(this.roleRepository.findById(3L).get());
-                    user.setRole(Role.ENTERPRISE);
-                    this.userRepository.save(user);
-                    change = true;
-                }
-
+                this.userRepository.save(user);
             }
 
+
+
+            //3 prestador de serviço
+            for (int i = 1; i < 3; i++) {
+                String email = "gab"+i+"@gmail.com";
+                String cpf = i+"266567898" + i;
+                String dateInString = "200"+i+"-08-0" + i;
+
+                User user = new User();
+                user.setCpf(cpf);
+                user.setEmail(email);
+                user.setFirstName("Rodrigo");
+                user.setLastName(" Ablu " + i);
+                user.setIsActive(true);
+                user.setPhone(cpf);
+                user.setBirthday(formatter.parse(dateInString));
+                user.setPassword(new BCryptPasswordEncoder().encode("test123"));
+                user.setIsJobProvider(true);
+                user.setRole(Role.ENTERPRISE);
+                user.setImageProfileId(Long.parseLong(String.valueOf(i)));
+                user.setImageCoverId(Long.parseLong(String.valueOf(i+3)));
+
+                this.userRepository.save(user);
+            }
+
+            //3 admin
             for (int i = 1; i < 3; i++) {
                 String email = "mandinha"+i+"@gmail.com";
                 String cpf = i+"360278988" + i;
@@ -383,16 +382,18 @@ public class Seed {
                 user.setEmail(email);
                 user.setFirstName("Amanda ");
                 user.setLastName(" Suit" + i);
-                user.setIsActive(active);
+                user.setIsActive(true);
                 user.setPhone(cpf);
                 user.setBirthday(formatter.parse(dateInString));
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
-//                user.setRoles(Set.of(this.roleRepository.findById(2L).get()));
                 user.setIsJobProvider(false);
                 user.setRole(Role.ADMIN);
+                user.setImageProfileId(Long.parseLong(String.valueOf(i)));
+
                 this.userRepository.save(user);
             }
-            logger.info("User seeded");
+
+            logger.info("User with image seeded");
         }
     }
 
