@@ -341,7 +341,8 @@ public class Seed {
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
                 user.setRole(Role.USER);
                 user.setIsJobProvider(false);
-                user.setImageProfileId(Long.parseLong(String.valueOf(i)));
+
+                user.setImageProfileId((long) i);
 
                 this.userRepository.save(user);
             }
@@ -365,8 +366,8 @@ public class Seed {
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
                 user.setIsJobProvider(true);
                 user.setRole(Role.ENTERPRISE);
-                user.setImageProfileId(Long.parseLong(String.valueOf(i)));
-                user.setImageCoverId(Long.parseLong(String.valueOf(i+3)));
+                user.setImageProfileId((long) i);
+                user.setImageCoverId((long) i + 3);
 
                 this.userRepository.save(user);
             }
@@ -388,7 +389,7 @@ public class Seed {
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
                 user.setIsJobProvider(false);
                 user.setRole(Role.ADMIN);
-                user.setImageProfileId(Long.parseLong(String.valueOf(i)));
+                user.setImageProfileId((long) i);
 
                 this.userRepository.save(user);
             }
