@@ -6,12 +6,15 @@ import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendify.Entities.User;
+import com.fatec.tcc.agendify.Entities.UserDetails;
 import com.fatec.tcc.agendify.Services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin
@@ -27,12 +30,12 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<ObjectNode> getUser(@PathVariable("id") Long id) {
         try {
-            User user = this.userService.getUserById(id);
+            UserDetails user = this.userService.getUserById(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | IOException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -70,6 +73,7 @@ public class UserController {
         }
     }
 
+    @Transactional
     @PutMapping("/{id}")
     public ResponseEntity<ObjectNode> updateUser(@PathVariable("id") Long id, @RequestBody UserBody user) {
         try {

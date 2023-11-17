@@ -2,7 +2,6 @@ package com.fatec.tcc.agendify.Entities.RequestTemplate;
 
 import com.fatec.tcc.agendify.Entities.Role;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -24,8 +23,10 @@ public @Data class UserBody {
 //    private Set<Role> roles = new HashSet<>();
     private Role role;
     private CepApi address;
-    private Long imageId;
-    private MultipartFile file;
+    private Long imageProfileId;
+    private Long imageCoverId;
+    private String profileImage;
+    private String coverImage;
 
 //    public  void addRole(Role role) {
 //        this.roles.add(role);

@@ -2,15 +2,12 @@ package com.fatec.tcc.agendify.Services;
 
 import com.fatec.tcc.agendify.CustomExceptions.IllegalUserArgumentException;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
-import com.fatec.tcc.agendify.Entities.Portfolio;
+import com.fatec.tcc.agendify.Entities.*;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.CompanyBranchBody;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
-import com.fatec.tcc.agendify.Entities.Role;
-import com.fatec.tcc.agendify.Entities.User;
 import com.fatec.tcc.agendify.Repositories.Address.AddressRepository;
 import com.fatec.tcc.agendify.Repositories.PortfolioRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,9 @@ public class UserService {
     private CompanyBranchService companyBranchService;
 
     @Autowired
+    private ImageService imageService;
+
+    @Autowired
     private AddressService addressService;
 
     @Autowired
@@ -54,14 +54,22 @@ public class UserService {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
-    public User getUserById(Long id) {
+    public UserDetails getUserById(Long id) throws IOException {
         Optional<User> optionalUser = this.userRepository.findById(id);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            Image image = this.imageService.getImage(user.getImageProfileId());
+            Image cover;
+
+            if (user.getIsJobProvider()) {
+                cover = this.imageService.getImage(user.getImageCoverId());
+                return new UserDetails(user, image.getBase64(), cover.getBase64());
+            }
+
 
             //if (user.getIsActive())
-                return user;
+            return new UserDetails(user, image.getBase64());
         }
 
         throw new NotFoundException("User does not exists");
@@ -85,12 +93,15 @@ public class UserService {
         return users.stream().filter(User::getIsActive).toList();
     }
 
-    public void createUser(UserBody user) throws SQLIntegrityConstraintViolationException, IOException {
+    public UserDetails createUser(UserBody user) throws SQLIntegrityConstraintViolationException, IOException {
         BCryptPasswordEncoder bCryptPasswordEncoder;
         boolean userAlreadyExistsByCpf = this.userRepository.existsUserByCpf(user.getCpf());
         boolean userAlreadyExistsByEmail = this.userRepository.existsUserByEmail(user.getEmail());
         boolean userAlreadyExistsByPhone = this.userRepository.existsUserByPhone(user.getPhone());
-        User userId = new User();
+        Image imageProfile = new Image();
+        Image imageCover = new Image();
+        User userId;
+        User userReturn = new User();
         Portfolio portfolio = new Portfolio();
 
         try {
@@ -104,75 +115,50 @@ public class UserService {
                 throw new SQLIntegrityConstraintViolationException("Phone is already registered");
             }
 
-//            if (Objects.nonNull(user.getFile())) {
-//                Long id = this.imageDataService.uploadImage(user.getFile(), null);
-//                user.setImageId(id);
-//            }
-
             bCryptPasswordEncoder = new BCryptPasswordEncoder();
             String hashedPass = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(hashedPass);
 
             user.setIsActive(true);
-            if (Objects.isNull(user.getImageId())) {
-                user.setImageId(0L);
-                logger.info("Image as null");
+            if (Objects.nonNull(user.getProfileImage())) {
+                imageProfile = this.imageService.saveImage(user.getProfileImage());
+
+                user.setImageProfileId(imageProfile.getId());
             }
             if (user.getIsJobProvider()) {
-//                Role role = this.roleRepository.findByName("ENTERPRISE");
-//                user.addRole(role);
                 user.setRole(Role.ENTERPRISE);
 
-                userId = this.userRepository.save(new User(user));
-//                if (Objects.isNull(user.getAddress())) {
-//                    this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
-//                            new CompanyBranchBody(
-//                                    user.getFantasyName(),
-//                                    userId.getId(),
-//                                    null
-//                            )
-//                    );
-//                } else {
-//                    Address address = this.addressService.createAddress(user.getAddress());
-                    this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
-                            new CompanyBranchBody(
-                                    user.getFantasyName(),
-                                    userId.getId(),
-                                    user.getAddress(),
-                                    user.getCategory(),
-                                    user.getSubCategories()
-                            )
-                    );
-//                }
+                if (Objects.nonNull(user.getCoverImage())) {
+                    System.out.println("NON NULL::" + user.getCoverImage());
+                    imageCover = this.imageService.saveImage(user.getCoverImage());
 
-//                CompanyBranch companyCreated =
-//                        this.companyBranchService.createCompanyBranch(
-//                                new CompanyBranchBody(
-//                                        user.getFantasyName(),
-//                                        userId.getId(),
-//                                        address
-//                                )
-//                        );
-//
-//                portfolio = this.portfolioService.createPortfolio(
-//                        companyCreated.getId(),
-//                        user.getCategory(),
-//                        user.getSubCategories());
+                    user.setImageCoverId(imageCover.getId());
+                }
+                userId = this.userRepository.save(new User(user));
+
+                this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
+                        new CompanyBranchBody(
+                                user.getFantasyName(),
+                                userId.getId(),
+                                user.getAddress(),
+                                user.getCategory(),
+                                user.getSubCategories()
+                        )
+                );
+
+                return new UserDetails(userId, imageProfile.getBase64(), imageCover.getBase64());
             } else {
-//                Role role = this.roleRepository.findByName("USER");
-//                user.addRole(role);
                 user.setRole(Role.USER);
-                this.userRepository.save(new User(user));
+                userReturn =  this.userRepository.save(new User(user));
             }
 
         } catch (Exception e) {
-            if (userId.getId() != null ) this.userRepository.delete(userId);
-//            if (address != null ) this.addressRepository.delete(address);
-            if (portfolio.getId() != null ) this.portfolioRepository.delete(portfolio);
-
+            e.printStackTrace();
             logger.error("User register unexpected error: " + e.getMessage());
             throw e;
         }
+
+        return new UserDetails(userReturn, imageProfile.getBase64());
     }
 
     public void updateUser(Long id, UserBody user) {
@@ -189,19 +175,20 @@ public class UserService {
         if (optionalUser.isEmpty()) throw new NotFoundException("User does not exists");
         User userToUpdate = optionalUser.get();
 
-        if ( Objects.nonNull(user.getFirstName()) || !(Strings.trimToNull(user.getFirstName()) == null) ) {
+        if (Objects.nonNull(user.getFirstName())) {
             if (user.getFirstName().length() < 2)
                 throw new IllegalUserArgumentException("Invalid username length!");
 
             userToUpdate.setFirstName(user.getFirstName().trim());
         }
 
-        if ( Objects.nonNull(user.getLastName()) || !(Strings.trimToNull(user.getLastName()) == null) )
-            userToUpdate.setLastName(user.getLastName().trim());
-        else
-            throw new IllegalUserArgumentException("Invalid username length!");
+        if ( Objects.nonNull(user.getLastName()))
+            if (user.getLastName().length() > 1)
+                userToUpdate.setLastName(user.getLastName().trim());
+            else
+                throw new IllegalUserArgumentException("Invalid lastname length!");
 
-        if (Objects.nonNull(user.getPhone()) || !(Strings.trimToNull(user.getPhone()) == null) ) {
+        if (Objects.nonNull(user.getPhone())) {
             if (user.getPhone().length() != 11)
                 throw new IllegalUserArgumentException("Invalid phone number!");
 
@@ -213,7 +200,6 @@ public class UserService {
 
         userToUpdate.setUpdateAt(Timestamp.from(Instant.now()));
         this.userRepository.save(userToUpdate);
-
     }
 
     public void deleteUser(Long id) {

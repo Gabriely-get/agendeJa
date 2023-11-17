@@ -6,9 +6,12 @@ import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.CepApi;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.Login;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
+import com.fatec.tcc.agendify.Entities.User;
+import com.fatec.tcc.agendify.Entities.UserDetails;
 import com.fatec.tcc.agendify.Services.CepApiService;
 import com.fatec.tcc.agendify.Services.LoginService;
 import com.fatec.tcc.agendify.Services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +39,7 @@ public class AuthController {
 
     @GetMapping("/")
     public String healthcheck() {
-        return "OK";
+        return "<html><h1>OI</h1></html>";
     }
 
     @GetMapping("/auth")
@@ -59,16 +62,18 @@ public class AuthController {
 //        return "This is not a secure text";
     }
 
+    @Transactional
     @PostMapping("/register")
     public ResponseEntity<ObjectNode> createUser(@RequestBody UserBody user) {
         try {
-            this.userService.createUser(user);
+            UserDetails user1 = this.userService.createUser(user);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user1).build(), HttpStatus.CREATED);
         } catch (RuntimeException | SQLIntegrityConstraintViolationException | IOException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<ObjectNode> login(@RequestBody Login login) {

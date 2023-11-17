@@ -31,7 +31,7 @@ public @Data class User {
         this.setLastName(user.getLastName());
 //        this.setRoles(user.getRoles());
         this.setRole(user.getRole());
-        this.setImageId(user.getImageId());
+        this.setImageProfileId(user.getImageProfileId());
         this.setIsJobProvider(user.getIsJobProvider());
     }
 
@@ -48,7 +48,8 @@ public @Data class User {
         this.setLastName(user.getLastName());
 //        this.setRoles(user.getRoles());
         this.setRole(user.getRole());
-        this.setImageId(user.getImageId());
+        this.setImageProfileId(user.getImageProfileId());
+        this.setImageCoverId(user.getImageCoverId());
         this.setIsJobProvider(user.getIsJobProvider());
     }
 
@@ -80,17 +81,9 @@ public @Data class User {
 
     @LastModifiedDate
     private Timestamp updateAt;
-
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(
-//            name = "user_role",
-//            joinColumns = @JoinColumn(
-//                    name = "user_id" ),
-//            inverseJoinColumns = @JoinColumn(
-//                    name = "role_id" ))
-//    private Set<Role> roles = new HashSet<>();
     private Role role;
-    private Long imageId;
+    private Long imageProfileId;
+    private Long imageCoverId;
 
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
 //    private Set<JobCategory> jobCategories;
@@ -106,10 +99,6 @@ public @Data class User {
     public void setLastName(String lastName) {
         this.lastName = lastName.trim();
     }
-
-//    public  void addRole(Role role) {
-//        this.roles.add(role);
-//    }
 
 //    private Collection<? extends GrantedAuthority> getRoles(User user) {
 //    List<GrantedAuthority> authorities = new ArrayList<>();
