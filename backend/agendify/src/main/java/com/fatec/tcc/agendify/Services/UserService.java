@@ -58,7 +58,11 @@ public class UserService {
 
             if (user.getIsJobProvider()) {
                 cover = this.imageService.getImage(user.getImageCoverId());
-                return new UserDetails(user, image.getBase64(), cover.getBase64());
+                return new UserDetails(
+                        user,
+                        image == null ? "" : image.getBase64(),
+                        cover == null ? "" : cover.getBase64()
+                );
             }
 
 

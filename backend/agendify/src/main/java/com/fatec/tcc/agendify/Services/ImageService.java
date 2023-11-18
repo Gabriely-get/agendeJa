@@ -27,7 +27,8 @@ public class ImageService {
     }
 
     public Image getImage(Long id) throws IOException {
-        return imageRepository.findById(id).get();
+        Optional<Image> imageIsNull = imageRepository.findById(id);
+        return imageIsNull.orElse(null);
     }
 
     public List<String> getImage() throws IOException {
