@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
@@ -82,7 +83,9 @@ public @Data class User {
     @LastModifiedDate
     private Timestamp updateAt;
     private Role role;
+    @Nullable
     private Long imageProfileId;
+    @Nullable
     private Long imageCoverId;
 
 //    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")

@@ -53,21 +53,25 @@ public class UserService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            Image image = this.imageService.getImage(user.getImageProfileId());
-            Image cover;
 
-            if (user.getIsJobProvider()) {
-                cover = this.imageService.getImage(user.getImageCoverId());
-                return new UserDetails(
-                        user,
-                        image == null ? "" : image.getBase64(),
-                        cover == null ? "" : cover.getBase64()
-                );
+            Image image = null;
+            Image cover = null;
+
+            if (Objects.nonNull(user.getImageProfileId())) {
+                image = this.imageService.getImage(user.getImageProfileId());
             }
 
+            if (user.getIsJobProvider()) {
+                if (Objects.nonNull(user.getImageProfileId()))
+                    cover = this.imageService.getImage(user.getImageCoverId());
 
-            //if (user.getIsActive())
-            return new UserDetails(user, image.getBase64());
+            }
+
+            return new UserDetails(
+                    user,
+                    image == null ? "" : image.getBase64(),
+                    cover == null ? "" : cover.getBase64()
+            );
         }
 
         throw new NotFoundException("User does not exists");
@@ -193,6 +197,21 @@ public class UserService {
                 throw new IllegalUserArgumentException("Invalid phone!");
 
             userToUpdate.setPhone(user.getPhone().trim());
+        }
+
+        if (Objects.nonNull(user.getProfileImage())) {
+            Image newProfileImage = this.imageService.saveImage(user.getProfileImage());
+            userToUpdate.setImageProfileId(newProfileImage.getId());
+        } else {
+            userToUpdate.setImageProfileId(null);
+        }
+
+        if (userToUpdate.getIsJobProvider()) {
+            if (Objects.nonNull(user.getCoverImage())) {
+                Image newCoverImage = this.imageService.saveImage(user.getCoverImage());
+                userToUpdate.setImageCoverId(newCoverImage.getId());
+            } else
+                userToUpdate.setImageCoverId(null);
         }
 
         userToUpdate.setUpdateAt(Timestamp.from(Instant.now()));
