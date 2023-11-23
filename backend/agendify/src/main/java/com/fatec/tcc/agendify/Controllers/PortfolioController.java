@@ -72,13 +72,13 @@ public class PortfolioController {
     public ResponseEntity<ObjectNode> createPortfolio(@RequestBody PortfolioBody portfolioBody) {
         try {
 
-            this.portfolioService.createPortfolio(
+            Portfolio portfolio = this.portfolioService.createPortfolio(
                     portfolioBody.getCompanyBranchId(),
                     portfolioBody.getCategoryId(),
                     portfolioBody.getSubcategories()
             );
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(portfolio).build(), HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
