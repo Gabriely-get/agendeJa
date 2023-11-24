@@ -1,7 +1,11 @@
 package com.fatec.tcc.agendify.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
@@ -19,6 +23,12 @@ public class Image {
     @Column
     private Date createdAt;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "portfolio_job_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private PortfolioJob portfolioJob;
+
     public Image(String base64, Date date) {
         this.base64 = base64;
         this.createdAt = date;
@@ -26,5 +36,11 @@ public class Image {
 
     public Image() {
 
+    }
+
+    public Image(String img, Date date, PortfolioJob portfolioJob) {
+        this.base64 = img;
+        this.createdAt = date;
+        this.portfolioJob = portfolioJob;
     }
 }

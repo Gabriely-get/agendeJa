@@ -2,6 +2,7 @@ package com.fatec.tcc.agendify.Services;
 
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.Image;
+import com.fatec.tcc.agendify.Entities.PortfolioJob;
 import com.fatec.tcc.agendify.Repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,18 @@ public class ImageService {
 
         imageRepository.save(image);
 
+        return image;
+    }
+
+    public Image saveImage(String base64, PortfolioJob portfolioJob) {
+        Image image = new Image();
+        image.setBase64(base64);
+        image.setCreatedAt(new Date());
+        image.setPortfolioJob(portfolioJob);
+
+        imageRepository.save(image);
+
+        System.out.println(image);
         return image;
     }
 

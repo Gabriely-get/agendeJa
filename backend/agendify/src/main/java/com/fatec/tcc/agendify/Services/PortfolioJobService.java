@@ -1,6 +1,7 @@
 package com.fatec.tcc.agendify.Services;
 
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
+import com.fatec.tcc.agendify.Entities.Image;
 import com.fatec.tcc.agendify.Entities.JobCategory;
 import com.fatec.tcc.agendify.Entities.Portfolio;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobBody;
@@ -26,6 +27,9 @@ public class PortfolioJobService {
 
     @Autowired
     private JobCategoryRepository jobCategoryRepository;
+
+    @Autowired
+    private ImageService imageService;
 
 //    @Autowired
 //    private ImageDataService imageDataService;
@@ -69,12 +73,32 @@ public class PortfolioJobService {
             if (portfolioJobBody.price() <= 0)
                 throw new IllegalArgumentException("An error occurred! Invalid job price!");
 
-            return this.portfolioJobRepository.save( new PortfolioJob(
+            List<Long> imageProfile = new ArrayList<>();
+            Image imageCover = null;
+
+            if (portfolioJobBody.coverImage().isEmpty() || portfolioJobBody.coverImage().isBlank()) {
+                imageCover = new Image();
+            } else {
+                imageCover = this.imageService.saveImage(portfolioJobBody.coverImage());
+            }
+
+            PortfolioJob newPortfolioJob = this.portfolioJobRepository.save(new PortfolioJob(
                     name,
                     portfolioJobBody.price(),
                     portfolioJobBody.description(),
+                    imageCover,
                     portfolio,
                     jobCategory));
+
+            System.out.println(newPortfolioJob.getId());
+            if (Objects.nonNull(portfolioJobBody.serviceImages())) {
+                portfolioJobBody
+                        .serviceImages()
+                        .forEach(img -> this.imageService.saveImage(img, newPortfolioJob));
+            }
+
+            return this.portfolioJobRepository.save(newPortfolioJob);
+
         } catch (Exception e) {
             logger.error("Error on create portfolio job: " + e.getMessage());
             throw e;

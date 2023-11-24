@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,17 +28,36 @@ public @Data class PortfolioJob {
     private Double price;
     private String description;
 
+//    @Nullable
+//    @ElementCollection
+//    private List<Long> imageProfileIdList;
+
+    @Nullable
+    private Long imageCoverId;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "portfolio_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
     private Portfolio portfolio;
 
+    @OneToMany(mappedBy = "portfolioJob", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Image> images;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "job_category_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
     private JobCategory jobCategory;
+
+    public PortfolioJob(String name, Double price, String description, Image imageCover, Portfolio portfolio, JobCategory jobCategory) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.imageCoverId = imageCover.getId();
+        this.portfolio = portfolio;
+        this.jobCategory = jobCategory;
+    }
 
     public void setPortfolio(Portfolio portfolio) {
         if (Objects.isNull(portfolio)) {
