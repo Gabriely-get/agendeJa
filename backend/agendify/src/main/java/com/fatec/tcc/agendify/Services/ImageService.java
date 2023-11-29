@@ -21,6 +21,7 @@ public class ImageService {
         Image image = new Image();
         image.setBase64(base64);
         image.setCreatedAt(new Date());
+        image.setPortfolioJob(null);
 
         imageRepository.save(image);
 

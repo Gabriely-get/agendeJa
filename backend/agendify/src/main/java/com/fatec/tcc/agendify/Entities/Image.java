@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
 
+@Table
 @Entity
 @Data
 public class Image {
@@ -23,8 +24,9 @@ public class Image {
     @Column
     private Date createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "portfolio_job_id", nullable = false)
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "portfolio_job_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private PortfolioJob portfolioJob;
