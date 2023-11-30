@@ -23,6 +23,5 @@ public @Data class Neighborhood {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "city_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private City city;
 }

@@ -1,5 +1,6 @@
 package com.fatec.tcc.agendify.Entities.RequestTemplate;
 
+import com.fatec.tcc.agendify.Entities.BusinessHour;
 import com.fatec.tcc.agendify.Entities.Role;
 import lombok.Data;
 
@@ -20,16 +21,14 @@ public @Data class UserBody {
     private Boolean isJobProvider;
     private Long category;
     private List<Long> subCategories;
-//    private Set<Role> roles = new HashSet<>();
     private Role role;
     private CepApi address;
     private Long imageProfileId;
     private Long imageCoverId;
     private String profileImage;
     private String coverImage;
-
-//    public  void addRole(Role role) {
-//        this.roles.add(role);
-//    }
+    private List<BussinesHourData> hours;
+    private Boolean is24Hours;
+    private String description;
 
 }

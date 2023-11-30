@@ -1,6 +1,7 @@
 package com.fatec.tcc.agendify.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.apache.logging.log4j.util.Strings;
 import org.hibernate.annotations.OnDelete;
@@ -24,11 +25,12 @@ public @Data class JobCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "subcategory_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private SubCategory subCategory;
 
     public void setName(String name) {

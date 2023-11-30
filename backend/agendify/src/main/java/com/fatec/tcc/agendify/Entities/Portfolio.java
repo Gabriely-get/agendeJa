@@ -1,6 +1,7 @@
 package com.fatec.tcc.agendify.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -26,12 +27,12 @@ public @Data class Portfolio {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private Category category;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "companybranch_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private CompanyBranch companyBranch;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -41,12 +42,8 @@ public @Data class Portfolio {
                     name = "portfolio_id" ),
             inverseJoinColumns = @JoinColumn(
                     name = "subcategory_id" ))
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private Set<SubCategory> subCategories = new HashSet<>();
-
-//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "portfolio")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private Set<PortfolioJob> portfolioJobs;
 
     public void setCompanyBranch(CompanyBranch companyBranch) {
         if (Objects.isNull(companyBranch)) {

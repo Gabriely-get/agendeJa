@@ -5,16 +5,20 @@ import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendify.Utils.UserFieldsValidation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
 import java.util.*;
 
 @Entity
-public @Data class User {
+public @Data class User implements UserDetails {
     public User() {
 
     }
@@ -59,37 +63,44 @@ public @Data class User {
     private Long id;
     @Column(nullable = false)
     @NotBlank
+    @NotNull
     private String email;
     @Column(nullable = false)
     @NotBlank
+    @NotNull
     private String password;
     @NotBlank
+    @NotNull
     private String firstName;
     @NotBlank
+    @NotNull
     private String lastName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "UTC-3")
     @Temporal(TemporalType.DATE)
+    @NotNull
     private Date birthday;
     @NotBlank
+    @NotNull
     private String cpf;
 
+    @NotNull
     private String phone;
 
     private Boolean isActive;
+    @NotNull
     private Boolean isJobProvider;
     @CreationTimestamp
     private Timestamp createAt;
 
     @LastModifiedDate
     private Timestamp updateAt;
+
+    @Enumerated(EnumType.STRING)
     private Role role;
     @Nullable
     private Long imageProfileId;
     @Nullable
     private Long imageCoverId;
-
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
-//    private Set<JobCategory> jobCategories;
 
     private String getFullUsername() {
         return this.getFirstName().trim() + ' ' + this.getLastName();
@@ -101,6 +112,43 @@ public @Data class User {
 
     public void setLastName(String lastName) {
         this.lastName = lastName.trim();
+    }
+
+    @Override
+    //controle de acesso de perfis
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(getRole().name()));
+    }
+
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
 //    private Collection<? extends GrantedAuthority> getRoles(User user) {

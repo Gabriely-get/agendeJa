@@ -18,7 +18,6 @@ public @Data class Address {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "neighborhood_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Neighborhood neighborhood;
     private String publicPlace;
     private String number;
@@ -27,9 +26,6 @@ public @Data class Address {
     // TODO field update at for verify on front and make an alert on enterprise page about the new address
     @LastModifiedDate
     private Timestamp updateAt;
-
-//    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "address")
-//    private Set<JobCategory> jobCategories;
 
     public Address(String cep, String logradouro, String number, String complement, Neighborhood neighborhoodObject) {
         this.cep = cep;

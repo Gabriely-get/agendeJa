@@ -24,7 +24,6 @@ public @Data class City {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "state_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private State state;
 
 }

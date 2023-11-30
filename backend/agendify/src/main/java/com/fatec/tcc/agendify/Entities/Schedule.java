@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -33,17 +34,21 @@ public @Data class Schedule {
     @JsonSerialize(using = LocalTimeSerializer.class)
     private LocalTime time;
     private String timeAsString;
+    @NotNull
     private Boolean isScheduled;
+
+    @NotNull
+    private String status;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "portfolio_job_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private PortfolioJob portfolioJob;
 
-//    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-//    @JoinColumn(name = "user_id")
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
+    private User user;
 
     public Schedule(LocalDate date, LocalTime time, PortfolioJob portfolioJob) {
         this.setDate(date);
@@ -53,6 +58,14 @@ public @Data class Schedule {
 
     public Schedule() {
 
+    }
+
+    public Schedule(LocalDate date, LocalTime time, PortfolioJob portfolioJob, User user, SCHEDULE_STATUS pendente) {
+        this.setDate(date);
+        this.setTime(time);
+        this.setPortfolioJob(portfolioJob);
+        this.user = user;
+        this.status = pendente.name();
     }
 
     public void setDate(LocalDate date) {

@@ -1,6 +1,9 @@
-package com.fatec.tcc.agendify.Entities;
+package com.fatec.tcc.agendify.Entities.RequestTemplate;
 
-public record UserDetails(
+import com.fatec.tcc.agendify.Entities.Role;
+import com.fatec.tcc.agendify.Entities.User;
+
+public record UserFields(
         Long id,
         String email,
         String password,
@@ -15,7 +18,7 @@ public record UserDetails(
         String profileImage,
         String coverImage
 ) {
-    public UserDetails(User userReturn, String image) {
+    public UserFields(User userReturn, String image) {
         this(
                 userReturn.getId(),
                 userReturn.getEmail(),
@@ -33,7 +36,7 @@ public record UserDetails(
         );
     }
 
-    public UserDetails(User user, String profile, String cover) {
+    public UserFields(User user, String profile, String cover) {
         this(
                 user.getId(),
                 user.getEmail(),

@@ -1,11 +1,13 @@
 package com.fatec.tcc.agendify.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,31 +26,29 @@ public @Data class PortfolioJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private Double price;
+    @NotNull
     private String description;
-
-//    @Nullable
-//    @ElementCollection
-//    private List<Long> imageProfileIdList;
 
     @Nullable
     private Long imageCoverId;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "portfolio_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @NotNull
     private Portfolio portfolio;
 
-    @OneToMany(mappedBy = "portfolioJob", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "portfolioJob", fetch = FetchType.EAGER)
     private List<Image> images;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "job_category_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
+    @NotNull
     private JobCategory jobCategory;
+    private LocalTime duration;
 
     public PortfolioJob(String name, Double price, String description, Image imageCover, Portfolio portfolio, JobCategory jobCategory) {
         this.name = name;

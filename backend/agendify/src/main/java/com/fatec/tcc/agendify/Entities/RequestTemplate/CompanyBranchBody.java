@@ -8,10 +8,10 @@ public @Data class CompanyBranchBody {
     private String fantasyName;
     private Long userId;
     private CepApi address;
-    //optional
     private Long category;
-    //optional
     private List<Long> subCategories;
+    private Boolean is24Hours;
+    private String description;
 
     public CompanyBranchBody(String fantasyName, Long userId, CepApi address) {
         this.setAddress(address);
@@ -19,15 +19,20 @@ public @Data class CompanyBranchBody {
         this.setUserId(userId);
     }
 
-    public CompanyBranchBody(String fantasyName, Long id, CepApi address, Long category, List<Long> subCategories) {
+    public CompanyBranchBody(String fantasyName, Long id, CepApi address, Long category, List<Long> subCategories, String description) {
         this.setAddress(address);
         this.setFantasyName(fantasyName);
         this.setUserId(id);
         this.setCategory(category);
         this.setSubCategories(subCategories);
+        this.setDescription(description);
     }
 
     public CompanyBranchBody() {
 
+    }
+
+    public void setIs24Hours(Boolean is24Hours) {
+        this.is24Hours = is24Hours;
     }
 }
