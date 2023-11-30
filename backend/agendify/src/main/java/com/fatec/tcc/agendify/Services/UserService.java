@@ -291,4 +291,7 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public Long getIdByEmail(String email) {
+        return this.userRepository.getUserByEmail(email).getId();
+    }
 }

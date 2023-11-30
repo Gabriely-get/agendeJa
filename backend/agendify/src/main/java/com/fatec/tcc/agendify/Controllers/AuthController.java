@@ -3,11 +3,8 @@ package com.fatec.tcc.agendify.Controllers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.CepApi;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.Login;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
 import com.fatec.tcc.agendify.Entities.User;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.UserFields;
 import com.fatec.tcc.agendify.Infra.DataTokenJWT;
 import com.fatec.tcc.agendify.Infra.TokenService;
 import com.fatec.tcc.agendify.Services.CepApiService;
@@ -95,7 +92,7 @@ public class AuthController {
             var auth = manager.authenticate(token);
             var tokenJWT = tokenService.generateToken((User) auth.getPrincipal());
 
-            return ResponseEntity.ok(new DataTokenJWT(tokenJWT));
+            return ResponseEntity.ok(new LoginResponse(this.userService.getIdByEmail(login.getEmail()), tokenJWT));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

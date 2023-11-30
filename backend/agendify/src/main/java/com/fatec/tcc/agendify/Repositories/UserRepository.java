@@ -21,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //    Optional<User> findUserByEmail(String email);
 
     org.springframework.security.core.userdetails.UserDetails findUserByEmail(String email);
+    User getUserByEmail(String email);
 
 
     @Query("Select u from User u where u.role = :roleType")
