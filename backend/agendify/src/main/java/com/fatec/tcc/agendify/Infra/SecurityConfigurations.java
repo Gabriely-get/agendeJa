@@ -142,16 +142,16 @@ public class SecurityConfigurations {
         return config.getAuthenticationManager();
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*");  // or specify allowed origins
-        config.addAllowedMethod("*");  // or specify allowed methods
-        config.addAllowedHeader("*");  // or specify allowed headers
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.addAllowedOrigin("*");  // or specify allowed origins
+//        config.addAllowedMethod("*");  // or specify allowed methods
+//        config.addAllowedHeader("*");  // or specify allowed headers
+//        source.registerCorsConfiguration("/**", config);
+//        return new CorsFilter(source);
+//    }
 
     //por ser um bean, o spring sabe que precisa usar este aqui, logo, as senhas ja serao encriptografadas
     @Bean

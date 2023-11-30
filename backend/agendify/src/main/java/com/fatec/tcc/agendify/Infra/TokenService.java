@@ -26,7 +26,7 @@ public class TokenService  {
                     .withIssuer("Agendify_api")
                     .withSubject(user.getEmail())
                     .withExpiresAt(dataExpiracao())
-                    //.withClaim("id", usuario.getId()) // chave-valor
+                    .withClaim("id", user.getId()) // chave-valor
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new RuntimeException("Erro gerar token", exception);
@@ -34,8 +34,7 @@ public class TokenService  {
     }
 
     public String getSubject(String tokenJWT) {
-//        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJpc3MiOiJhdXRoMCJ9.AbIJTDMFc7yUa5MhvcP03nJPyCPzZtQcGEp-zWfOkEE";
-        DecodedJWT decodedJWT;
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -43,6 +42,21 @@ public class TokenService  {
                     .build()
                     .verify(tokenJWT)
                     .getSubject();
+
+        } catch (JWTVerificationException exception){
+            throw new RuntimeException("Token inválido ou expirado. Tente fazer login novamente");
+        }
+    }
+
+    public String getClaim(String tokenJWT) {
+
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            return JWT.require(algorithm)
+                    .withIssuer("Agendify_api")
+                    .build()
+                    .verify(tokenJWT)
+                    .getClaim("id").asString();
 
         } catch (JWTVerificationException exception){
             throw new RuntimeException("Token inválido ou expirado. Tente fazer login novamente");
