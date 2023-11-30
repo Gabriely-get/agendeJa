@@ -15,7 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
+@CrossOrigin
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -26,7 +31,7 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         System.out.println(Role.ADMIN.name());
-        return http.csrf(AbstractHttpConfigurer::disable)
+        return http.cors().and().csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/agenda/login").permitAll()
@@ -135,6 +140,17 @@ public class SecurityConfigurations {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("*");  // or specify allowed origins
+        config.addAllowedMethod("*");  // or specify allowed methods
+        config.addAllowedHeader("*");  // or specify allowed headers
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
     //por ser um bean, o spring sabe que precisa usar este aqui, logo, as senhas ja serao encriptografadas
