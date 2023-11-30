@@ -6,7 +6,7 @@ import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendify.Entities.User;
-import com.fatec.tcc.agendify.Entities.UserDetails;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.UserFields;
 import com.fatec.tcc.agendify.Services.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<ObjectNode> getUser(@PathVariable("id") Long id) {
         try {
-            UserDetails user = this.userService.getUserById(id);
+            UserFields user = this.userService.getUserById(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
         } catch (NotFoundException e) {

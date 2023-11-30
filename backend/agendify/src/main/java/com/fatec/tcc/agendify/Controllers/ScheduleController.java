@@ -60,10 +60,7 @@ public class ScheduleController {
     public ResponseEntity<ObjectNode> createSchedule(@RequestBody ScheduleBody scheduleBody) {
         try {
 
-            this.scheduleService.createSchedule(
-                    scheduleBody.getPortfolioJobId(),
-                    scheduleBody.getDate(),
-                    scheduleBody.getTime());
+            this.scheduleService.createSchedule(scheduleBody);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -71,36 +68,36 @@ public class ScheduleController {
         }
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<ObjectNode> scheduleSchedule(@PathVariable("id") Long scheduleId, @RequestBody ScheduleBody scheduleBody) {
-        try {
+//    @PostMapping("/{id}")
+//    public ResponseEntity<ObjectNode> scheduleSchedule(@PathVariable("id") Long scheduleId, @RequestBody ScheduleBody scheduleBody) {
+//        try {
+//
+//            this.scheduleService.scheduleASchedule(
+//                    scheduleBody.getUserId(),
+//                    scheduleId
+//            );
+//
+//            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
-            this.scheduleService.scheduleASchedule(
-                    scheduleBody.getUserId(),
-                    scheduleId
-            );
-
-            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ObjectNode> updateSchedule(@PathVariable("id") Long scheduleId, @RequestBody ScheduleBody scheduleBody) {
-        try {
-
-            this.scheduleService.updateSchedule(
-                    scheduleId,
-                    scheduleBody.getUserId(),
-                    scheduleBody.getDate(),
-                    scheduleBody.getTime()
-            );
-
-            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ObjectNode> updateSchedule(@PathVariable("id") Long scheduleId, @RequestBody ScheduleBody scheduleBody) {
+//        try {
+//
+//            this.scheduleService.updateSchedule(
+//                    scheduleId,
+//                    scheduleBody.getUserId(),
+//                    scheduleBody.getDate(),
+//                    scheduleBody.getTime()
+//            );
+//
+//            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
 }

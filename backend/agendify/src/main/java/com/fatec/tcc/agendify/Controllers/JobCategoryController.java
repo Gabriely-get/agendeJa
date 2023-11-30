@@ -25,7 +25,7 @@ public class JobCategoryController {
     private JsonResponseBuilder jsonResponseBuilder;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ObjectNode> getJob(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getJob(@PathVariable("id") Long id) {
         try {
             JobCategory jobCategory = this.jobCategoryService.getById(id);
 

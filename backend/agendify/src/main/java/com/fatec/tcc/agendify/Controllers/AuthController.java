@@ -7,7 +7,9 @@ import com.fatec.tcc.agendify.Entities.RequestTemplate.CepApi;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.Login;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendify.Entities.User;
-import com.fatec.tcc.agendify.Entities.UserDetails;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.UserFields;
+import com.fatec.tcc.agendify.Infra.DataTokenJWT;
+import com.fatec.tcc.agendify.Infra.TokenService;
 import com.fatec.tcc.agendify.Services.CepApiService;
 import com.fatec.tcc.agendify.Services.LoginService;
 import com.fatec.tcc.agendify.Services.UserService;
@@ -15,6 +17,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -26,7 +30,13 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class AuthController {
 
     @Autowired
+    private AuthenticationManager manager;
+
+    @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private UserService userService;
@@ -66,7 +76,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ObjectNode> createUser(@RequestBody UserBody user) {
         try {
-            UserDetails user1 = this.userService.createUser(user);
+            UserFields user1 = user.getIsJobProvider()
+                    ? this.userService.createUserEnterprise(user)
+                    : this.userService.createUserClient(user);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user1).build(), HttpStatus.CREATED);
         } catch (RuntimeException | SQLIntegrityConstraintViolationException | IOException e) {
@@ -76,12 +88,16 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ObjectNode> login(@RequestBody Login login) {
+    public ResponseEntity<?> login(@RequestBody Login login) {
         try {
-            Long userLogin = this.loginService.login(login.getEmail(), login.getPassword());
-            return new ResponseEntity<>(this.jsonResponseBuilder.withMessage(userLogin.toString()).build(), HttpStatus.OK);
+            var token = new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword());
+
+            var auth = manager.authenticate(token);
+            var tokenJWT = tokenService.generateToken((User) auth.getPrincipal());
+
+            return ResponseEntity.ok(new DataTokenJWT(tokenJWT));
         } catch (Exception e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

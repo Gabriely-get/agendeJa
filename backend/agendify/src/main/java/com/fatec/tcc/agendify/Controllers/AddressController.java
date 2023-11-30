@@ -42,7 +42,7 @@ public class AddressController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ObjectNode> getCategories() {
+    public ResponseEntity<ObjectNode> getAll() {
         try {
             List<Address> addresses = this.addressService.getAll();
 
