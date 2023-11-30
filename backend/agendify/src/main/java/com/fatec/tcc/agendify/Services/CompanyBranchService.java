@@ -4,9 +4,11 @@ import com.fatec.tcc.agendify.CustomExceptions.IllegalUserArgumentException;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.Address.Address;
 import com.fatec.tcc.agendify.Entities.CompanyBranch;
+import com.fatec.tcc.agendify.Entities.Portfolio;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.CepApi;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.CompanyBranchBody;
 import com.fatec.tcc.agendify.Entities.User;
+import com.fatec.tcc.agendify.Repositories.BusinessHourRepository;
 import com.fatec.tcc.agendify.Repositories.CompanyBranchRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
 import org.apache.logging.log4j.util.Strings;
@@ -28,6 +30,9 @@ public class CompanyBranchService {
 
     @Autowired
     private PortfolioService portfolioService;
+
+    @Autowired
+    private BusinessHourService businessHourService;
 
     @Autowired
     private AddressService addressService;
@@ -87,7 +92,9 @@ public class CompanyBranchService {
                 return this.companyBranchRepository.save(
                         new CompanyBranch(branchName,
                                 this.addressService.createAndGetAddress(address),
-                                user)
+                                user,
+                                companyBranch.getDescription(),
+                                companyBranch.getIs24Hours())
                 );
             }
 
@@ -106,7 +113,7 @@ public class CompanyBranchService {
                         companyBranch
                 );
 
-        this.portfolioService.createPortfolio(
+        Portfolio newPortfolio = this.portfolioService.createPortfolio(
                 companyCreated.getId(),
                 companyBranch.getCategory(),
                 companyBranch.getSubCategories());

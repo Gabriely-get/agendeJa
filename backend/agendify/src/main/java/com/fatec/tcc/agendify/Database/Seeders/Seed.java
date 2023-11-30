@@ -197,18 +197,21 @@ public class Seed {
                             "Meu espaço de Cuidado",
                             this.addressRepository.findById(1L).get(),
                             this.userRepository.findById(1L).get(),
+                            null,
                             true);
             CompanyBranch company2 =
                     new CompanyBranch(
                             "Salão Raízes",
                             this.addressRepository.findById(1L).get(),
                             this.userRepository.findById(3L).get(),
+                            "Desde 1974 etc etc",
                             false);
             CompanyBranch company3 =
                     new CompanyBranch(
                             "Apice Learning",
                             this.addressRepository.findById(2L).get(),
                             this.userRepository.findById(5L).get(),
+                            "Formada nisso, tals, etc",
                             false);
 
             this.companyRepository.saveAll(List.of(company1, company2, company3));

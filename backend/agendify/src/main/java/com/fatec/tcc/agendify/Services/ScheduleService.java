@@ -2,13 +2,11 @@ package com.fatec.tcc.agendify.Services;
 
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 //import com.fatec.tcc.agendeja.Database.Seeders.Seed;
-import com.fatec.tcc.agendify.Entities.Schedule;
-import com.fatec.tcc.agendify.Entities.User;
+import com.fatec.tcc.agendify.Entities.*;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.ScheduleBody;
 import com.fatec.tcc.agendify.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendify.Repositories.ScheduleRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
-import com.fatec.tcc.agendify.Entities.PortfolioJob;
-import com.fatec.tcc.agendify.Entities.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,18 +59,24 @@ public class ScheduleService {
         return this.scheduleRepository.findAllByUserId(id);
     }
 
-    public void createSchedule(Long portfolioJobId, LocalDate date, LocalTime time) {
+    public void createSchedule(ScheduleBody scheduleBody) {
         try {
-            if (Objects.isNull(date)) throw new IllegalArgumentException("Can not create schedule! Invalid date!");
-            if (Objects.isNull(time)) throw new IllegalArgumentException("Can not create schedule! Invalid time!");
-            if (Objects.isNull(portfolioJobId)) throw new IllegalArgumentException("Can not create schedule! Invalid portfolio job id!");
+            if (Objects.isNull(scheduleBody.date())) throw new IllegalArgumentException("Can not create schedule! Invalid date!");
+            if (Objects.isNull(scheduleBody.time())) throw new IllegalArgumentException("Can not create schedule! Invalid time!");
+            if (Objects.isNull(scheduleBody.portfolioJobId())) throw new IllegalArgumentException("Can not create schedule! Invalid portfolio job id!");
 
 
-            Optional<PortfolioJob> optionalPortfolioJob = this.portfolioJobRepository.findById(portfolioJobId);
+            Optional<PortfolioJob> optionalPortfolioJob = this.portfolioJobRepository.findById(scheduleBody.portfolioJobId());
 
             if (optionalPortfolioJob.isEmpty())
                 throw new NotFoundException("Can not create schedule! Portfolio job does not exists!");
+
+            Optional<User> optionalUser = this.userRepository.findById(scheduleBody.userId());
+            if (optionalUser.isEmpty())
+                throw new NotFoundException("Can not create schedule! Client does not exists!");
+
             PortfolioJob portfolioJob = optionalPortfolioJob.get();
+            User user = optionalUser.get();
 
             if (!this.roleExists(
                     portfolioJob.getPortfolio().getCompanyBranch().getUser().getRole() )
@@ -80,18 +84,23 @@ public class ScheduleService {
             )
                 throw new IllegalArgumentException("Can not create schedule! Invalid user role!");
 
-            if (date.isBefore(LocalDate.now()))
+            if (scheduleBody.date().isBefore(LocalDate.now()))
                 throw new IllegalArgumentException("Can not create a schedule for a past day");
-            if (date.equals(LocalDate.now()) && time.isBefore(LocalTime.now()))
+
+            if (scheduleBody.date().equals(LocalDate.now()) && scheduleBody.time().isBefore(LocalTime.now()))
                 throw new IllegalArgumentException("Can not create a schedule for a past time");
-            if (this.scheduleRepository.existsByDateAndTimeAndPortfolioJob_Id(date, time, portfolioJobId))
+
+            if (this.scheduleRepository
+                    .existsByDateAndTimeAndPortfolioJob_Id(
+                            scheduleBody.date(), scheduleBody.time(), scheduleBody.portfolioJobId()
+                    )
+            )
                 throw new IllegalArgumentException("This schedule already exists!");
 
-            Schedule schedule = new Schedule(date, time, portfolioJob);
-            schedule.setIsScheduled(false);
-            schedule.setUserId(null);
-            schedule.setDateAsString(date.toString());
-            schedule.setTimeAsString(time.toString());
+
+
+            Schedule schedule =
+                    new Schedule(scheduleBody.date(), scheduleBody.time(), portfolioJob, user, SCHEDULE_STATUS.PENDENTE);
 
             this.scheduleRepository.save(
                     schedule
@@ -104,27 +113,27 @@ public class ScheduleService {
 
     }
 
-    public void scheduleASchedule(Long userId, Long scheduleId) {
-        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);
-//        Optional<User> optionalUser = this.userRepository.findById(userId);
-
-        if (optionalSchedule.isEmpty()) throw new RuntimeException("Schedule does not exists! Can not schedule");
-
-        Schedule schedule = optionalSchedule.get();
-        if (schedule.getIsScheduled() && Objects.nonNull(schedule.getUserId()))
-            throw new RuntimeException("Can not schedule! Schedule is not available!");
-
-        if (!this.userRepository.existsById(userId)) throw new RuntimeException("Invalid user! Can not schedule");
-
-        if (this.scheduleRepository
-                .existsByDateAndTimeAndUserIdAndIsScheduledIsTrue(schedule.getDate(), schedule.getTime(), userId)
-        ) throw new RuntimeException("Can not schedule! User already have a schedule for this date and time!");
-
-        schedule.setIsScheduled(true);
-        schedule.setUserId(userId);
-        this.scheduleRepository.save(schedule);
-
-    }
+//    public void scheduleASchedule(Long userId, Long scheduleId) {
+//        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);
+////        Optional<User> optionalUser = this.userRepository.findById(userId);
+//
+//        if (optionalSchedule.isEmpty()) throw new RuntimeException("Schedule does not exists! Can not schedule");
+//
+//        Schedule schedule = optionalSchedule.get();
+//        if (schedule.getIsScheduled() && Objects.nonNull(schedule.getUser().getId()))
+//            throw new RuntimeException("Can not schedule! Schedule is not available!");
+//
+//        if (!this.userRepository.existsById(userId)) throw new RuntimeException("Invalid user! Can not schedule");
+//
+//        if (this.scheduleRepository
+//                .existsByDateAndTimeAndUserIdAndIsScheduledIsTrue(schedule.getDate(), schedule.getTime(), userId)
+//        ) throw new RuntimeException("Can not schedule! User already have a schedule for this date and time!");
+//
+//        schedule.setIsScheduled(true);
+//        schedule.setUserId(userId);
+//        this.scheduleRepository.save(schedule);
+//
+//    }
 
     public void updateSchedule(Long scheduleId, Long userId, LocalDate date, LocalTime time) {
         Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);

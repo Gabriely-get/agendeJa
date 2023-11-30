@@ -19,13 +19,22 @@ public @Data class CompanyBranchBody {
         this.setUserId(userId);
     }
 
-    public CompanyBranchBody(String fantasyName, Long id, CepApi address, Long category, List<Long> subCategories, String description) {
+    public CompanyBranchBody(
+            String fantasyName,
+            Long id,
+            CepApi address,
+            Long category,
+            List<Long> subCategories,
+            String description,
+            Boolean is24Hours
+    ) {
         this.setAddress(address);
         this.setFantasyName(fantasyName);
         this.setUserId(id);
         this.setCategory(category);
         this.setSubCategories(subCategories);
         this.setDescription(description);
+        this.setIs24Hours(is24Hours);
     }
 
     public CompanyBranchBody() {

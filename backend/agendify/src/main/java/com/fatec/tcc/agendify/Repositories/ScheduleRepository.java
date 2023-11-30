@@ -17,5 +17,9 @@ public interface ScheduleRepository extends CrudRepository<Schedule, Long> {
     boolean existsByDateAndTime(LocalDate date, LocalTime time);
     boolean existsByDateAndTimeAndUserIdAndIsScheduledIsTrue(LocalDate date, LocalTime time, Long userId);
 
+    List<Schedule> findAllByPortfolioJob_IdAndDateAndStatusIsNotContaining(
+            Long portfolioJob_id, LocalDate date, String status
+    );
+
 //    List<Schedule> findAllByDateAndTime(LocalDate date, LocalTime time);
 }

@@ -5,13 +5,16 @@ import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.*;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.CompanyBranchBody;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.UserFields;
 import com.fatec.tcc.agendify.Repositories.Address.AddressRepository;
 import com.fatec.tcc.agendify.Repositories.PortfolioRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,7 +27,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     Logger logger = LoggerFactory.getLogger(User.class);
 
     @Autowired
@@ -35,6 +38,12 @@ public class UserService {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private BusinessHourService businessHourService;
 
     @Autowired
     private AddressService addressService;
@@ -48,7 +57,12 @@ public class UserService {
     @Autowired
     private PortfolioRepository portfolioRepository;
 
-    public UserDetails getUserById(Long id) throws IOException {
+    @Override
+    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.userRepository.findUserByEmail(username);
+    }
+
+    public UserFields getUserById(Long id) throws IOException {
         Optional<User> optionalUser = this.userRepository.findById(id);
 
         if (optionalUser.isPresent()) {
@@ -67,7 +81,7 @@ public class UserService {
 
             }
 
-            return new UserDetails(
+            return new UserFields(
                     user,
                     image == null ? "" : image.getBase64(),
                     cover == null ? "" : cover.getBase64()
@@ -95,16 +109,14 @@ public class UserService {
         return users.stream().filter(User::getIsActive).toList();
     }
 
-    public UserDetails createUser(UserBody user) throws SQLIntegrityConstraintViolationException, IOException {
-        BCryptPasswordEncoder bCryptPasswordEncoder;
+    public UserFields createUserEnterprise(UserBody user) throws SQLIntegrityConstraintViolationException {
         boolean userAlreadyExistsByCpf = this.userRepository.existsUserByCpf(user.getCpf());
         boolean userAlreadyExistsByEmail = this.userRepository.existsUserByEmail(user.getEmail());
         boolean userAlreadyExistsByPhone = this.userRepository.existsUserByPhone(user.getPhone());
+
         Image imageProfile = new Image();
         Image imageCover = new Image();
-        User userId;
-        User userReturn = new User();
-        Portfolio portfolio = new Portfolio();
+        User newUser;
 
         try {
             if (userAlreadyExistsByCpf) {
@@ -117,41 +129,91 @@ public class UserService {
                 throw new SQLIntegrityConstraintViolationException("Phone is already registered");
             }
 
-            bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            String hashedPass = bCryptPasswordEncoder.encode(user.getPassword());
-            user.setPassword(hashedPass);
-
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setIsActive(true);
+            user.setRole(Role.ENTERPRISE);
+
+            if (Objects.nonNull(user.getProfileImage())) {
+                imageProfile = this.imageService.saveImage(user.getProfileImage());
+                user.setImageProfileId(imageProfile.getId());
+            }
+
+            if (Objects.nonNull(user.getCoverImage())) {
+                imageCover = this.imageService.saveImage(user.getCoverImage());
+                user.setImageCoverId(imageCover.getId());
+            }
+            newUser = this.userRepository.save(new User(user));
+
+//            this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
+//                    new CompanyBranchBody(
+//                            user.getFantasyName(),
+//                            newUser.getId(),
+//                            user.getAddress(),
+//                            user.getCategory(),
+//                            user.getSubCategories()
+//                    )
+//            );
+
+            CompanyBranchBody companyBranchBody = new CompanyBranchBody(
+                    user.getFantasyName(),
+                    newUser.getId(),
+                    user.getAddress(),
+                    user.getCategory(),
+                    user.getSubCategories(),
+                    user.getDescription(),
+                    user.getIs24Hours()
+            );
+
+            CompanyBranch companyCreated =
+                    this.companyBranchService.create(
+                            companyBranchBody
+                    );
+
+            Portfolio newPortfolio = this.portfolioService.createPortfolio(
+                    companyCreated.getId(),
+                    companyBranchBody.getCategory(),
+                    companyBranchBody.getSubCategories());
+
+            this.businessHourService.register(user.getIs24Hours(), user.getHours(), newPortfolio);
+
+            System.out.println("HERE:::");
+            return new UserFields(newUser, imageProfile.getBase64(), imageCover.getBase64());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("User register unexpected error: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public UserFields createUserClient(UserBody user) throws SQLIntegrityConstraintViolationException, IOException {
+        boolean userAlreadyExistsByCpf = this.userRepository.existsUserByCpf(user.getCpf());
+        boolean userAlreadyExistsByEmail = this.userRepository.existsUserByEmail(user.getEmail());
+        boolean userAlreadyExistsByPhone = this.userRepository.existsUserByPhone(user.getPhone());
+        Image imageProfile = new Image();
+        User userReturn;
+
+        try {
+            if (userAlreadyExistsByCpf) {
+                throw new SQLIntegrityConstraintViolationException("CPF is already registered");
+            }
+            if (userAlreadyExistsByEmail) {
+                throw new SQLIntegrityConstraintViolationException("E-mail is already registered");
+            }
+            if (userAlreadyExistsByPhone) {
+                throw new SQLIntegrityConstraintViolationException("Phone is already registered");
+            }
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setIsActive(true);
+            user.setRole(Role.USER);
+
             if (Objects.nonNull(user.getProfileImage())) {
                 imageProfile = this.imageService.saveImage(user.getProfileImage());
 
                 user.setImageProfileId(imageProfile.getId());
             }
-            if (user.getIsJobProvider()) {
-                user.setRole(Role.ENTERPRISE);
-
-                if (Objects.nonNull(user.getCoverImage())) {
-                    imageCover = this.imageService.saveImage(user.getCoverImage());
-
-                    user.setImageCoverId(imageCover.getId());
-                }
-                userId = this.userRepository.save(new User(user));
-
-                this.companyBranchService.createCompanyBranchWithCategoriesAndSubcategories(
-                        new CompanyBranchBody(
-                                user.getFantasyName(),
-                                userId.getId(),
-                                user.getAddress(),
-                                user.getCategory(),
-                                user.getSubCategories()
-                        )
-                );
-
-                return new UserDetails(userId, imageProfile.getBase64(), imageCover.getBase64());
-            } else {
-                user.setRole(Role.USER);
-                userReturn =  this.userRepository.save(new User(user));
-            }
+            userReturn =  this.userRepository.save(new User(user));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,7 +221,7 @@ public class UserService {
             throw e;
         }
 
-        return new UserDetails(userReturn, imageProfile.getBase64());
+        return new UserFields(userReturn, imageProfile.getBase64());
     }
 
     public void updateUser(Long id, UserBody user) {

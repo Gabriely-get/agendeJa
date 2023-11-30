@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByCpf(String cpf);
     boolean existsUserByEmail(String email);
     boolean existsUserByPhone(String phone);
-    Optional<User> findUserByEmail(String email);
+//    Optional<User> findUserByEmail(String email);
+
+    org.springframework.security.core.userdetails.UserDetails findUserByEmail(String email);
+
 
     @Query("Select u from User u where u.role = :roleType")
     List<User> findAllByRole_Value(Role roleType);

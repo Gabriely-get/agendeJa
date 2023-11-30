@@ -17,10 +17,11 @@ public @Data class CompanyBranch {
     public CompanyBranch() {
 
     }
-    public CompanyBranch(String name, Address address, User user, Boolean is24Hours) {
+    public CompanyBranch(String name, Address address, User user, String description, Boolean is24Hours) {
         this.setName(name);
         this.setUser(user);
         this.setAddress(address);
+        this.setDescription(description);
         this.setIs24Hours(is24Hours);
     }
 
