@@ -131,6 +131,12 @@ public class SecurityConfigurations {
                                 Role.ADMIN.name(),
                                 Role.ENTERPRISE.name()
                         )
+
+                        .requestMatchers("/agenda/verify").hasAnyAuthority(
+                                Role.USER.name(),
+                                Role.ADMIN.name(),
+                                Role.ENTERPRISE.name()
+                        )
                 )
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .build();

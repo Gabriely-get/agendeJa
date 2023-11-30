@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fatec.tcc.agendify.Entities.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,7 @@ public class TokenService  {
         }
     }
 
-    public String getClaim(String tokenJWT) {
+    public Long getClaimId(String tokenJWT) {
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -56,7 +55,7 @@ public class TokenService  {
                     .withIssuer("Agendify_api")
                     .build()
                     .verify(tokenJWT)
-                    .getClaim("id").asString();
+                    .getClaim("id").asLong();
 
         } catch (JWTVerificationException exception){
             throw new RuntimeException("Token inválido ou expirado. Tente fazer login novamente");

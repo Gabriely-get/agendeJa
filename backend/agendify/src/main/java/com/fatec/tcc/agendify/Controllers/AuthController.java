@@ -92,9 +92,28 @@ public class AuthController {
             var auth = manager.authenticate(token);
             var tokenJWT = tokenService.generateToken((User) auth.getPrincipal());
 
-            return ResponseEntity.ok(new LoginResponse(this.userService.getIdByEmail(login.getEmail()), tokenJWT));
+            return ResponseEntity.ok(new DataTokenJWT(tokenJWT));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verify(@RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = this.extractBearerToken(authorizationHeader);
+            var idByToken = tokenService.getClaimId(token);
+
+            return ResponseEntity.ok(new IdResponse(idByToken));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    private String extractBearerToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7); // 7 is the length of "Bearer "
+        }
+        return null;
+    }
+
 }
