@@ -118,6 +118,7 @@ public class SecurityConfigurations {
                         )
                         //SUBCATEGORY
                         .requestMatchers(HttpMethod.GET, "/agenda/subcategory/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/agenda/subcategory/by/*").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/agenda/subategory/*").hasAnyAuthority(
                                 Role.ADMIN.name()
                         )
@@ -133,11 +134,15 @@ public class SecurityConfigurations {
                         .requestMatchers("/agenda/job/*").hasAnyAuthority(
                                 Role.ADMIN.name()
                         )
+
+                        //HOURS
                         .requestMatchers("/agenda/hours/*").hasAnyAuthority(
                                 Role.USER.name(),
                                 Role.ADMIN.name(),
                                 Role.ENTERPRISE.name()
                         )
+
+                        //SCHEDULE
                         .requestMatchers("/agenda/schedule/*").hasAnyAuthority(
                                 Role.USER.name(),
                                 Role.ADMIN.name(),
@@ -153,7 +158,11 @@ public class SecurityConfigurations {
                                 Role.ADMIN.name(),
                                 Role.ENTERPRISE.name()
                         )
+                        .requestMatchers("/agenda/schedule/accept/*").hasAnyAuthority(
+                                Role.ENTERPRISE.name()
+                        )
 
+                        //TOKEN
                         .requestMatchers("/agenda/verify").hasAnyAuthority(
                                 Role.USER.name(),
                                 Role.ADMIN.name(),
