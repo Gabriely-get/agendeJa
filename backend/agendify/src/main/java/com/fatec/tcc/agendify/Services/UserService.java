@@ -76,14 +76,13 @@ public class UserService implements UserDetailsService {
 
             System.out.println("ID IMAGE:::"+user.getImageCoverId());
             System.out.println("ID IMAGE:::"+user.getImageProfileId());
-            if (Objects.nonNull(user.getImageProfileId())) {
+            if (user.getImageProfileId() != null) {
                 image = this.imageService.getImage(user.getImageProfileId());
             }
 
             if (user.getIsJobProvider()) {
-                if (Objects.nonNull(user.getImageProfileId()))
+                if (user.getImageCoverId() != null)
                     cover = this.imageService.getImage(user.getImageCoverId());
-
             }
 
             return new UserFields(
