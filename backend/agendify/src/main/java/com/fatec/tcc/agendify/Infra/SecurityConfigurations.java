@@ -36,6 +36,7 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/agenda/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/agenda/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/agenda/").permitAll()
                         //usuario
                         .requestMatchers(HttpMethod.GET,"/agenda/user/").hasAnyAuthority(Role.ADMIN.name())
                         .requestMatchers(HttpMethod.PUT,"/agenda/user/*").hasAnyAuthority(
