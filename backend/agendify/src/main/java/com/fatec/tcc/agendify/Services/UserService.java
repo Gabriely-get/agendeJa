@@ -63,6 +63,9 @@ public class UserService implements UserDetailsService {
     }
 
     public UserFields getUserById(Long id) throws IOException {
+        System.out.println("ID USER:::"+id);
+        assert id != null;
+
         Optional<User> optionalUser = this.userRepository.findById(id);
 
         if (optionalUser.isPresent()) {
@@ -71,6 +74,8 @@ public class UserService implements UserDetailsService {
             Image image = null;
             Image cover = null;
 
+            System.out.println("ID IMAGE:::"+user.getImageCoverId());
+            System.out.println("ID IMAGE:::"+user.getImageProfileId());
             if (Objects.nonNull(user.getImageProfileId())) {
                 image = this.imageService.getImage(user.getImageProfileId());
             }
