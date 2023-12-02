@@ -55,7 +55,7 @@ public class SecurityConfigurations {
                         )
 
                         //ENDERECO
-                        .requestMatchers(HttpMethod.GET,"/agenda/address/by/cep").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/agenda/address/by/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/agenda/address/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/agenda/address/").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/agenda/address/*").hasAnyAuthority(
