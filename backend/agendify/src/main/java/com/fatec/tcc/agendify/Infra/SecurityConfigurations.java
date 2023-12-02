@@ -100,6 +100,7 @@ public class SecurityConfigurations {
 
                         // PORTFOLIO
                         .requestMatchers(HttpMethod.GET,"/agenda/portfolio/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/agenda/portfolio/user/*").permitAll()
 
                         //CATEGORY
 

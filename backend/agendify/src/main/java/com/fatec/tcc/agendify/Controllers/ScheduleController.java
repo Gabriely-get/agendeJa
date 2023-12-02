@@ -3,8 +3,9 @@ package com.fatec.tcc.agendify.Controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.ScheduleBody;
-import com.fatec.tcc.agendify.Entities.Schedule;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.Error;
+import com.fatec.tcc.agendify.Infra.TokenService;
 import com.fatec.tcc.agendify.Services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,13 @@ public class ScheduleController {
     @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
+    @Autowired
+    private TokenService tokenService;
+
     @GetMapping("/{id}")
     public ResponseEntity<ObjectNode> getScheduleById(@PathVariable("id") Long id) {
         try {
-            Schedule schedule = this.scheduleService.getById(id);
+            ScheduleDetailsResponse schedule = this.scheduleService.getById(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(schedule).build(), HttpStatus.OK);
         } catch (RuntimeException e) {
@@ -35,20 +39,31 @@ public class ScheduleController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ObjectNode> getSchedules() {
+    public ResponseEntity<?> getSchedules() {
         try {
-            List<Schedule> schedules = this.scheduleService.getAll();
+            List<ScheduleDetailsResponse> schedules = this.scheduleService.getAll();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(schedules).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(schedules);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new Error(e.getMessage()));
         }
     }
 
     @GetMapping("/by/{id}")
-    public ResponseEntity<ObjectNode> getAlSchedulesByUserId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getAlSchedulesByUserId(@PathVariable("id") Long userId) {
         try {
-            List<Schedule> schedules = this.scheduleService.getByUserId(id);
+            List<ScheduleClientResponse> schedules = this.scheduleService.getAllFromClientSchedule(userId);
+
+            return ResponseEntity.ok(schedules);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new Error(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/portfolio/{id}")
+    public ResponseEntity<ObjectNode> getAlSchedulesByPortfolioId(@PathVariable("id") Long id) {
+        try {
+            List<ScheduleClientResponse> schedules = this.scheduleService.getAllUserEnterpriseSchedulesByPortfolio(id);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(schedules).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
@@ -60,7 +75,7 @@ public class ScheduleController {
     public ResponseEntity<ObjectNode> createSchedule(@RequestBody ScheduleBody scheduleBody) {
         try {
 
-            this.scheduleService.createSchedule(scheduleBody);
+            this.scheduleService.createAppointment(scheduleBody);
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -68,36 +83,43 @@ public class ScheduleController {
         }
     }
 
-//    @PostMapping("/{id}")
-//    public ResponseEntity<ObjectNode> scheduleSchedule(@PathVariable("id") Long scheduleId, @RequestBody ScheduleBody scheduleBody) {
-//        try {
-//
-//            this.scheduleService.scheduleASchedule(
-//                    scheduleBody.getUserId(),
-//                    scheduleId
-//            );
-//
-//            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @PostMapping("/accept")
+    public ResponseEntity<?> acceptSchedule(
+            @RequestBody ManageStatusAcceptAppointment appointment,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = this.extractBearerToken(authorizationHeader);
+            var idByToken = tokenService.getClaimId(token);
+            ScheduleEnterpriseResponse schedule = this.scheduleService.acceptOrDeclineAppointment(appointment, idByToken);
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ObjectNode> updateSchedule(@PathVariable("id") Long scheduleId, @RequestBody ScheduleBody scheduleBody) {
-//        try {
-//
-//            this.scheduleService.updateSchedule(
-//                    scheduleId,
-//                    scheduleBody.getUserId(),
-//                    scheduleBody.getDate(),
-//                    scheduleBody.getTime()
-//            );
-//
-//            return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
+            return ResponseEntity.ok(schedule);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/confirm")
+    public ResponseEntity<?> confirmSchedule(
+            @RequestBody ManageStatusConfirmAppointment appointment,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = this.extractBearerToken(authorizationHeader);
+            var idByToken = tokenService.getClaimId(token);
+            ScheduleEnterpriseResponse schedule = this.scheduleService.confirmOrDeclineAppointment(appointment, idByToken);
+
+            return ResponseEntity.ok(schedule);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private String extractBearerToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7); // 7 is the length of "Bearer "
+        }
+        return null;
+    }
 
 }

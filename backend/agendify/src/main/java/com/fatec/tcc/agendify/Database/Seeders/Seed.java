@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
 @Component
@@ -30,6 +32,11 @@ public class Seed {
     private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private  BusinessHourRepository businessHourRepository;
 
     @Autowired
     private SubCategoryRepository subCategoryRepository;
@@ -60,14 +67,16 @@ public class Seed {
     public void seed(ContextRefreshedEvent event) throws ParseException, InterruptedException {
 
         try {
-            this.seedUser(true);
+            this.seedUser();
             this.seedRCategory();
             this.seedRSubCategory();
             this.seedJobCategory();
             this.seedAddressAndOthersNecessariesTables();
             this.seedCompany();
             this.seedPortfolio();
+            this.seedBusinessHour();
             this.seedPortfolioJob();
+            this.seedSchedule();
 
             System.out.println();
         } catch (Exception e) {
@@ -93,6 +102,7 @@ public class Seed {
     }
      */
 
+    @Transactional
     private void seedRCategory() {
         int qt = ((List<Category>) this.categoryRepository.findAll()).size();
 
@@ -106,6 +116,7 @@ public class Seed {
         }
     }
 
+    @Transactional
     private void seedRSubCategory() {
         int qt = ((List<SubCategory>) this.subCategoryRepository.findAll()).size();
 
@@ -124,7 +135,7 @@ public class Seed {
         }
     }
 
-//    @Transactional
+    @Transactional
     private void seedJobCategory() throws InterruptedException {
 //        Thread.sleep(500);
         try {
@@ -163,6 +174,7 @@ public class Seed {
 
     }
 
+    @Transactional
     private void seedAddressAndOthersNecessariesTables() {
         int qt = ((List<Address>) this.addressRepository.findAll()).size();
 
@@ -187,6 +199,7 @@ public class Seed {
         }
     }
 
+    @Transactional
     private void seedCompany() {
         int qt = ((List<CompanyBranch>) this.companyRepository.findAll()).size();
 
@@ -283,6 +296,115 @@ public class Seed {
         }
     }
 
+    @Transactional
+    private void seedBusinessHour() {
+        Iterable<BusinessHour> businessHourIterable = this.businessHourRepository.findAll();
+        List<BusinessHour> businessHours = new ArrayList<>();
+        businessHourIterable.forEach(businessHours::add);
+
+        if (businessHours.size() < 3) {
+
+            //seed as 24h for company 1 that is 24h
+            this.businessHourRepository.saveAll(
+                    List.of(
+                            new BusinessHour(
+                                    DaysOfWeek.MONDAY,
+                                    LocalTime.of(0, 0),
+                                    LocalTime.of(23, 0),
+                                    this.portfolioRepository.findById(1L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.WEDNESDAY,
+                                    LocalTime.of(0, 0),
+                                    LocalTime.of(23, 0),
+                                    this.portfolioRepository.findById(1L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.FRIDAY,
+                                    LocalTime.of(0, 0),
+                                    LocalTime.of(23, 0),
+                                    this.portfolioRepository.findById(1L).get()
+                            )
+                    )
+            );
+
+            //seed not as 24h for company 2
+            this.businessHourRepository.saveAll(
+                    List.of(
+                            new BusinessHour(
+                                    DaysOfWeek.MONDAY,
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(17, 0),
+                                    this.portfolioRepository.findById(2L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.TUESDAY,
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(17, 0),
+                                    this.portfolioRepository.findById(2L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.THURSDAY,
+                                    LocalTime.of(10, 0),
+                                    LocalTime.of(19, 0),
+                                    this.portfolioRepository.findById(2L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.FRIDAY,
+                                    LocalTime.of(9, 0),
+                                    LocalTime.of(19, 0),
+                                    this.portfolioRepository.findById(2L).get()
+                            )
+                    )
+            );
+
+            //seed not as 24h for company 3
+            this.businessHourRepository.saveAll(
+                    List.of(
+                            new BusinessHour(
+                                    DaysOfWeek.MONDAY,
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(17, 0),
+                                    this.portfolioRepository.findById(3L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.TUESDAY,
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(17, 0),
+                                    this.portfolioRepository.findById(3L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.WEDNESDAY,
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(17, 0),
+                                    this.portfolioRepository.findById(3L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.THURSDAY,
+                                    LocalTime.of(10, 0),
+                                    LocalTime.of(19, 0),
+                                    this.portfolioRepository.findById(3L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.FRIDAY,
+                                    LocalTime.of(9, 0),
+                                    LocalTime.of(19, 0),
+                                    this.portfolioRepository.findById(3L).get()
+                            ),
+                            new BusinessHour(
+                                    DaysOfWeek.SUNDAY,
+                                    LocalTime.of(8, 0),
+                                    LocalTime.of(14, 0),
+                                    this.portfolioRepository.findById(3L).get()
+                            )
+                    )
+            );
+
+            logger.info("Bussiness seeded");
+        }
+    }
+
+    @Transactional
     private void seedPortfolioJob() {
         int qt = ((List<PortfolioJob>) this.portfolioJobRepository.findAll()).size();
 
@@ -319,13 +441,141 @@ public class Seed {
         }
     }
 
-//    @Transactional
-    private void seedUser(boolean active) throws ParseException {
+    @Transactional
+    private void seedSchedule() {
+
+        Iterable<Schedule> scheduleIterable = this.scheduleRepository.findAll();
+        List<Schedule> schedules1 = new ArrayList<>();
+        scheduleIterable.forEach(schedules1::add);
+
+        if (schedules1.size() < 3) {
+
+            //schedule for company 1
+            this.scheduleRepository.saveAll(
+                    List.of(
+                            //agenda segunda
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 11),
+                                    LocalTime.of(9, 0),
+                                    this.portfolioJobRepository.findById(1L).get(),
+                                    this.userRepository.findById(1L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda quinta
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 21),
+                                    LocalTime.of(9, 0),
+                                    this.portfolioJobRepository.findById(1L).get(),
+                                    this.userRepository.findById(1L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda sexta
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 15),
+                                    LocalTime.of(9, 0),
+                                    this.portfolioJobRepository.findById(1L).get(),
+                                    this.userRepository.findById(1L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            )
+                    )
+            );
+
+            //schedule for company 2
+            this.scheduleRepository.saveAll(
+                    List.of(
+                            //agenda segunda
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 11),
+                                    LocalTime.of(22, 0),
+                                    this.portfolioJobRepository.findById(2L).get(),
+                                    this.userRepository.findById(2L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda quarta
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 13),
+                                    LocalTime.of(20, 0),
+                                    this.portfolioJobRepository.findById(2L).get(),
+                                    this.userRepository.findById(2L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda quarta
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 20),
+                                    LocalTime.of(5, 0),
+                                    this.portfolioJobRepository.findById(2L).get(),
+                                    this.userRepository.findById(2L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            )
+                    )
+            );
+
+            //schedule for company 3
+            this.scheduleRepository.saveAll(
+                    List.of(
+                            //agenda segunda
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 25),
+                                    LocalTime.of(12, 0),
+                                    this.portfolioJobRepository.findById(3L).get(),
+                                    this.userRepository.findById(3L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda terça
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 5),
+                                    LocalTime.of(17, 0),
+                                    this.portfolioJobRepository.findById(3L).get(),
+                                    this.userRepository.findById(3L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda quinta
+                            new Schedule(
+                                    LocalDate.of(2024, 1, 4),
+                                    LocalTime.of(11, 0),
+                                    this.portfolioJobRepository.findById(3L).get(),
+                                    this.userRepository.findById(3L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            ),
+                            //agenda domingo
+                            new Schedule(
+                                    LocalDate.of(2023, 12, 10),
+                                    LocalTime.of(8, 0),
+                                    this.portfolioJobRepository.findById(3L).get(),
+                                    this.userRepository.findById(3L).get(),
+                                    SCHEDULE_STATUS.PENDENTE,
+                                    false,
+                                    null
+                            )
+                    )
+            );
+
+            logger.info("Schedules seeded");
+        }
+    }
+
+    @Transactional
+    private void seedUser() throws ParseException {
         int qt = this.userRepository.findAll().size();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
-//        Set<Role> roles = new HashSet<>();
-//        roles.add(this.roleRepository.findById(1L).get());
 
         if (qt < 6) {
             boolean change = false;

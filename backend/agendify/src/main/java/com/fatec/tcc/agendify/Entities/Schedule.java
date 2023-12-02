@@ -9,8 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,6 +39,9 @@ public @Data class Schedule {
     @NotNull
     private String status;
 
+    @Nullable
+    private String noteByDecline;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "portfolio_job_id", nullable = false)
     @NotNull
@@ -66,6 +68,24 @@ public @Data class Schedule {
         this.setPortfolioJob(portfolioJob);
         this.user = user;
         this.status = pendente.name();
+    }
+
+    public Schedule(
+            LocalDate date,
+            LocalTime time,
+            PortfolioJob portfolioJob,
+            User user,
+            SCHEDULE_STATUS pendente,
+            Boolean isScheduled,
+            String noteByDecline
+    ) {
+        this.setDate(date);
+        this.setTime(time);
+        this.setPortfolioJob(portfolioJob);
+        this.user = user;
+        this.status = pendente.name();
+        this.isScheduled = isScheduled;
+        this.noteByDecline = noteByDecline;
     }
 
     public void setDate(LocalDate date) {

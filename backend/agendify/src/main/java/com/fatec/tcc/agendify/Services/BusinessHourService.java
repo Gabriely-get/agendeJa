@@ -37,14 +37,16 @@ public class BusinessHourService {
                 );
             } else {
 
-                this.businessHourRepository.save(
-                        new BusinessHour(
-                                DaysOfWeek.valueOf(bhd.dayOfWeek()),
-                                bhd.start(),
-                                bhd.end(),
-                                portfolio
-                        )
-                );
+                if (bhd.start() != LocalTime.of(0,0) && bhd.end() != LocalTime.of(0,0)) {
+                    this.businessHourRepository.save(
+                            new BusinessHour(
+                                    DaysOfWeek.valueOf(bhd.dayOfWeek()),
+                                    bhd.start(),
+                                    bhd.end(),
+                                    portfolio
+                            )
+                    );
+                }
             }
         }
     }
