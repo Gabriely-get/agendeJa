@@ -3,8 +3,11 @@ package com.fatec.tcc.agendify.Controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
+import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.PortfolioJob;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.ErrorResponseAPI;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobBody;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobResponse;
 import com.fatec.tcc.agendify.Services.PortfolioJobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +28,14 @@ public class PortfolioJobController {
     private JsonResponseBuilder jsonResponseBuilder;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ObjectNode> getPortfolioById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getPortfolioById(@PathVariable("id") Long id) {
         try {
-            PortfolioJob portfolioJob = this.userJobService.getById(id);
+            PortfolioJobResponse portfolioJob = this.userJobService.getById(id);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(portfolioJob).build(), HttpStatus.OK);
+            return ResponseEntity.ok(portfolioJob);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new ErrorResponseAPI(e.getMessage()));
         }
     }
 
@@ -54,6 +58,7 @@ public class PortfolioJobController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolioJobs).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -66,19 +71,21 @@ public class PortfolioJobController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolioJobs).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/")
-    public ResponseEntity<ObjectNode> createPortfolioJob(@RequestBody PortfolioJobBody portfolioBody) {
+    public ResponseEntity<?> createPortfolioJob(@RequestBody PortfolioJobBody portfolioBody) {
         try {
 
-            PortfolioJob portfolioJob = this.userJobService.createPortfolioJob(portfolioBody);
+            PortfolioJobResponse portfolioJob = this.userJobService.createPortfolioJob(portfolioBody);
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(portfolioJob).build(), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.ok(portfolioJob);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new ErrorResponseAPI(e.getMessage()));
         }
     }
 
@@ -89,6 +96,7 @@ public class PortfolioJobController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -100,6 +108,7 @@ public class PortfolioJobController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }

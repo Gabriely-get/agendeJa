@@ -13,6 +13,7 @@ import java.util.Objects;
 
 @Entity
 public @Data class PortfolioJob {
+
     public PortfolioJob() {
     }
 
@@ -49,14 +50,17 @@ public @Data class PortfolioJob {
     @NotNull
     private JobCategory jobCategory;
     private LocalTime duration;
+    private Boolean restricted;
 
-    public PortfolioJob(String name, Double price, String description, Image imageCover, Portfolio portfolio, JobCategory jobCategory) {
+    public PortfolioJob(String name, Double price, String description, Long imageCover, Portfolio portfolio, JobCategory jobCategory, LocalTime duration, Boolean restricted) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.imageCoverId = imageCover.getId();
+        this.imageCoverId = imageCover;
         this.portfolio = portfolio;
         this.jobCategory = jobCategory;
+        this.duration = duration;
+        this.restricted = restricted;
     }
 
     public void setPortfolio(Portfolio portfolio) {

@@ -5,6 +5,8 @@ import com.fatec.tcc.agendify.Entities.Image;
 import com.fatec.tcc.agendify.Entities.JobCategory;
 import com.fatec.tcc.agendify.Entities.Portfolio;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobBody;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobResponse;
+import com.fatec.tcc.agendify.Repositories.ImageRepository;
 import com.fatec.tcc.agendify.Repositories.JobCategoryRepository;
 import com.fatec.tcc.agendify.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendify.Repositories.PortfolioRepository;
@@ -29,6 +31,9 @@ public class PortfolioJobService {
     private JobCategoryRepository jobCategoryRepository;
 
     @Autowired
+    private ImageRepository imageRepository;
+
+    @Autowired
     private ImageService imageService;
 
 //    @Autowired
@@ -48,8 +53,8 @@ public class PortfolioJobService {
 //        throw new NotFoundException("Portfolio does not exists");
 //    }
 
-    public PortfolioJob createPortfolioJob(PortfolioJobBody portfolioJobBody) {
-        //TODO add desc character limit 100
+    public PortfolioJobResponse createPortfolioJob(PortfolioJobBody portfolioJobBody) {
+
         try {
             Optional<Portfolio> optionalPortfolio = this.portfolioRepository.findById(portfolioJobBody.portfolioId());
             Optional<JobCategory> optionalJob = this.jobCategoryRepository.findById(portfolioJobBody.jobId());
@@ -59,9 +64,6 @@ public class PortfolioJobService {
 
             Portfolio portfolio = optionalPortfolio.get();
             JobCategory jobCategory = optionalJob.get();
-
-//        if (Objects.nonNull(portfolioJobBody.getFile()))
-//            this.imageDataService.uploadImage(portfolioJobBody.getFile(), job.getId());
 
             if (!Objects.equals(portfolio.getCategory().getId(), jobCategory.getSubCategory().getCategory().getId()))
                 throw new IllegalArgumentException("An error occurred! The job selected does not belong to the portfolio category!");
@@ -73,11 +75,10 @@ public class PortfolioJobService {
             if (portfolioJobBody.price() <= 0)
                 throw new IllegalArgumentException("An error occurred! Invalid job price!");
 
-            List<Long> imageProfile = new ArrayList<>();
-            Image imageCover = null;
+            Image imageCover;
 
-            if (portfolioJobBody.coverImage().isEmpty() || portfolioJobBody.coverImage().isBlank()) {
-                imageCover = new Image();
+            if (Objects.isNull(portfolioJobBody.coverImage()) || portfolioJobBody.coverImage().isBlank()) {
+                imageCover = null;
             } else {
                 imageCover = this.imageService.saveImage(portfolioJobBody.coverImage());
             }
@@ -86,21 +87,47 @@ public class PortfolioJobService {
                     name,
                     portfolioJobBody.price(),
                     portfolioJobBody.description(),
-                    imageCover,
+                    imageCover == null ? null : imageCover.getId(),
                     portfolio,
-                    jobCategory));
+                    jobCategory,
+                    portfolioJobBody.duration(),
+                    portfolioJobBody.restricted())
+            );
 
             System.out.println(newPortfolioJob.getId());
+
+            this.portfolioJobRepository.save(newPortfolioJob);
             if (Objects.nonNull(portfolioJobBody.serviceImages())) {
                 portfolioJobBody
                         .serviceImages()
                         .forEach(img -> this.imageService.saveImage(img, newPortfolioJob));
             }
 
-            return this.portfolioJobRepository.save(newPortfolioJob);
+            List<Image> imageList = this.imageRepository.findAllByPortfolioJob_Id(newPortfolioJob.getId());
+            List<String> images = new ArrayList<>();
+
+            if (!imageList.isEmpty()) {
+                imageList.forEach(img -> images.add(img.getBase64()));
+            }
+            return new PortfolioJobResponse(
+                    newPortfolioJob.getId(),
+                    newPortfolioJob.getName(),
+                    newPortfolioJob.getPrice(),
+                    newPortfolioJob.getDescription(),
+                    newPortfolioJob.getDuration() == null ? null : newPortfolioJob.getDuration().toString(),
+                    newPortfolioJob.getPortfolio().getId(),
+                    newPortfolioJob.getPortfolio().getCategory().getName(),
+                    newPortfolioJob.getJobCategory().getName(),
+                    newPortfolioJob.getPortfolio().getCompanyBranch().getUser().getFirstName()
+                            +' '+newPortfolioJob.getPortfolio().getCompanyBranch().getUser().getLastName(),
+                    newPortfolioJob.getRestricted(),
+                    newPortfolioJob.getImageCoverId(),
+                    images
+            );
 
         } catch (Exception e) {
             logger.error("Error on create portfolio job: " + e.getMessage());
+            e.printStackTrace();
             throw e;
         }
 //        throw new IllegalArgumentException("Job name is already registered");
@@ -154,11 +181,33 @@ public class PortfolioJobService {
                 .findAllByPortfolio_CompanyBranch_User_IdAndJobCategory_SubCategory_Id(userId, subCatId);
     }
 
-    public PortfolioJob getById(Long id) {
+    public PortfolioJobResponse getById(Long id) {
         Optional<PortfolioJob> optionalPortfolioJob = this.portfolioJobRepository.findById(id);
 
         if (optionalPortfolioJob.isPresent()) {
-            return optionalPortfolioJob.get();
+            PortfolioJob job = optionalPortfolioJob.get();
+            List<Image> imageList = this.imageRepository.findAllByPortfolioJob_Id(id);
+            List<String> images = new ArrayList<>();
+
+            if (!imageList.isEmpty()) {
+                imageList.forEach(img -> images.add(img.getBase64()));
+            }
+
+            return new PortfolioJobResponse(
+                    job.getId(),
+                    job.getName(),
+                    job.getPrice(),
+                    job.getDescription(),
+                    job.getDuration() == null ? null : job.getDuration().toString(),
+                    job.getPortfolio().getId(),
+                    job.getPortfolio().getCategory().getName(),
+                    job.getJobCategory().getName(),
+                    job.getPortfolio().getCompanyBranch().getUser().getFirstName()
+                            +' '+job.getPortfolio().getCompanyBranch().getUser().getLastName(),
+                    job.getRestricted(),
+                    job.getImageCoverId(),
+                    images
+            );
         }
 
         throw new NotFoundException("Portfolio's Job does not exists");

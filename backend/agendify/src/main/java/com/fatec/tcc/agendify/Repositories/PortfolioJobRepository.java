@@ -16,5 +16,6 @@ public interface PortfolioJobRepository extends CrudRepository<PortfolioJob, Lon
     PortfolioJob findPortfolioJobCompleteById(Long id);
 
     List<PortfolioJob> findAllByPortfolio_CompanyBranch_User_Id(Long id);
+    List<PortfolioJob> findAllByPortfolio_Id(Long id);
     List<PortfolioJob> findAllByPortfolio_CompanyBranch_User_IdAndJobCategory_SubCategory_Id(Long userId, Long subCatId);
 }

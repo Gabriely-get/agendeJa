@@ -1,4 +1,4 @@
 package com.fatec.tcc.agendify.Entities.RequestTemplate;
 
-public record Error(String erro) {
+public record ErrorResponseAPI(String erro) {
 }
