@@ -56,10 +56,7 @@ public class SecurityConfigurations {
 
                         //ENDERECO
                         .requestMatchers(HttpMethod.GET,"/agenda/address/by/cep").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/agenda/address/*").hasAnyAuthority(
-                                Role.ADMIN.name(),
-                                Role.ENTERPRISE.name()
-                        )
+                        .requestMatchers(HttpMethod.GET,"/agenda/address/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/agenda/address/").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/agenda/address/*").hasAnyAuthority(
                             Role.ENTERPRISE.name()
@@ -159,6 +156,10 @@ public class SecurityConfigurations {
                                 Role.ENTERPRISE.name()
                         )
                         .requestMatchers("/agenda/schedule/accept/*").hasAnyAuthority(
+                                Role.ENTERPRISE.name()
+                        )
+
+                        .requestMatchers("/agenda/schedule/confirm/*").hasAnyAuthority(
                                 Role.ENTERPRISE.name()
                         )
 
