@@ -39,6 +39,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/agenda/").permitAll()
                         //usuario
                         .requestMatchers(HttpMethod.GET,"/agenda/user/").hasAnyAuthority(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET,"/agenda/user/profile/*").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/agenda/user/*").hasAnyAuthority(
                                 Role.USER.name(),
                                 Role.ADMIN.name(),
@@ -131,6 +132,11 @@ public class SecurityConfigurations {
 
                         //JOB
                         .requestMatchers("/agenda/job/*").hasAnyAuthority(
+                                Role.ENTERPRISE.name(),
+                                Role.ADMIN.name()
+                        )
+                        .requestMatchers("/agenda/job/subcategory/*").hasAnyAuthority(
+                                Role.ENTERPRISE.name(),
                                 Role.ADMIN.name()
                         )
 
