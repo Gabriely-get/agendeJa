@@ -62,8 +62,10 @@ public class AuthController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
 //        return "This is not a secure text";
@@ -79,6 +81,7 @@ public class AuthController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user1).build(), HttpStatus.CREATED);
         } catch (RuntimeException | SQLIntegrityConstraintViolationException | IOException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -94,6 +97,7 @@ public class AuthController {
 
             return ResponseEntity.ok(new DataTokenJWT(tokenJWT));
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -106,6 +110,7 @@ public class AuthController {
 
             return ResponseEntity.ok(new IdResponse(idByToken));
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

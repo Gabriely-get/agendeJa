@@ -35,8 +35,10 @@ public class AddressController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(address).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -48,6 +50,7 @@ public class AddressController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(addresses).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -59,8 +62,10 @@ public class AddressController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -73,6 +78,7 @@ public class AddressController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -88,6 +94,7 @@ public class AddressController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -99,6 +106,7 @@ public class AddressController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }

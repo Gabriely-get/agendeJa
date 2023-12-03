@@ -28,7 +28,7 @@ public class BusinessHourService {
         for (BussinesHourData bhd : hours) {
             if (is24Hours) {
                 this.businessHourRepository.save(
-                        new BusinessHour(
+                        new BussinessHour(
                                 DaysOfWeek.valueOf(bhd.dayOfWeek()),
                                 LocalTime.of(0,0),
                                 LocalTime.of(23,0),
@@ -39,7 +39,7 @@ public class BusinessHourService {
 
                 if (bhd.start() != LocalTime.of(0,0) && bhd.end() != LocalTime.of(0,0)) {
                     this.businessHourRepository.save(
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.valueOf(bhd.dayOfWeek()),
                                     bhd.start(),
                                     bhd.end(),
@@ -54,14 +54,14 @@ public class BusinessHourService {
     public List<String> getBusinessHoursByDay(BusinessHoursByDayOfWeek data) {
         System.out.println(data);
         if (!data.date().isBefore(LocalDate.now())) {
-            Optional<BusinessHour> optionalBusinessHour =
+            Optional<BussinessHour> optionalBusinessHour =
                     this.businessHourRepository.findByPortfolio_IdAndDayOfWeek(
                             data.portfolioId(),
                             DaysOfWeek.valueOf(data.date().getDayOfWeek().name())
                     );
 
             if (optionalBusinessHour.isEmpty()) return new ArrayList<>();
-            BusinessHour businessHour = optionalBusinessHour.get();
+            BussinessHour businessHour = optionalBusinessHour.get();
 
             return this.hoursBetweenAsString(businessHour.getStartTime(), businessHour.getEndTime());
         }
@@ -72,7 +72,7 @@ public class BusinessHourService {
 
         try {
             if (!data.date().isBefore(LocalDate.now())) {
-                Optional<BusinessHour> optionalBusinessHour =
+                Optional<BussinessHour> optionalBusinessHour =
                         this.businessHourRepository.findByPortfolio_IdAndDayOfWeek(
                                 data.portfolioId(),
                                 DaysOfWeek.valueOf(data.date().getDayOfWeek().name())
@@ -81,7 +81,7 @@ public class BusinessHourService {
                 //retorno vazio se o prestador nao possui horarios para aquele dia da semana
                 if (optionalBusinessHour.isEmpty()) return new ArrayList<>();
 
-                BusinessHour businessHour = optionalBusinessHour.get();
+                BussinessHour businessHour = optionalBusinessHour.get();
                 List<Hour> hoursFiltered = new ArrayList<>();
                 List<LocalTime> listOfHourScheduled = new ArrayList<>();
                 List<LocalTime> allHours =

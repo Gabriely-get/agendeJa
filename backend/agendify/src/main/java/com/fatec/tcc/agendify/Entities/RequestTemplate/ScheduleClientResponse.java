@@ -16,7 +16,7 @@ public record ScheduleClientResponse(
         Long id,
         String companyName,
         String jobName,
-        LocalTime duration,
+        String duration,
         String date,
         String appointment,
         String status
@@ -26,7 +26,7 @@ public record ScheduleClientResponse(
                 schedule.getId(),
                 schedule.getPortfolioJob().getPortfolio().getCompanyBranch().getName(),
                 schedule.getPortfolioJob().getName(),
-                schedule.getPortfolioJob().getDuration(),
+                schedule.getPortfolioJob().getDuration() == null ? null : schedule.getPortfolioJob().getDuration().toString().toString(),
                 schedule.getDate().toString(),
                 schedule.getTime().toString(),
                 schedule.getStatus()

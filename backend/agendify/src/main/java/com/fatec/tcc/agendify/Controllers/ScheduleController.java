@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.Error;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.ErrorResponseAPI;
 import com.fatec.tcc.agendify.Infra.TokenService;
 import com.fatec.tcc.agendify.Services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +34,7 @@ public class ScheduleController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(schedule).build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -45,7 +46,8 @@ public class ScheduleController {
 
             return ResponseEntity.ok(schedules);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(new Error(e.getMessage()));
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new ErrorResponseAPI(e.getMessage()));
         }
     }
 
@@ -56,7 +58,8 @@ public class ScheduleController {
 
             return ResponseEntity.ok(schedules);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(new Error(e.getMessage()));
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new ErrorResponseAPI(e.getMessage()));
         }
     }
 
@@ -67,6 +70,7 @@ public class ScheduleController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(schedules).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -79,6 +83,7 @@ public class ScheduleController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }

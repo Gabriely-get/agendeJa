@@ -31,6 +31,7 @@ public class PortfolioController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(portfolio).build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }

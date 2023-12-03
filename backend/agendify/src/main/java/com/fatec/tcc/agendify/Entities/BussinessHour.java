@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Entity
 @Data
-public class BusinessHour {
+public class BussinessHour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,14 +25,14 @@ public class BusinessHour {
     @NotNull
     private Portfolio portfolio;
 
-    public BusinessHour(DaysOfWeek dayOfWeek, LocalTime start, LocalTime end, Portfolio portfolio) {
+    public BussinessHour(DaysOfWeek dayOfWeek, LocalTime start, LocalTime end, Portfolio portfolio) {
         this.dayOfWeek = dayOfWeek;
         this.startTime = start;
         this.endTime = end;
         this.portfolio = portfolio;
     }
 
-    public BusinessHour() {
+    public BussinessHour() {
 
     }
 }

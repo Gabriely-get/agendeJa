@@ -31,8 +31,10 @@ public class JobCategoryController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(jobCategory).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -44,6 +46,7 @@ public class JobCategoryController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(jobCategory).build(), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         }
     }
@@ -55,6 +58,7 @@ public class JobCategoryController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(jobCategories).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -67,6 +71,7 @@ public class JobCategoryController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.CREATED);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -78,6 +83,7 @@ public class JobCategoryController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -89,6 +95,7 @@ public class JobCategoryController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
