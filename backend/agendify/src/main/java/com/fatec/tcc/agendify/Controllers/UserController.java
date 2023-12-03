@@ -4,9 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.EnterpriseProfileResponse;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendify.Entities.User;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserFields;
+import com.fatec.tcc.agendify.Services.CompanyBranchService;
 import com.fatec.tcc.agendify.Services.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private CompanyBranchService companyBranchService;
+
+    @Autowired
     private JsonResponseBuilder jsonResponseBuilder;
 
     @GetMapping("/{id}")
@@ -34,8 +39,24 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withBody(user).build(), HttpStatus.OK);
         } catch (NotFoundException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
         } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<ObjectNode> getUserProfile(@PathVariable("id") Long id) {
+        try {
+            EnterpriseProfileResponse profile = this.companyBranchService.getProfile(id);
+
+            return new ResponseEntity<>(this.jsonResponseBuilder.withBody(profile).build(), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.NOT_FOUND);
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
@@ -48,6 +69,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -59,6 +81,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -70,6 +93,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withList(users).build(), HttpStatus.OK);
         } catch (RuntimeException | JsonProcessingException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -82,6 +106,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
@@ -93,6 +118,7 @@ public class UserController {
 
             return new ResponseEntity<>(this.jsonResponseBuilder.withoutMessage().build(), HttpStatus.OK);
         } catch (RuntimeException e) {
+            e.printStackTrace();
             return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }

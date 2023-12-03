@@ -9,7 +9,7 @@ public record ScheduleDetailsResponse(
         String companyName,
         String jobName,
         String clientName,
-        LocalTime duration,
+        String duration,
         String date,
         String appointment,
         String status
@@ -20,7 +20,7 @@ public record ScheduleDetailsResponse(
                 schedule.getPortfolioJob().getPortfolio().getCompanyBranch().getName(),
                 schedule.getPortfolioJob().getName(),
                 schedule.getUser().getFirstName()+' '+schedule.getUser().getLastName(),
-                schedule.getPortfolioJob().getDuration(),
+                schedule.getPortfolioJob().getDuration() == null ? null : schedule.getPortfolioJob().getDuration().toString(),
                 schedule.getDate().toString(),
                 schedule.getTime().toString(),
                 schedule.getStatus()

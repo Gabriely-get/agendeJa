@@ -2,21 +2,17 @@ package com.fatec.tcc.agendify.Services;
 
 import com.fatec.tcc.agendify.CustomExceptions.IllegalUserArgumentException;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
+import com.fatec.tcc.agendify.Entities.*;
 import com.fatec.tcc.agendify.Entities.Address.Address;
-import com.fatec.tcc.agendify.Entities.CompanyBranch;
-import com.fatec.tcc.agendify.Entities.Portfolio;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.CepApi;
-import com.fatec.tcc.agendify.Entities.RequestTemplate.CompanyBranchBody;
-import com.fatec.tcc.agendify.Entities.User;
-import com.fatec.tcc.agendify.Repositories.BusinessHourRepository;
-import com.fatec.tcc.agendify.Repositories.CompanyBranchRepository;
-import com.fatec.tcc.agendify.Repositories.UserRepository;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
+import com.fatec.tcc.agendify.Repositories.*;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +25,16 @@ public class CompanyBranchService {
     private CompanyBranchRepository companyBranchRepository;
 
     @Autowired
+    private PortfolioJobRepository portfolioJobRepository;
+
+    @Autowired
+    private BusinessHourRepository businessHourRepository;
+
+    @Autowired
     private PortfolioService portfolioService;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private BusinessHourService businessHourService;
@@ -44,6 +49,90 @@ public class CompanyBranchService {
         return (List<CompanyBranch>) this.companyBranchRepository.findAll();
     }
 
+    public EnterpriseProfileResponse getProfile(Long id) {
+        Optional<CompanyBranch> optionalCompanyBranch = this.companyBranchRepository.findById(id);
+
+        if (optionalCompanyBranch.isPresent()) {
+            Image profile = null;
+            Image cover = null;
+            List<PortfolioJobResponse> portfolioJobResponse = new ArrayList<>();
+            CompanyBranch company = optionalCompanyBranch.get();
+            List<BussinesHourDataResponse> bussinesHourDataResponse = new ArrayList<>();
+            List<BussinessHour> bussinessHourList = this.businessHourRepository.findAllByPortfolio_CompanyBranch_Id(id);
+            List<PortfolioJob> portfolioJobList =
+                    this.portfolioJobRepository.findAllByPortfolio_CompanyBranch_User_Id(company.getUser().getId());
+
+            if (!bussinessHourList.isEmpty()) {
+                bussinessHourList.forEach(bussinessHour -> {
+                    bussinesHourDataResponse.add(
+                            new BussinesHourDataResponse(
+                                    bussinessHour.getDayOfWeek().name(),
+                                    bussinessHour.getStartTime().toString(),
+                                    bussinessHour.getEndTime().toString()
+                            )
+                    );
+                });
+            }
+
+            if (!portfolioJobList.isEmpty()) {
+                List<String> images = new ArrayList<>();
+
+                for (int i = 0; i < portfolioJobList.size(); i++) {
+                    portfolioJobList.get(i).getImages().forEach(img -> { images.add(img.getBase64()); });
+
+                    portfolioJobResponse.add(new PortfolioJobResponse(
+                            portfolioJobList.get(i).getId(),
+                            portfolioJobList.get(i).getName(),
+                            portfolioJobList.get(i).getPrice(),
+                            portfolioJobList.get(i).getDescription(),
+                            portfolioJobList.get(i).getDuration() == null ? null : portfolioJobList.get(i).getDuration().toString(),
+                            portfolioJobList.get(i).getPortfolio().getId(),
+                            portfolioJobList.get(i).getPortfolio().getCategory().getName(),
+                            portfolioJobList.get(i).getJobCategory().getName(),
+                            portfolioJobList.get(i).getPortfolio().getCompanyBranch().getUser().getFirstName()
+                                    +portfolioJobList.get(i).getPortfolio().getCompanyBranch().getUser().getLastName(),
+                            portfolioJobList.get(i).getRestricted(),
+                            portfolioJobList.get(i).getImageCoverId(),
+                            images
+                        )
+                    );
+                }
+            }
+
+            if (Objects.nonNull(company.getUser().getImageProfileId())) {
+                Optional<Image> optionalImage = this.imageRepository.findById(company.getUser().getImageProfileId());
+
+                profile = optionalImage.orElse(null);
+            }
+
+            if (Objects.nonNull(company.getUser().getImageCoverId())) {
+                Optional<Image> optionalImage = this.imageRepository.findById(company.getUser().getImageCoverId());
+                cover = optionalImage.orElse(null);
+            }
+
+            return new EnterpriseProfileResponse(
+                    company.getName(),
+                    company.getDescription(),
+                    portfolioJobResponse,
+                    profile == null ? "" : profile.getBase64(),
+                    cover == null ? "" : cover.getBase64(),
+                    company.getAddress() == null
+                            ? null
+                            : new AddressResponse(
+                            company.getAddress().getCep(),
+                            company.getAddress().getNeighborhood().getName(),
+                            company.getAddress().getNeighborhood().getCity().getName(),
+                            company.getAddress().getNeighborhood().getCity().getState().getNameAbbreviation(),
+                            company.getAddress().getPublicPlace(),
+                            company.getAddress().getNumber(),
+                            company.getAddress().getComplement()
+                    ),
+                    bussinesHourDataResponse
+            );
+        }
+
+        throw new NotFoundException("Company branch does not exists");
+    }
     public CompanyBranch getById(Long id) {
         Optional<CompanyBranch> optionalCompanyBranch = this.companyBranchRepository.findById(id);
 

@@ -298,8 +298,8 @@ public class Seed {
 
     @Transactional
     private void seedBusinessHour() {
-        Iterable<BusinessHour> businessHourIterable = this.businessHourRepository.findAll();
-        List<BusinessHour> businessHours = new ArrayList<>();
+        Iterable<BussinessHour> businessHourIterable = this.businessHourRepository.findAll();
+        List<BussinessHour> businessHours = new ArrayList<>();
         businessHourIterable.forEach(businessHours::add);
 
         if (businessHours.size() < 3) {
@@ -307,19 +307,19 @@ public class Seed {
             //seed as 24h for company 1 that is 24h
             this.businessHourRepository.saveAll(
                     List.of(
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.MONDAY,
                                     LocalTime.of(0, 0),
                                     LocalTime.of(23, 0),
                                     this.portfolioRepository.findById(1L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.WEDNESDAY,
                                     LocalTime.of(0, 0),
                                     LocalTime.of(23, 0),
                                     this.portfolioRepository.findById(1L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.FRIDAY,
                                     LocalTime.of(0, 0),
                                     LocalTime.of(23, 0),
@@ -331,25 +331,25 @@ public class Seed {
             //seed not as 24h for company 2
             this.businessHourRepository.saveAll(
                     List.of(
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.MONDAY,
                                     LocalTime.of(8, 0),
                                     LocalTime.of(17, 0),
                                     this.portfolioRepository.findById(2L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.TUESDAY,
                                     LocalTime.of(8, 0),
                                     LocalTime.of(17, 0),
                                     this.portfolioRepository.findById(2L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.THURSDAY,
                                     LocalTime.of(10, 0),
                                     LocalTime.of(19, 0),
                                     this.portfolioRepository.findById(2L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.FRIDAY,
                                     LocalTime.of(9, 0),
                                     LocalTime.of(19, 0),
@@ -361,37 +361,37 @@ public class Seed {
             //seed not as 24h for company 3
             this.businessHourRepository.saveAll(
                     List.of(
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.MONDAY,
                                     LocalTime.of(8, 0),
                                     LocalTime.of(17, 0),
                                     this.portfolioRepository.findById(3L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.TUESDAY,
                                     LocalTime.of(8, 0),
                                     LocalTime.of(17, 0),
                                     this.portfolioRepository.findById(3L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.WEDNESDAY,
                                     LocalTime.of(8, 0),
                                     LocalTime.of(17, 0),
                                     this.portfolioRepository.findById(3L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.THURSDAY,
                                     LocalTime.of(10, 0),
                                     LocalTime.of(19, 0),
                                     this.portfolioRepository.findById(3L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.FRIDAY,
                                     LocalTime.of(9, 0),
                                     LocalTime.of(19, 0),
                                     this.portfolioRepository.findById(3L).get()
                             ),
-                            new BusinessHour(
+                            new BussinessHour(
                                     DaysOfWeek.SUNDAY,
                                     LocalTime.of(8, 0),
                                     LocalTime.of(14, 0),
