@@ -131,6 +131,10 @@ public class SecurityConfigurations {
 
 
                         //JOB
+                        .requestMatchers(HttpMethod.GET,"/agenda/job/").hasAnyAuthority(
+                                Role.ENTERPRISE.name(),
+                                Role.ADMIN.name()
+                        )
                         .requestMatchers("/agenda/job/*").hasAnyAuthority(
                                 Role.ENTERPRISE.name(),
                                 Role.ADMIN.name()
