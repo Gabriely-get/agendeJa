@@ -1,6 +1,10 @@
 package com.fatec.tcc.agendify.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.UserBody;
 import com.fatec.tcc.agendify.Utils.UserFieldsValidation;
 import jakarta.persistence.*;
@@ -15,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -47,7 +52,7 @@ public @Data class User implements UserDetails {
         this.setPassword(user.getPassword());
         this.setCpf(user.getCpf());
         this.setPhone(user.getPhone());
-        this.setBirthday(user.getBirthday());
+        this.setBirthday(user.getBirthday().toString());
         this.setIsActive(user.getIsActive());
         this.setFirstName(user.getFirstName());
         this.setLastName(user.getLastName());
@@ -75,10 +80,10 @@ public @Data class User implements UserDetails {
     @NotBlank
     @NotNull
     private String lastName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone = "UTC-3")
-    @Temporal(TemporalType.DATE)
+//    @JsonDeserialize(using = LocalDateDeserializer.class)
+//    @JsonSerialize(using = LocalDateSerializer.class)
     @NotNull
-    private Date birthday;
+    private String birthday;
     @NotBlank
     @NotNull
     private String cpf;

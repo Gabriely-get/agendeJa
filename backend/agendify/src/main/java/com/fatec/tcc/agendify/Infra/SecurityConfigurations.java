@@ -16,9 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @CrossOrigin
 @Configuration
@@ -150,9 +147,18 @@ public class SecurityConfigurations {
                                 Role.ADMIN.name(),
                                 Role.ENTERPRISE.name()
                         )
+                        .requestMatchers("/agenda/hours/filter").hasAnyAuthority(
+                                Role.USER.name(),
+                                Role.ENTERPRISE.name()
+                        )
 
                         //SCHEDULE
                         .requestMatchers("/agenda/schedule/*").hasAnyAuthority(
+                                Role.USER.name(),
+                                Role.ADMIN.name(),
+                                Role.ENTERPRISE.name()
+                        )
+                        .requestMatchers("/agenda/schedule/reschedule").hasAnyAuthority(
                                 Role.USER.name(),
                                 Role.ADMIN.name(),
                                 Role.ENTERPRISE.name()

@@ -13,7 +13,7 @@ public record PortfolioJobResponse(
         String subcategory,
         String owner,
         Boolean restricted,
-        Long coverImage,
+        String coverImage,
         List<String> images
 
 ) {

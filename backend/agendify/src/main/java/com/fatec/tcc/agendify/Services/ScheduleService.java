@@ -7,6 +7,7 @@ import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
 import com.fatec.tcc.agendify.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendify.Repositories.ScheduleRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
+import com.fatec.tcc.agendify.Utils.GetHoursBetween;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +111,10 @@ public class ScheduleService {
             )
                 throw new IllegalArgumentException("This schedule already exists!");
 
+            LocalTime finalHour =
+                    LocalTime.of(scheduleBody.time().getHour() + portfolioJob.getDuration().getHour(),0);
 
+//            List<Hour> hours = GetHoursBetween.
             Schedule schedule =
                     new Schedule(scheduleBody.date(), scheduleBody.time(), portfolioJob, user, SCHEDULE_STATUS.PENDENTE);
 
@@ -124,6 +128,18 @@ public class ScheduleService {
         }
 
     }
+
+//    public void cancelSchedule(ManageStatusConfirmAppointment statusAppointment) {
+//        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(statusAppointment.scheduleId());
+//
+//        if (!statusAppointment.reschedule() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.PENDENTE.name())) {
+//            schedule.setStatus(SCHEDULE_STATUS.CANCELADO.name());
+//            schedule.setNoteByDecline(statusAppointment.note());
+//            this.scheduleRepository.save(schedule);
+//
+//            return new ScheduleEnterpriseResponse(schedule);
+//        }
+//    }
 
     public ScheduleEnterpriseResponse acceptOrDeclineAppointment(ManageStatusAcceptAppointment statusAppointment, Long idByToken) {
         Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(statusAppointment.scheduleId());
@@ -180,6 +196,12 @@ public class ScheduleService {
             ) {
                 Schedule schedule = optionalSchedule.get();
 
+                if (statusAppointment.reschedule() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.ACEITO.name())) {
+                    Schedule newSchedule = this.reschedule(statusAppointment);
+
+                    return new ScheduleEnterpriseResponse(newSchedule);
+                }
+
                 if (statusAppointment.confirm() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.ACEITO.name())) {
                     schedule.setStatus(SCHEDULE_STATUS.CONFIRMADO.name());
                     this.scheduleRepository.save(schedule);
@@ -195,12 +217,6 @@ public class ScheduleService {
                     return new ScheduleEnterpriseResponse(schedule);
                 }
 
-                if (statusAppointment.reschedule() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.ACEITO.name())) {
-                    Schedule newSchedule = this.reschedule(schedule.getId(), statusAppointment);
-
-                    return new ScheduleEnterpriseResponse(newSchedule);
-                }
-
                 throw new RuntimeException("Operação inválida! Verifique status do agendamento. Deveria ser ACEITO");
             }
             else throw new RuntimeException("Esse agendamento não pertence a esse prestador de serviço. Verificar");
@@ -208,113 +224,200 @@ public class ScheduleService {
         }
     }
 
-//    public void scheduleASchedule(Long userId, Long scheduleId) {
-//        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);
-////        Optional<User> optionalUser = this.userRepository.findById(userId);
+    public ScheduleEnterpriseResponse appointmentRealized(
+            ManageStatusRelizedAppointment statusAppointment,
+            Long idByToken
+    ) {
+        try {
+            System.out.println("CHEGUEII");
+            Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(statusAppointment.scheduleId());
+            Optional<User> optionalUser = this.userRepository.findById(idByToken);
+
+            if (optionalUser.isEmpty())
+                throw new RuntimeException("Usuário não existe. Impossível recuperar agendamento.");
+
+            if (optionalSchedule.isEmpty()) throw new RuntimeException("Agenda inválida!");
+            else {
+                if (this.scheduleRepository.existsByIdAndPortfolioJob_Portfolio_CompanyBranch_User_Id(
+                        statusAppointment.scheduleId(),
+                        idByToken)
+                ) {
+                    Schedule schedule = optionalSchedule.get();
+
+                    if (statusAppointment.reschedule() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.CONFIRMADO.name())) {
+                        Schedule newSchedule = this.reschedule(statusAppointment);
+
+                        return new ScheduleEnterpriseResponse(newSchedule);
+                    }
+
+                    if (statusAppointment.realized() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.CONFIRMADO.name())) {
+                        schedule.setStatus(SCHEDULE_STATUS.REALIZADO.name());
+                        this.scheduleRepository.save(schedule);
+
+                        return new ScheduleEnterpriseResponse(schedule);
+                    }
+
+                    if (!statusAppointment.realized() && Objects.equals(schedule.getStatus(), SCHEDULE_STATUS.CONFIRMADO.name())) {
+                        schedule.setStatus(SCHEDULE_STATUS.CANCELADO.name());
+                        schedule.setNoteByDecline(statusAppointment.note());
+                        this.scheduleRepository.save(schedule);
+
+                        return new ScheduleEnterpriseResponse(schedule);
+                    }
+
+                    throw new RuntimeException("Operação inválida! Verifique status do agendamento. Deveria ser CONFIRMADO");
+                } else
+                    throw new RuntimeException("Esse agendamento não pertence a esse prestador de serviço. Verificar");
+
+            }
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw  e;
+        }
+    }
+
+//    public List<ScheduleDetailsResponse> getAllRealizesByUserRole(Long idByToken) {
+//        Optional<User> optionalUser = this.userRepository.findById(idByToken);
 //
-//        if (optionalSchedule.isEmpty()) throw new RuntimeException("Schedule does not exists! Can not schedule");
+//        if (optionalUser.isEmpty()) throw new RuntimeException("Usuairo nao existe")
 //
-//        Schedule schedule = optionalSchedule.get();
-//        if (schedule.getIsScheduled() && Objects.nonNull(schedule.getUser().getId()))
-//            throw new RuntimeException("Can not schedule! Schedule is not available!");
-//
-//        if (!this.userRepository.existsById(userId)) throw new RuntimeException("Invalid user! Can not schedule");
-//
-//        if (this.scheduleRepository
-//                .existsByDateAndTimeAndUserIdAndIsScheduledIsTrue(schedule.getDate(), schedule.getTime(), userId)
-//        ) throw new RuntimeException("Can not schedule! User already have a schedule for this date and time!");
-//
-//        schedule.setIsScheduled(true);
-//        schedule.setUserId(userId);
-//        this.scheduleRepository.save(schedule);
-//
+//        return this.scheduleRepository.
 //    }
 
-    public Schedule reschedule(Long scheduleId, ManageStatusConfirmAppointment schedule) {
-        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);
+    public Schedule reschedule(ManageStatusConfirmAppointment schedule) {
+        try {
 
-        if (optionalSchedule.isEmpty()) throw new RuntimeException("Agenda inválida!");
-        Schedule schedule1 = optionalSchedule.get();
+            Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(schedule.scheduleId());
 
-        if (Objects.isNull(schedule.newDate()))
-            throw new IllegalArgumentException("Can not update schedule! Invalid date!");
+            if (optionalSchedule.isEmpty()) throw new RuntimeException("Agenda inválida!");
+            Schedule schedule1 = optionalSchedule.get();
 
-        if (Objects.isNull(schedule.newTime()))
-            throw new IllegalArgumentException("Can not update schedule! Invalid time!");
+            if (Objects.isNull(schedule.newDate()))
+                throw new IllegalArgumentException("Can not update schedule! Invalid date!");
 
-        if (LocalDate.parse(schedule.newDate()).isBefore(LocalDate.now()))
-            throw new IllegalArgumentException("Can not update a schedule for a past day");
+            if (Objects.isNull(schedule.newTime()))
+                throw new IllegalArgumentException("Can not update schedule! Invalid time!");
 
-        if (this.scheduleRepository.existsByDateAndTime(
-                LocalDate.parse(schedule.newDate()), LocalTime.parse(schedule.newTime())
+            if (LocalDate.parse(schedule.newDate()).isBefore(LocalDate.now()))
+                throw new IllegalArgumentException("Can not update a schedule for a past day");
+
+            if (this.scheduleRepository.existsByDateAndTimeAndPortfolioJob_Portfolio_Id(
+                    LocalDate.parse(schedule.newDate()),
+                    LocalTime.parse(schedule.newTime()),
+                    schedule1.getPortfolioJob().getPortfolio().getId()
             )
-        )
-            throw new IllegalArgumentException("Can not update! The schedule already is registered!");
+            )
+                throw new IllegalArgumentException("Não foi possível reagendar! Já existe um agendamento nesse horário!");
 
-        schedule1.setDate(LocalDate.parse(schedule.newDate()));
-        schedule1.setTime(LocalTime.parse(schedule.newTime()));
+            schedule1.setDate(LocalDate.parse(schedule.newDate()));
+            schedule1.setTime(LocalTime.parse(schedule.newTime()));
 
-        this.scheduleRepository.save(
-                schedule1
-        );
+            this.scheduleRepository.save(
+                    schedule1
+            );
 
-        return schedule1;
+            return schedule1;
 //        }
 //        else throw new RuntimeException("Esse agendamento não pertence a esse prestador de serviço. Verificar");
 
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public Schedule reschedule(ManageStatusRelizedAppointment schedule) {
+        try {
+
+            Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(schedule.scheduleId());
+
+            if (optionalSchedule.isEmpty()) throw new RuntimeException("Agenda inválida!");
+            Schedule schedule1 = optionalSchedule.get();
+
+            if (Objects.isNull(schedule.newDate()))
+                throw new IllegalArgumentException("Can not update schedule! Invalid date!");
+
+            if (Objects.isNull(schedule.newTime()))
+                throw new IllegalArgumentException("Can not update schedule! Invalid time!");
+
+            if (LocalDate.parse(schedule.newDate()).isBefore(LocalDate.now()))
+                throw new IllegalArgumentException("Can not update a schedule for a past day");
+
+            if (this.scheduleRepository.existsByDateAndTimeAndPortfolioJob_Portfolio_Id(
+                    LocalDate.parse(schedule.newDate()),
+                    LocalTime.parse(schedule.newTime()),
+                    schedule1.getPortfolioJob().getPortfolio().getId()
+            )
+            )
+                throw new IllegalArgumentException("Não foi possível reagendar! Já existe um agendamento nesse horário!");
+
+            schedule1.setDate(LocalDate.parse(schedule.newDate()));
+            schedule1.setTime(LocalTime.parse(schedule.newTime()));
+
+            this.scheduleRepository.save(
+                    schedule1
+            );
+
+            return schedule1;
+//        }
+//        else throw new RuntimeException("Esse agendamento não pertence a esse prestador de serviço. Verificar");
+
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     //update with any date and time; without validation; trazer apenas dias e horarios de acordo com o horário comercial da empresa
-    public void updateSchedule(Long scheduleId, Long idByToken, ScheduleBody scheduleBody) {
-        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);
-        Optional<User> optionalUser = this.userRepository.findById(scheduleBody.userId());
-
-        if (Objects.isNull(scheduleBody.date()))
-            throw new IllegalArgumentException("Can not update schedule! Invalid date!");
-
-        if (Objects.isNull(scheduleBody.time()))
-            throw new IllegalArgumentException("Can not update schedule! Invalid time!");
-
-        if (optionalSchedule.isEmpty())
-            throw new NotFoundException("Can not update schedule! Schedule does not exists!");
-
-        if (optionalUser.isEmpty())
-            throw new NotFoundException("Can not update schedule! User enterprise does not exists!");
-
-        if (this.scheduleRepository.existsByIdAndPortfolioJob_Portfolio_CompanyBranch_User_Id(
-                scheduleId,
-                idByToken)
-        ) {
-
-            Schedule schedule = optionalSchedule.get();
-            User user = optionalUser.get();
-
-            if (user.getRole() != Role.ENTERPRISE)
-                throw new IllegalArgumentException("Can not update schedule! Invalid user role!");
-            if (schedule.getIsScheduled())
-                throw new IllegalArgumentException("Schedule is scheduled! Can not update");
-            if (scheduleBody.date().isBefore(LocalDate.now()))
-                throw new IllegalArgumentException("Can not update a schedule for a past day");
-            if (this.scheduleRepository.existsByDateAndTime(scheduleBody.date(), scheduleBody.time()))
-                throw new IllegalArgumentException("Can not update! The schedule already is registered!");
-
-            schedule.setDate(scheduleBody.date());
-            schedule.setTime(scheduleBody.time());
-
-            this.scheduleRepository.save(
-                    schedule
-            );
-        }
-        else throw new RuntimeException("Esse agendamento não pertence a esse prestador de serviço. Verificar");
-
-    }
+//    public void updateSchedule(Long scheduleId, Long idByToken, ScheduleBody scheduleBody) {
+//        Optional<Schedule> optionalSchedule = this.scheduleRepository.findById(scheduleId);
+//        Optional<User> optionalUser = this.userRepository.findById(scheduleBody.userId());
+//
+//        if (Objects.isNull(scheduleBody.date()))
+//            throw new IllegalArgumentException("Can not update schedule! Invalid date!");
+//
+//        if (Objects.isNull(scheduleBody.time()))
+//            throw new IllegalArgumentException("Can not update schedule! Invalid time!");
+//
+//        if (optionalSchedule.isEmpty())
+//            throw new NotFoundException("Can not update schedule! Schedule does not exists!");
+//
+//        if (optionalUser.isEmpty())
+//            throw new NotFoundException("Can not update schedule! User enterprise does not exists!");
+//
+//        if (this.scheduleRepository.existsByIdAndPortfolioJob_Portfolio_CompanyBranch_User_Id(
+//                scheduleId,
+//                idByToken)
+//        ) {
+//
+//            Schedule schedule = optionalSchedule.get();
+//            User user = optionalUser.get();
+//
+//            if (user.getRole() != Role.ENTERPRISE)
+//                throw new IllegalArgumentException("Can not update schedule! Invalid user role!");
+//            if (schedule.getIsScheduled())
+//                throw new IllegalArgumentException("Schedule is scheduled! Can not update");
+//            if (scheduleBody.date().isBefore(LocalDate.now()))
+//                throw new IllegalArgumentException("Can not update a schedule for a past day");
+//            if (this.scheduleRepository.existsByDateAndTimeAndPortfolioJob_Portfolio_Id(scheduleBody.date(), scheduleBody.time(), p))
+//                throw new IllegalArgumentException("Can not update! The schedule already is registered!");
+//
+//            schedule.setDate(scheduleBody.date());
+//            schedule.setTime(scheduleBody.time());
+//
+//            this.scheduleRepository.save(
+//                    schedule
+//            );
+//        }
+//        else throw new RuntimeException("Esse agendamento não pertence a esse prestador de serviço. Verificar");
+//
+//    }
 
     public void deleteSchedule(Long scheduleId) {
         boolean existsById = this.scheduleRepository.existsById(scheduleId);
 
         if (existsById) {
             Schedule schedule = this.scheduleRepository.findById(scheduleId).get();
-            if (!schedule.getIsScheduled())
                 this.scheduleRepository.deleteById(scheduleId);
         }
 

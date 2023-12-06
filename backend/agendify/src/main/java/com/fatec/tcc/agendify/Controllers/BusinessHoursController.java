@@ -1,6 +1,7 @@
 package com.fatec.tcc.agendify.Controllers;
 
 import com.fatec.tcc.agendify.Entities.RequestTemplate.BusinessHoursByDayOfWeek;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.ErrorResponseAPI;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.Hour;
 import com.fatec.tcc.agendify.Services.BusinessHourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class BusinessHoursController {
             return ResponseEntity.ok(times);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponseAPI(e.getMessage()));
         }
     }
 
@@ -40,7 +41,7 @@ public class BusinessHoursController {
             return ResponseEntity.ok(hours);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ErrorResponseAPI(e.getMessage()));
         }
     }
 }

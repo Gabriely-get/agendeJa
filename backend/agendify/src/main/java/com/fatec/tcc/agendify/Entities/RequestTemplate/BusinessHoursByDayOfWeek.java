@@ -4,5 +4,5 @@ import com.fatec.tcc.agendify.Entities.DaysOfWeek;
 
 import java.time.LocalDate;
 
-public record BusinessHoursByDayOfWeek(Long portfolioId, LocalDate date) {
+public record BusinessHoursByDayOfWeek(String date, Long portfolioJobId) {
 }

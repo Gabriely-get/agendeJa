@@ -93,12 +93,14 @@ public class AuthController {
             var token = new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword());
 
             var auth = manager.authenticate(token);
+            if (auth == null) throw new RuntimeException("Usuário não encontrado. Verifique suas informações de login");
+
             var tokenJWT = tokenService.generateToken((User) auth.getPrincipal());
 
             return ResponseEntity.ok(new DataTokenJWT(tokenJWT));
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new MessageResponseAPI(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

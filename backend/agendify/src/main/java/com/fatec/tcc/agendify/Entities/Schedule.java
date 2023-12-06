@@ -33,8 +33,8 @@ public @Data class Schedule {
     @JsonSerialize(using = LocalTimeSerializer.class)
     private LocalTime time;
     private String timeAsString;
-    @NotNull
-    private Boolean isScheduled;
+//    @NotNull
+//    private Boolean isScheduled;
 
     @NotNull
     private String status;
@@ -84,7 +84,7 @@ public @Data class Schedule {
         this.setPortfolioJob(portfolioJob);
         this.user = user;
         this.status = pendente.name();
-        this.isScheduled = isScheduled;
+//        this.isScheduled = isScheduled;
         this.noteByDecline = noteByDecline;
     }
 

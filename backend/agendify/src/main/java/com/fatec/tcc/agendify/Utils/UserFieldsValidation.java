@@ -6,6 +6,7 @@ import com.fatec.tcc.agendify.Entities.User;
 import lombok.experimental.UtilityClass;
 import org.apache.logging.log4j.util.Strings;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @UtilityClass
@@ -15,7 +16,7 @@ public class UserFieldsValidation {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPassword(),
-                user.getBirthday(),
+                user.getBirthday().toString(),
                 user.getPhone());
 
         if (Strings.trimToNull(user.getCpf()) == null || user.getCpf().isEmpty() || user.getCpf().isBlank()) {
@@ -32,7 +33,7 @@ public class UserFieldsValidation {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getPassword(),
-                user.getBirthday(),
+                user.getBirthday().toString(),
                 user.getPhone());
 
         if (Strings.trimToNull(user.getCpf()) == null || user.getCpf().isEmpty() || user.getCpf().isBlank()) {
@@ -44,7 +45,7 @@ public class UserFieldsValidation {
 
     }
 
-    private static void validateComuns(String email, String name, String lastName, String password, Date birthday, String phone) {
+    private static void validateComuns(String email, String name, String lastName, String password, String birthday, String phone) {
         if (Strings.trimToNull(email) == null || email.isEmpty() || email.isBlank()) {
             throw new IllegalUserArgumentException("E-mail is required");
         }
@@ -58,8 +59,8 @@ public class UserFieldsValidation {
         if (Strings.trimToNull(password) == null || password.isEmpty() || password.isBlank()) {
             throw new IllegalUserArgumentException("Password is required");
         }
-        if (birthday == null || birthday.toString().isEmpty() || birthday.toString().isBlank()) {
-            throw new IllegalUserArgumentException("Birth Day is required");
+        if (birthday == null || birthday.toString().isEmpty() || birthday.toString().isBlank() || LocalDate.parse(birthday).getYear() > 2008) {
+            throw new IllegalUserArgumentException("Birth Day is invalid");
         }
 
         if (phone.length() != 11) throw new IllegalUserArgumentException("Invalid phone length!");

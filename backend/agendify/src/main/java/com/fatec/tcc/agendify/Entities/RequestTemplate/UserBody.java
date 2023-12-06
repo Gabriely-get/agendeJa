@@ -3,6 +3,7 @@ package com.fatec.tcc.agendify.Entities.RequestTemplate;
 import com.fatec.tcc.agendify.Entities.Role;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public @Data class UserBody {
     private String password;
     private String firstName;
     private String lastName;
-    private Date birthday;
+    private LocalDate birthday;
     private String cpf;
     private String phone;
     private String fantasyName;

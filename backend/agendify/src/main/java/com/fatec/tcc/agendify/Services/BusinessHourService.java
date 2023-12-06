@@ -5,7 +5,9 @@ import com.fatec.tcc.agendify.Entities.RequestTemplate.BusinessHoursByDayOfWeek;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.BussinesHourData;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.Hour;
 import com.fatec.tcc.agendify.Repositories.BusinessHourRepository;
+import com.fatec.tcc.agendify.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendify.Repositories.ScheduleRepository;
+import com.fatec.tcc.agendify.Utils.HourComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class BusinessHourService {
     @Autowired
     private BusinessHourRepository businessHourRepository;
+
+    @Autowired
+    private PortfolioJobRepository portfolioJobRepository;
 
     @Autowired
     private ScheduleRepository scheduleRepository;
@@ -52,12 +57,18 @@ public class BusinessHourService {
     }
 
     public List<String> getBusinessHoursByDay(BusinessHoursByDayOfWeek data) {
-        System.out.println(data);
-        if (!data.date().isBefore(LocalDate.now())) {
+//        System.out.println(data);
+        Optional<PortfolioJob> optionalPortfolioJob = this.portfolioJobRepository.findById(data.portfolioJobId());
+        if (optionalPortfolioJob.isEmpty()) throw new RuntimeException("Serviço não existe");
+
+        LocalDate date = LocalDate.parse(data.date());
+        if (!date.isBefore(LocalDate.now())) {
+            PortfolioJob job = optionalPortfolioJob.get();
+
             Optional<BussinessHour> optionalBusinessHour =
                     this.businessHourRepository.findByPortfolio_IdAndDayOfWeek(
-                            data.portfolioId(),
-                            DaysOfWeek.valueOf(data.date().getDayOfWeek().name())
+                            job.getPortfolio().getId(),
+                            DaysOfWeek.valueOf(date.getDayOfWeek().name())
                     );
 
             if (optionalBusinessHour.isEmpty()) return new ArrayList<>();
@@ -71,11 +82,16 @@ public class BusinessHourService {
     public List<Hour> getFilteredBusinessHoursByDay(BusinessHoursByDayOfWeek data) {
 
         try {
-            if (!data.date().isBefore(LocalDate.now())) {
+            Optional<PortfolioJob> optionalPortfolioJob = this.portfolioJobRepository.findById(data.portfolioJobId());
+            if (optionalPortfolioJob.isEmpty()) throw new RuntimeException("Serviço não existe");
+
+            LocalDate date = LocalDate.parse(data.date());
+            if (!date.isBefore(LocalDate.now())) {
+                PortfolioJob job = optionalPortfolioJob.get();
                 Optional<BussinessHour> optionalBusinessHour =
                         this.businessHourRepository.findByPortfolio_IdAndDayOfWeek(
-                                data.portfolioId(),
-                                DaysOfWeek.valueOf(data.date().getDayOfWeek().name())
+                                job.getPortfolio().getId(),
+                                DaysOfWeek.valueOf(date.getDayOfWeek().name())
                         );
 
                 //retorno vazio se o prestador nao possui horarios para aquele dia da semana
@@ -89,8 +105,8 @@ public class BusinessHourService {
                 List<Schedule> allHoursScheduledByDay =
                         this.scheduleRepository
                                 .findAllByPortfolioJob_IdAndDateAndStatusIsNotContaining(
-                                        data.portfolioId(),
-                                        data.date(),
+                                        job.getId(),
+                                        date,
                                         SCHEDULE_STATUS.CANCELADO.name()
                                 );
 
@@ -104,8 +120,9 @@ public class BusinessHourService {
 
                 allHours.removeAll(listOfHourScheduled);
                 allHours.forEach(h -> hoursFiltered.add(new Hour(h.toString(), true)));
-                return hoursFiltered;
+                hoursFiltered.sort(new HourComparator());
 
+                return hoursFiltered;
             }
             throw new RuntimeException("Datas anteriores a hoje não possuem horários para agendamento.");
         } catch (RuntimeException e) {

@@ -79,6 +79,13 @@ public class CompanyBranchService {
 
                 for (int i = 0; i < portfolioJobList.size(); i++) {
                     portfolioJobList.get(i).getImages().forEach(img -> { images.add(img.getBase64()); });
+                    String coverImage = null;
+
+                    if (Objects.nonNull(portfolioJobList.get(i).getImageCoverId())) {
+                        Optional<Image> optionalImage = this.imageRepository.findById(portfolioJobList.get(i).getImageCoverId());
+                        if (optionalCompanyBranch.isPresent()) coverImage = optionalImage.get().getBase64();
+                    }
+
 
                     portfolioJobResponse.add(new PortfolioJobResponse(
                             portfolioJobList.get(i).getId(),
@@ -92,7 +99,7 @@ public class CompanyBranchService {
                             portfolioJobList.get(i).getPortfolio().getCompanyBranch().getUser().getFirstName()
                                     +portfolioJobList.get(i).getPortfolio().getCompanyBranch().getUser().getLastName(),
                             portfolioJobList.get(i).getRestricted(),
-                            portfolioJobList.get(i).getImageCoverId(),
+                            coverImage,
                             images
                         )
                     );

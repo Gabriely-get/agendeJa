@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.ErrorResponseAPI;
+import com.fatec.tcc.agendify.Entities.Schedule;
 import com.fatec.tcc.agendify.Infra.TokenService;
 import com.fatec.tcc.agendify.Services.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +113,39 @@ public class ScheduleController {
             String token = this.extractBearerToken(authorizationHeader);
             var idByToken = tokenService.getClaimId(token);
             ScheduleEnterpriseResponse schedule = this.scheduleService.confirmOrDeclineAppointment(appointment, idByToken);
+
+            return ResponseEntity.ok(schedule);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/reschedule")
+    public ResponseEntity<?> rescheduleAppointment(
+            @RequestBody ManageStatusConfirmAppointment appointment,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = this.extractBearerToken(authorizationHeader);
+            var idByToken = tokenService.getClaimId(token);
+            Schedule schedule = this.scheduleService.reschedule(appointment);
+
+            return ResponseEntity.ok(new ScheduleEnterpriseResponse(schedule));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/realized")
+    public ResponseEntity<?> appointmentRealized(
+            @RequestBody ManageStatusRelizedAppointment appointment,
+            @RequestHeader("Authorization") String authorizationHeader) {
+        try {
+            String token = this.extractBearerToken(authorizationHeader);
+            var idByToken = tokenService.getClaimId(token);
+            System.out.println("CHEGUEI");
+            ScheduleEnterpriseResponse schedule = this.scheduleService.appointmentRealized(appointment, idByToken);
 
             return ResponseEntity.ok(schedule);
         } catch (Exception e) {

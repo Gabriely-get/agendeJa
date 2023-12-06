@@ -414,8 +414,11 @@ public class Seed {
                             "Micropigmentação Fio a Fio",
                             50.00,
                             "Esta é a descrição do portfolio job micropigmentação fio a fio",
+                            6L,
                             this.portfolioRepository.findById(2L).get(),
-                            this.jobCategoryRepository.findById(1L).get()
+                            this.jobCategoryRepository.findById(1L).get(),
+                            LocalTime.of(1,0),
+                            false
                     );
 
             PortfolioJob portfolioJob2 =
@@ -423,8 +426,11 @@ public class Seed {
                             "Massagem Transversal Superior",
                             70.00,
                             "Esta é a descrição do portfolio job massagem transversal",
+                            null,
                             this.portfolioRepository.findById(1L).get(),
-                            this.jobCategoryRepository.findById(2L).get()
+                            this.jobCategoryRepository.findById(2L).get(),
+                            LocalTime.of(2,0),
+                            false
                     );
 
             PortfolioJob portfolioJob3 =
@@ -432,8 +438,11 @@ public class Seed {
                             "",
                             30.00,
                             "Esta é a descrição do portfolio aula de inglês",
+                            null,
                             this.portfolioRepository.findById(3L).get(),
-                            this.jobCategoryRepository.findById(3L).get()
+                            this.jobCategoryRepository.findById(3L).get(),
+                            LocalTime.of(1,0),
+                            false
                     );
 
             this.portfolioJobRepository.saveAll(List.of(portfolioJob1, portfolioJob2, portfolioJob3));
@@ -593,7 +602,7 @@ public class Seed {
                 user.setLastName(" Santos " + i);
                 user.setIsActive(true);
                 user.setPhone(cpf);
-                user.setBirthday(formatter.parse(dateInString));
+                user.setBirthday(dateInString);
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
                 user.setRole(Role.USER);
                 user.setIsJobProvider(false);
@@ -618,7 +627,7 @@ public class Seed {
                 user.setLastName(" Ablu " + i);
                 user.setIsActive(true);
                 user.setPhone(cpf);
-                user.setBirthday(formatter.parse(dateInString));
+                user.setBirthday(dateInString);
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
                 user.setIsJobProvider(true);
                 user.setRole(Role.ENTERPRISE);
@@ -641,7 +650,7 @@ public class Seed {
                 user.setLastName(" Suit" + i);
                 user.setIsActive(true);
                 user.setPhone(cpf);
-                user.setBirthday(formatter.parse(dateInString));
+                user.setBirthday(dateInString);
                 user.setPassword(new BCryptPasswordEncoder().encode("test123"));
                 user.setIsJobProvider(false);
                 user.setRole(Role.ADMIN);

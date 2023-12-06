@@ -17,13 +17,6 @@ public @Data class PortfolioJob {
     public PortfolioJob() {
     }
 
-    public PortfolioJob(String name, Double price, String description, Portfolio portfolio, JobCategory jobCategory) {
-        this.setName(name);
-        this.setPrice(price);
-        this.setDescription(description);
-        this.setPortfolio(portfolio);
-        this.setJobCategory(jobCategory);
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -109,6 +109,14 @@ public class PortfolioJobService {
             if (!imageList.isEmpty()) {
                 imageList.forEach(img -> images.add(img.getBase64()));
             }
+
+            String cover = null;
+            if (newPortfolioJob.getImageCoverId() != null) {
+                Optional<Image> optionalImage = this.imageRepository.findById(newPortfolioJob.getImageCoverId());
+                if (optionalImage.isPresent()) {
+                    cover = optionalImage.get().getBase64();
+                }
+            }
             return new PortfolioJobResponse(
                     newPortfolioJob.getId(),
                     newPortfolioJob.getName(),
@@ -121,7 +129,7 @@ public class PortfolioJobService {
                     newPortfolioJob.getPortfolio().getCompanyBranch().getUser().getFirstName()
                             +' '+newPortfolioJob.getPortfolio().getCompanyBranch().getUser().getLastName(),
                     newPortfolioJob.getRestricted(),
-                    newPortfolioJob.getImageCoverId(),
+                    cover,
                     images
             );
 
@@ -130,7 +138,6 @@ public class PortfolioJobService {
             e.printStackTrace();
             throw e;
         }
-//        throw new IllegalArgumentException("Job name is already registered");
     }
 
     public void updatePortfolioJob(Long portfolioJobId, PortfolioJob newPortfolioJob) {
@@ -188,6 +195,14 @@ public class PortfolioJobService {
             PortfolioJob job = optionalPortfolioJob.get();
             List<Image> imageList = this.imageRepository.findAllByPortfolioJob_Id(id);
             List<String> images = new ArrayList<>();
+            String cover = null;
+
+            if (job.getImageCoverId() != null) {
+                Optional<Image> optionalImage = this.imageRepository.findById(job.getImageCoverId());
+                if (optionalImage.isPresent()) {
+                    cover = optionalImage.get().getBase64();
+                }
+            }
 
             if (!imageList.isEmpty()) {
                 imageList.forEach(img -> images.add(img.getBase64()));
@@ -205,7 +220,7 @@ public class PortfolioJobService {
                     job.getPortfolio().getCompanyBranch().getUser().getFirstName()
                             +' '+job.getPortfolio().getCompanyBranch().getUser().getLastName(),
                     job.getRestricted(),
-                    job.getImageCoverId(),
+                    cover,
                     images
             );
         }
