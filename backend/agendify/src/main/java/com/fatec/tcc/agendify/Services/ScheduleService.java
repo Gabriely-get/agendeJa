@@ -7,7 +7,6 @@ import com.fatec.tcc.agendify.Entities.RequestTemplate.*;
 import com.fatec.tcc.agendify.Repositories.PortfolioJobRepository;
 import com.fatec.tcc.agendify.Repositories.ScheduleRepository;
 import com.fatec.tcc.agendify.Repositories.UserRepository;
-import com.fatec.tcc.agendify.Utils.GetHoursBetween;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,8 @@ public class ScheduleService {
 
     @Autowired
     private PortfolioJobRepository portfolioJobRepository;
+    @Autowired
+    private PortfolioService portfolioService;
 
     @Autowired
     private UserRepository userRepository;
@@ -276,14 +277,20 @@ public class ScheduleService {
         }
     }
 
-//    public List<ScheduleDetailsResponse> getAllRealizesByUserRole(Long idByToken) {
-//        Optional<User> optionalUser = this.userRepository.findById(idByToken);
-//
-//        if (optionalUser.isEmpty()) throw new RuntimeException("Usuairo nao existe")
-//
-//        return this.scheduleRepository.
-//    }
+    public List<Schedule> getAllRealizesByUserRole(Long idByToken) {
+        Optional<User> optionalUser = this.userRepository.findById(idByToken);
 
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<Portfolio> portfolio = this.portfolioService.getByUserId(user.getId());
+            List<Schedule> scheduleList = this.scheduleRepository.findAllByPortfolioJob_Portfolio_Id_AndStatusIsContaining(portfolio.get(0).getId(), SCHEDULE_STATUS.REALIZADO.name());
+
+
+            return scheduleList;
+
+        }
+        throw new RuntimeException("User nao existe");
+    }
     public Schedule reschedule(ManageStatusConfirmAppointment schedule) {
         try {
 

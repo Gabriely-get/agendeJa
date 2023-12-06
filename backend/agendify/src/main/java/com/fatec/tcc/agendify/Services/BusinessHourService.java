@@ -82,12 +82,14 @@ public class BusinessHourService {
     public List<Hour> getFilteredBusinessHoursByDay(BusinessHoursByDayOfWeek data) {
 
         try {
+            if (data.portfolioJobId() == null) throw new RuntimeException("Sem id do serviço");
             Optional<PortfolioJob> optionalPortfolioJob = this.portfolioJobRepository.findById(data.portfolioJobId());
             if (optionalPortfolioJob.isEmpty()) throw new RuntimeException("Serviço não existe");
 
             LocalDate date = LocalDate.parse(data.date());
             if (!date.isBefore(LocalDate.now())) {
                 PortfolioJob job = optionalPortfolioJob.get();
+                System.out.println("PORT::JOBPORT "+ job.getId()+"::"+job.getPortfolio().getId());
                 Optional<BussinessHour> optionalBusinessHour =
                         this.businessHourRepository.findByPortfolio_IdAndDayOfWeek(
                                 job.getPortfolio().getId(),
@@ -126,6 +128,7 @@ public class BusinessHourService {
             }
             throw new RuntimeException("Datas anteriores a hoje não possuem horários para agendamento.");
         } catch (RuntimeException e) {
+            e.printStackTrace();
             throw e;
         }
     }
