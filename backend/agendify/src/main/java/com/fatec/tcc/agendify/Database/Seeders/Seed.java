@@ -417,7 +417,7 @@ public class Seed {
                             6L,
                             this.portfolioRepository.findById(2L).get(),
                             this.jobCategoryRepository.findById(1L).get(),
-                            LocalTime.of(1,0),
+                            LocalTime.of(1,0).toString(),
                             false
                     );
 
@@ -429,7 +429,7 @@ public class Seed {
                             null,
                             this.portfolioRepository.findById(1L).get(),
                             this.jobCategoryRepository.findById(2L).get(),
-                            LocalTime.of(2,0),
+                            LocalTime.of(2,0).toString(),
                             false
                     );
 
@@ -441,7 +441,7 @@ public class Seed {
                             null,
                             this.portfolioRepository.findById(3L).get(),
                             this.jobCategoryRepository.findById(3L).get(),
-                            LocalTime.of(1,0),
+                            LocalTime.of(1,0).toString(),
                             false
                     );
 

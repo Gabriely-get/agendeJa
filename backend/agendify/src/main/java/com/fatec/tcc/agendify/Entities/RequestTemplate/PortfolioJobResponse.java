@@ -10,7 +10,7 @@ public record PortfolioJobResponse(
         String duration,
         Long portfolioId,
         String category,
-        String subcategory,
+        String jobCategory,
         String owner,
         Boolean restricted,
         String coverImage,

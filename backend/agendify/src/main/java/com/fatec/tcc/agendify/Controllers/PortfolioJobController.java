@@ -6,6 +6,7 @@ import com.fatec.tcc.agendify.Builders.JsonResponseBuilder;
 import com.fatec.tcc.agendify.CustomExceptions.NotFoundException;
 import com.fatec.tcc.agendify.Entities.PortfolioJob;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.ErrorResponseAPI;
+import com.fatec.tcc.agendify.Entities.RequestTemplate.MessageResponseAPI;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobBody;
 import com.fatec.tcc.agendify.Entities.RequestTemplate.PortfolioJobResponse;
 import com.fatec.tcc.agendify.Services.PortfolioJobService;
@@ -40,14 +41,14 @@ public class PortfolioJobController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<ObjectNode> getPortfolioJobs() {
+    public ResponseEntity<?> getPortfolioJobs() {
         try {
-            List<PortfolioJob> portfolioJobs = this.userJobService.getAll();
+            List<PortfolioJobResponse> portfolioJobs = this.userJobService.getAll();
 
-            return new ResponseEntity<>(this.jsonResponseBuilder.withList(portfolioJobs).build(), HttpStatus.OK);
-        } catch (RuntimeException | JsonProcessingException e) {
+            return ResponseEntity.ok(portfolioJobs);
+        } catch (RuntimeException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(this.jsonResponseBuilder.withError(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(new MessageResponseAPI(e.getMessage()));
         }
     }
 

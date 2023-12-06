@@ -24,7 +24,8 @@ public interface ScheduleRepository extends CrudRepository<Schedule, Long> {
             Long portfolioJob_id, LocalDate date, String status
     );
 
-    List<Schedule> findAllByUserIdAndStatusIsContainingIgnoreCase(Long id, String status);
+    List<Schedule> findAllByPortfolioJob_Portfolio_Id_AndStatusIsContaining(Long id, String status);
+    List<Schedule> findAllByPortfolioJob_Portfolio_CompanyBranch_Id(Long id);
 
 //    List<Schedule> findAllByDateAndTime(LocalDate date, LocalTime time);
 }

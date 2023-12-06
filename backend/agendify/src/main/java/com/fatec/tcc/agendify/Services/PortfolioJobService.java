@@ -90,7 +90,7 @@ public class PortfolioJobService {
                     imageCover == null ? null : imageCover.getId(),
                     portfolio,
                     jobCategory,
-                    portfolioJobBody.duration(),
+                    portfolioJobBody.duration().toString(),
                     portfolioJobBody.restricted())
             );
 
@@ -167,8 +167,44 @@ public class PortfolioJobService {
 //        throw new IllegalArgumentException("Job name is already registered");
     }
 
-    public List<PortfolioJob> getAll(){
-        return (List<PortfolioJob>) this.portfolioJobRepository.findAll();
+    public List<PortfolioJobResponse> getAll(){
+        Iterable<PortfolioJob> iterable = this.portfolioJobRepository.findAll();
+        List<PortfolioJobResponse> jobResponses = new ArrayList<>();
+
+        iterable.forEach(portfolioJob -> {
+            List<Image> imageList = this.imageRepository.findAllByPortfolioJob_Id(portfolioJob.getId());
+            List<String> images = new ArrayList<>();
+            String cover = null;
+
+            if (portfolioJob.getImageCoverId() != null) {
+                Optional<Image> optionalImage = this.imageRepository.findById(portfolioJob.getImageCoverId());
+                if (optionalImage.isPresent()) {
+                    cover = optionalImage.get().getBase64();
+                }
+            }
+
+            if (!imageList.isEmpty()) {
+                imageList.forEach(img -> images.add(img.getBase64()));
+            }
+
+            jobResponses.add(new PortfolioJobResponse(
+                    portfolioJob.getId(),
+                    portfolioJob.getName(),
+                    portfolioJob.getPrice(),
+                    portfolioJob.getDescription(),
+                    portfolioJob.getDuration(),
+                    portfolioJob.getPortfolio().getId(),
+                    portfolioJob.getPortfolio().getCategory().getName(),
+                    portfolioJob.getJobCategory().getName(),
+                    portfolioJob.getPortfolio().getCompanyBranch().getUser().getFirstName() + ' '+
+                            portfolioJob.getPortfolio().getCompanyBranch().getUser().getLastName(),
+                    false,
+                    cover,
+                    images
+            ));
+        });
+
+        return jobResponses;
     }
 
 //    public List<PortfolioJob> getAllFormatted(){
@@ -213,7 +249,7 @@ public class PortfolioJobService {
                     job.getName(),
                     job.getPrice(),
                     job.getDescription(),
-                    job.getDuration() == null ? null : job.getDuration().toString(),
+                    job.getDuration() == null ? null : job.getDuration(),
                     job.getPortfolio().getId(),
                     job.getPortfolio().getCategory().getName(),
                     job.getJobCategory().getName(),

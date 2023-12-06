@@ -42,10 +42,10 @@ public @Data class PortfolioJob {
     @JoinColumn(name = "job_category_id", nullable = false)
     @NotNull
     private JobCategory jobCategory;
-    private LocalTime duration;
+    private String duration;
     private Boolean restricted;
 
-    public PortfolioJob(String name, Double price, String description, Long imageCover, Portfolio portfolio, JobCategory jobCategory, LocalTime duration, Boolean restricted) {
+    public PortfolioJob(String name, Double price, String description, Long imageCover, Portfolio portfolio, JobCategory jobCategory, String duration, Boolean restricted) {
         this.name = name;
         this.price = price;
         this.description = description;

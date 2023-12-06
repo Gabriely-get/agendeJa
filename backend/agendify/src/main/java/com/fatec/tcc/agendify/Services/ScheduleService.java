@@ -112,7 +112,7 @@ public class ScheduleService {
                 throw new IllegalArgumentException("This schedule already exists!");
 
             LocalTime finalHour =
-                    LocalTime.of(scheduleBody.time().getHour() + portfolioJob.getDuration().getHour(),0);
+                    LocalTime.of(scheduleBody.time().getHour() + LocalTime.parse(portfolioJob.getDuration()).getHour(),0);
 
 //            List<Hour> hours = GetHoursBetween.
             Schedule schedule =
